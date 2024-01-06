@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 /dump.rdb
 
+application.yml
+
 local.env
 
 ### STS ###
