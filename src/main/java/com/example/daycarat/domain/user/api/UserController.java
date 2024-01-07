@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.user.api;
 
-import com.example.daycarat.domain.user.dto.TokenResponse;
+import com.example.daycarat.global.jwt.TokenResponse;
 import com.example.daycarat.domain.user.dto.UserDto;
 import com.example.daycarat.domain.user.service.UserService;
 import com.example.daycarat.global.oauth.KakaoUserService;

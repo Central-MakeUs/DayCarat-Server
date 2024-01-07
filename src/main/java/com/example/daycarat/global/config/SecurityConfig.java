@@ -23,7 +23,11 @@ public class SecurityConfig {
     };
 
     private final String[] BasicPatterns = {
-            "/health", "/user/oauth/kakao"
+            "/health"
+    };
+
+    private final String[] securityPatterns = {
+            "/user/oauth/kakao"
     };
 
     private final String[] UserPatterns = {
@@ -37,8 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(SwaggerPatterns).permitAll()
                         .requestMatchers(BasicPatterns).permitAll()
+                        .requestMatchers(securityPatterns).permitAll()
                         .requestMatchers(UserPatterns).authenticated()
-                        .requestMatchers("/user/oauth/kakao").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
