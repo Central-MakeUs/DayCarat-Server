@@ -9,21 +9,28 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserDto {
     private String email;
-    private String name;
+    private String nickname;
     private String picture;
 
     @Builder
-    public UserDto(String email, String name, String picture) {
+    public UserDto(String email, String nickname, String picture) {
         this.email = email;
-        this.name = name;
+        this.nickname = nickname;
         this.picture = picture;
     }
 
     public static UserDto of(User user) {
         return UserDto.builder()
                 .email(user.getEmail())
-                .name(user.getName())
+                .nickname(user.getNickname())
                 .picture(user.getPicture())
+                .build();
+    }
+
+    public static UserDto of(String email, String nickname) {
+        return UserDto.builder()
+                .email(email)
+                .nickname(nickname)
                 .build();
     }
 }
