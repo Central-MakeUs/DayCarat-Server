@@ -55,6 +55,7 @@ jobs:
 
     - name: Make application-secret.yml
       run: |
+        mkdir ./src/main/resources
         touch ./src/main/resources/application-secret.yml
         echo "${{ secrets.APPLICATION_SECRET }}" > ./src/main/resources/application-secret.yml
 
