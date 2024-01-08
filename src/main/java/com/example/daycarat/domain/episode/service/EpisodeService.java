@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.service;
 
+import com.example.daycarat.domain.episode.dto.GetEpisodeSummary;
 import com.example.daycarat.domain.episode.dto.GetRecentEpisode;
 import com.example.daycarat.domain.episode.dto.PostEpisode;
 import com.example.daycarat.domain.episode.dto.PostEpisodeContent;
@@ -93,5 +94,16 @@ public class EpisodeService {
                 .map(episode -> GetRecentEpisode.of(episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
                 .collect(Collectors.toList());
 
+    }
+
+    public List<GetEpisodeSummary> getEpisodeByDate(Integer year) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (year == null) year = 2024;
+
+        return episodeRepository.getPageByDate(user, year);
     }
 }

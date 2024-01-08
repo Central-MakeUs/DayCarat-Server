@@ -1,12 +1,10 @@
 package com.example.daycarat.domain.episode.api;
 
-import com.example.daycarat.domain.episode.dto.GetActivityTag;
-import com.example.daycarat.domain.episode.dto.GetRecentEpisode;
-import com.example.daycarat.domain.episode.dto.PostActivityTag;
-import com.example.daycarat.domain.episode.dto.PostEpisode;
+import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.service.ActivityTagService;
 import com.example.daycarat.domain.episode.service.EpisodeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +45,15 @@ public class EpisodeController {
         return ResponseEntity.ok()
                 .body(episodeService.getRecentEpisode());
     }
+
+    @Operation(summary = "에피소드 조회: 날짜 최신순")
+    @GetMapping("/date")
+    public ResponseEntity<List<GetEpisodeSummary>> getEpisodeByDate(
+            @Parameter(description = "조회년도, null일 시 2024년") @RequestParam(required = false) Integer year) {
+
+        return ResponseEntity.ok()
+                .body(episodeService.getEpisodeByDate(year));
+    }
+
 
 }
