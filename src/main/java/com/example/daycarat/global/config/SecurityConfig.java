@@ -34,15 +34,21 @@ public class SecurityConfig {
             "/user/**"
     };
 
+    private final String[] EpisodePatterns = {
+            "/episode/activityTag"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors();
         http.csrf().disable().authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(SwaggerPatterns).permitAll()
                         .requestMatchers(BasicPatterns).permitAll()
                         .requestMatchers(securityPatterns).permitAll()
                         .requestMatchers(UserPatterns).authenticated()
+                        .requestMatchers(EpisodePatterns).authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
