@@ -87,7 +87,6 @@ public class TokenService {
 
     // 토큰 검증
     public boolean validateToken(String token) {
-        System.out.println("token = " + token);
         try {
             // Bearer 검증
             if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
