@@ -2,7 +2,9 @@ package com.example.daycarat.domain.episode.api;
 
 import com.example.daycarat.domain.episode.dto.GetActivityTag;
 import com.example.daycarat.domain.episode.dto.PostActivityTag;
+import com.example.daycarat.domain.episode.dto.PostEpisode;
 import com.example.daycarat.domain.episode.service.ActivityTagService;
+import com.example.daycarat.domain.episode.service.EpisodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 public class EpisodeController {
 
     private final ActivityTagService activityTagService;
+    private final EpisodeService episodeService;
 
     @Operation(summary = "활동 태그 등록하기")
     @PostMapping("/activityTag")
@@ -28,6 +31,13 @@ public class EpisodeController {
     public ResponseEntity<List<GetActivityTag>> getActivtyTag() {
         return ResponseEntity.ok()
                 .body(activityTagService.getActivityTagList());
+    }
+
+    @Operation(summary = "에피소드 등록하기")
+    @PostMapping("/register")
+    public ResponseEntity<Boolean> createEpisode(@RequestBody PostEpisode postEpisode) {
+        return ResponseEntity.ok()
+                .body(episodeService.createEpisode(postEpisode));
     }
 
 }

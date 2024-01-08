@@ -52,4 +52,17 @@ public class Episode extends BaseTimeEntity {
         this.isFinalized = isFinalized;
     }
 
+    public static Episode of(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, String episodeType, String participationRole, boolean isFinalized) {
+        return Episode.builder()
+                .user(user)
+                .episodeActivityTags(episodeActivityTags)
+                .episodeKeywords(episodeKeywords)
+                .title(title)
+                .selectedDate(selectedDate)
+                .episodeType(episodeType)
+                .participationRole(participationRole)
+                .isFinalized(isFinalized)
+                .build();
+    }
+
 }
