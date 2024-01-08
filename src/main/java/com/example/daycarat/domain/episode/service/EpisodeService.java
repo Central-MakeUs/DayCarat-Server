@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.service;
 
+import com.example.daycarat.domain.episode.dto.GetRecentEpisode;
 import com.example.daycarat.domain.episode.dto.PostEpisode;
 import com.example.daycarat.domain.episode.dto.PostEpisodeContent;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
@@ -14,13 +15,14 @@ import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
-import com.example.daycarat.global.util.LocalDateParser;
+import com.example.daycarat.global.util.LocalDateTimeParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class EpisodeService {
@@ -38,12 +40,14 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+        // TODO : Validation for tagIds
+
         // create Episode
 
         Episode episode = Episode.builder()
                 .user(user)
                 .title(postEpisode.title())
-                .selectedDate(LocalDateParser.toLocalDate(postEpisode.date()))
+                .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
                 .episodeType(postEpisode.episodeType())
                 .participationRole(postEpisode.participationRole())
                 .isFinalized(false)
@@ -78,4 +82,16 @@ public class EpisodeService {
 
     }
 
+    public List<GetRecentEpisode> getRecentEpisode() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
+                .stream()
+                .map(episode -> GetRecentEpisode.of(episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
+                .collect(Collectors.toList());
+
+    }
 }

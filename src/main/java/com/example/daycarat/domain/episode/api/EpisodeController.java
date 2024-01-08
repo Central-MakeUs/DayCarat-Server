@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.episode.api;
 
 import com.example.daycarat.domain.episode.dto.GetActivityTag;
+import com.example.daycarat.domain.episode.dto.GetRecentEpisode;
 import com.example.daycarat.domain.episode.dto.PostActivityTag;
 import com.example.daycarat.domain.episode.dto.PostEpisode;
 import com.example.daycarat.domain.episode.service.ActivityTagService;
@@ -38,6 +39,13 @@ public class EpisodeController {
     public ResponseEntity<Boolean> createEpisode(@RequestBody PostEpisode postEpisode) {
         return ResponseEntity.ok()
                 .body(episodeService.createEpisode(postEpisode));
+    }
+
+    @Operation(summary = "에피소드 최신순 조회 3개")
+    @GetMapping("/recent")
+    public ResponseEntity<List<GetRecentEpisode>> getRecentEpisode() {
+        return ResponseEntity.ok()
+                .body(episodeService.getRecentEpisode());
     }
 
 }
