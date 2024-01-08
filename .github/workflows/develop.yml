@@ -24,10 +24,9 @@ jobs:
       - name: Make application-secret.yml
         run: |
           mkdir -p ./src/main/resources
-          if [ ! -f ./src/main/resources/application.yml ]; then
-            touch ./src/main/resources/application.yml
-            echo "${{ secrets.APPLICATION_SECRET }}" > ./src/main/resources/application.yml
-          fi
+          rm ./src/main/resources/application.yml
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3

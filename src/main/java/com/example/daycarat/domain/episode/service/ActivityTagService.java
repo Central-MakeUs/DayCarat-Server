@@ -26,7 +26,7 @@ public class ActivityTagService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        ActivityTag activityTag = ActivityTag.of(user, postActivityTag.activityTag());
+        ActivityTag activityTag = ActivityTag.of(user, postActivityTag.activityTagName());
 
         activityTagRepository.save(activityTag);
 
