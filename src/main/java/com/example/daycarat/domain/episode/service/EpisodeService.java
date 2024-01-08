@@ -1,11 +1,14 @@
 package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.episode.dto.PostEpisode;
+import com.example.daycarat.domain.episode.dto.PostEpisodeContent;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeActivityTag;
+import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeActivityTagRepository;
+import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
@@ -26,6 +29,7 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeActivityTagRepository episodeActivityTagRepository;
+    private final EpisodeContentRepository episodeContentRepository;
 
     @Transactional
     public Boolean createEpisode(PostEpisode postEpisode) {
@@ -33,6 +37,8 @@ public class EpisodeService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // create Episode
 
         Episode episode = Episode.builder()
                 .user(user)
@@ -45,6 +51,8 @@ public class EpisodeService {
 
         episodeRepository.save(episode);
 
+        // create EpisodeActivityTag
+
         List<ActivityTag> activityTags = activityTagRepository.findAllById(postEpisode.activityTagIds());
 
         for (ActivityTag activityTag : activityTags) {
@@ -53,6 +61,17 @@ public class EpisodeService {
                     .activityTag(activityTag)
                     .build();
             episodeActivityTagRepository.save(episodeActivityTag);
+        }
+
+        // create EpisodeContent
+
+        for (PostEpisodeContent postEpisodeContent : postEpisode.episodeContents()) {
+            EpisodeContent episodeContent = EpisodeContent.builder()
+                    .episode(episode)
+                    .episodeContentType(postEpisodeContent.episodeContentType())
+                    .content(postEpisodeContent.content())
+                    .build();
+            episodeContentRepository.save(episodeContent);
         }
 
         return true;
