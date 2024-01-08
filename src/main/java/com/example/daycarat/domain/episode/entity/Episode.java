@@ -3,11 +3,14 @@ package com.example.daycarat.domain.episode.entity;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+@Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Episode extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +39,17 @@ public class Episode extends BaseTimeEntity {
 
     // 다듬기여부 (soft delete)
     private boolean isFinalized;
+
+    @Builder
+    public Episode(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, String episodeType, String participationRole, boolean isFinalized) {
+        this.user = user;
+        this.episodeActivityTags = episodeActivityTags;
+        this.episodeKeywords = episodeKeywords;
+        this.title = title;
+        this.selectedDate = selectedDate;
+        this.episodeType = episodeType;
+        this.participationRole = participationRole;
+        this.isFinalized = isFinalized;
+    }
 
 }

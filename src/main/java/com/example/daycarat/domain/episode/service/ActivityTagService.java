@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.service;
 
+import com.example.daycarat.domain.episode.dto.GetActivityTag;
 import com.example.daycarat.domain.episode.dto.PostActivityTag;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service @RequiredArgsConstructor
 public class ActivityTagService {
 
@@ -20,12 +23,8 @@ public class ActivityTagService {
     public Boolean createActivityTag(PostActivityTag postActivityTag) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        System.out.println("email = " + email);
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        System.out.println("postActivityTag = " + postActivityTag.activityTag());
 
         ActivityTag activityTag = ActivityTag.of(user, postActivityTag.activityTag());
 
@@ -34,4 +33,15 @@ public class ActivityTagService {
         return true;
     }
 
+    public List<GetActivityTag> getActivityTagList() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        List<ActivityTag> allByUserId = activityTagRepository.findAllByUserId(user.getId());
+
+        return GetActivityTag.listOf(allByUserId);
+
+    }
 }
