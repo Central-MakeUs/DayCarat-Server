@@ -24,13 +24,10 @@ public class UserController {
 
     @Operation(summary = "Authorization Code로 토큰 발급하기")
     @GetMapping("/oauth/kakao")
-    public ResponseEntity<TokenResponse> kakaoLogin(@Parameter(name = "code", description = "카카오 로그인을 위한 코드", required = true)
-                                        @RequestParam String code,
-                                                    @Parameter(name= "redirect_uri", description = "카카오 로그인을 위한 리다이렉트 uri", required = true)
-                                        @RequestParam String redirect_uri) throws JsonProcessingException {
-        System.out.println("code = " + code);
+    public ResponseEntity<TokenResponse> kakaoLogin(@Parameter(name = "accessToken", description = "카카오 인증서버에서 받은 토큰", required = true)
+                                        @RequestParam String accessToken) throws JsonProcessingException {
         return ResponseEntity.ok()
-                .body(kakaoUserService.kakaoLogin(code, redirect_uri));
+                .body(kakaoUserService.kakaoLogin(accessToken));
     }
 
     @Operation(summary = "유저 정보 조회하기")

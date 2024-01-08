@@ -3,8 +3,8 @@ package com.example.daycarat.global.oauth;
 import com.example.daycarat.domain.user.domain.Role;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.dto.UserDto;
-import com.example.daycarat.global.jwt.TokenResponse;
 import com.example.daycarat.domain.user.repository.UserRepository;
+import com.example.daycarat.global.jwt.TokenResponse;
 import com.example.daycarat.global.jwt.TokenService;
 import com.example.daycarat.global.jwt.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,11 +37,7 @@ public class KakaoUserService {
     @Value("${oauth.kakao.client-secret}")
     private String clientSecret;
 
-    public TokenResponse kakaoLogin(String code, String redirect_uri) throws JsonProcessingException {
-
-        String accessToken = getAccessToken(code, redirect_uri);
-
-        System.out.println("accessToken = " + accessToken);
+    public TokenResponse kakaoLogin(String accessToken) throws JsonProcessingException {
 
         UserDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
@@ -52,36 +47,6 @@ public class KakaoUserService {
 
         return kakaoUsersAuthorizationInput(authentication);
 
-    }
-
-    private String getAccessToken(String code, String redirect_uri) throws JsonProcessingException {
-        // HTTP Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        // HTTP Body 생성
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "authorization_code");
-        body.add("client_id", clientId);
-        body.add("redirect_uri", redirect_uri);
-        body.add("client_secret", clientSecret);
-        body.add("code", code);
-
-        // HTTP 요청 보내기
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
-        RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
-        String responseBody = response.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
-        return jsonNode.get("access_token").asText();
     }
 
     private UserDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
