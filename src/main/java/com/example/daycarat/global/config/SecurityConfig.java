@@ -34,6 +34,10 @@ public class SecurityConfig {
             "/user/**"
     };
 
+    private final String[] EpisodePatterns = {
+            "/episode/activityTag"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(BasicPatterns).permitAll()
                         .requestMatchers(securityPatterns).permitAll()
                         .requestMatchers(UserPatterns).authenticated()
+                        .requestMatchers(EpisodePatterns).authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )

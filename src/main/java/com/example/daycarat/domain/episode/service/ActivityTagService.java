@@ -12,21 +12,26 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service @RequiredArgsConstructor
-public class EpisodeActivityTagService {
+public class ActivityTagService {
 
     private final UserRepository userRepository;
     private final ActivityTagRepository activityTagRepository;
 
-    public void createActivityTag(PostActivityTag postActivityTag) {
+    public Boolean createActivityTag(PostActivityTag postActivityTag) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        System.out.println("email = " + email);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        System.out.println("postActivityTag = " + postActivityTag.activityTag());
 
         ActivityTag activityTag = ActivityTag.of(user, postActivityTag.activityTag());
 
         activityTagRepository.save(activityTag);
 
+        return true;
     }
 
 }
