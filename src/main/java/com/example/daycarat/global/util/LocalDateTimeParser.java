@@ -26,7 +26,16 @@ public class LocalDateTimeParser {
         }
 
         long hours = duration.toHours();
-        return hours + "시간 전";
+        if (hours >= 1) {
+            return hours + "시간 전";
+        }
+
+        long minutes = duration.toMinutes();
+        if (minutes >= 1) {
+            return minutes + "분 전";
+        }
+
+        return "방금 전";
     }
 
 }
