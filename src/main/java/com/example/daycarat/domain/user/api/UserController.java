@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
     private final KakaoUserService kakaoUserService;
 
-    @Operation(summary = "Authorization Code로 토큰 발급하기")
+    @Operation(summary = "카카오 액세스 토큰으로 내부 토큰 발급하기")
     @GetMapping("/oauth/kakao")
     public ResponseEntity<TokenResponse> kakaoLogin(@Parameter(name = "accessToken", description = "카카오 인증서버에서 받은 토큰", required = true)
                                         @RequestParam String accessToken) throws JsonProcessingException {
