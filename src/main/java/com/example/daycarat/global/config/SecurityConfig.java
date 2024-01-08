@@ -35,7 +35,7 @@ public class SecurityConfig {
     };
 
     private final String[] EpisodePatterns = {
-            "/episode/activityTag"
+            "/episode/**"
     };
 
 
