@@ -1,18 +1,16 @@
 package com.example.daycarat.domain.user.api;
 
-import com.example.daycarat.global.jwt.TokenResponse;
-import com.example.daycarat.domain.user.dto.UserDto;
+import com.example.daycarat.domain.user.dto.GetUserInfo;
+import com.example.daycarat.domain.user.dto.PatchUserInfo;
 import com.example.daycarat.domain.user.service.UserService;
+import com.example.daycarat.global.jwt.TokenResponse;
 import com.example.daycarat.global.oauth.KakaoUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController @RequestMapping("/user")
@@ -32,9 +30,16 @@ public class UserController {
 
     @Operation(summary = "유저 정보 조회하기")
     @GetMapping("/userInfo")
-    public ResponseEntity<UserDto> getUserInfo() {
+    public ResponseEntity<GetUserInfo> getUserInfo() {
         return ResponseEntity.ok()
                 .body(userService.getUserInfo());
+    }
+
+    @Operation(summary = "유저 정보 수정하기")
+    @PatchMapping("/userInfo")
+    public ResponseEntity<Boolean> patchUserInfo(@RequestBody PatchUserInfo patchUserInfo) {
+        return ResponseEntity.ok()
+                .body(userService.patchUserInfo(patchUserInfo));
     }
 
 }

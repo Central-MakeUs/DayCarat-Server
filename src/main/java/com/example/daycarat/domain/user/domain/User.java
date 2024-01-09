@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.user.domain;
 
+import com.example.daycarat.domain.user.dto.PatchUserInfo;
 import com.example.daycarat.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -16,9 +17,13 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     private String email;
-    private String nickname;
     private String picture;
     private String password;
+
+    // 추가 정보
+    private String nickname;
+    private String jobTitle;
+    private String strength;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -33,4 +38,10 @@ public class User extends BaseTimeEntity {
     }
 
 
+    public void update(PatchUserInfo patchUserInfo) {
+        this.nickname = patchUserInfo.nickname() != null ? patchUserInfo.nickname() : this.nickname;
+        this.picture = patchUserInfo.picture() != null ? patchUserInfo.picture() : this.picture;
+        this.jobTitle = patchUserInfo.jobTitle() != null ? patchUserInfo.jobTitle() : this.jobTitle;
+        this.strength = patchUserInfo.strength() != null ? patchUserInfo.strength() : this.strength;
+    }
 }
