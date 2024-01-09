@@ -96,6 +96,7 @@ public class KakaoUserService {
                     .nickname(nickname)
                     .role(Role.USER)
                     .password(password)
+                    .pushAllow(false)
                     .build();
 
             userRepository.save(kakaoUser);

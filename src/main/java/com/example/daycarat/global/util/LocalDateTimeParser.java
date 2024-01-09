@@ -21,8 +21,7 @@ public class LocalDateTimeParser {
         }
 
         if (days >= 1) {
-            long hours = duration.minusDays(days).toHours();
-            return days + "일 " + hours + "시간 전";
+            return days + "일 전";
         }
 
         long hours = duration.toHours();
