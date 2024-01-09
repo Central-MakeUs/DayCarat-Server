@@ -3,10 +3,8 @@ package com.example.daycarat.domain.episode.service;
 import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
-import com.example.daycarat.domain.episode.entity.EpisodeActivityTag;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
-import com.example.daycarat.domain.episode.repository.EpisodeActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.user.domain.User;
@@ -28,7 +26,6 @@ public class EpisodeService {
     private final UserRepository userRepository;
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
-    private final EpisodeActivityTagRepository episodeActivityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
 
     @Transactional
@@ -42,26 +39,18 @@ public class EpisodeService {
 
         // create Episode
 
+        ActivityTag activityTag = activityTagRepository.findById(postEpisode.activityTagId())
+                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+
         Episode episode = Episode.builder()
                 .user(user)
+                .activityTag(activityTag)
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
                 .isFinalized(false)
                 .build();
 
         episodeRepository.save(episode);
-
-        // create EpisodeActivityTag
-
-        List<ActivityTag> activityTags = activityTagRepository.findAllById(postEpisode.activityTagIds());
-
-        for (ActivityTag activityTag : activityTags) {
-            EpisodeActivityTag episodeActivityTag = EpisodeActivityTag.builder()
-                    .episode(episode)
-                    .activityTag(activityTag)
-                    .build();
-            episodeActivityTagRepository.save(episodeActivityTag);
-        }
 
         // create EpisodeContent
 
@@ -86,7 +75,7 @@ public class EpisodeService {
 
         return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
                 .stream()
-                .map(episode -> GetRecentEpisode.of(episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
+                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
                 .collect(Collectors.toList());
 
     }
@@ -102,14 +91,58 @@ public class EpisodeService {
         return episodeRepository.getEpisodeSummaryByDate(user, year);
     }
 
-    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryByActivity(Integer year, Long cursorId, int pageSize) {
+    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryByActivity() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (year == null) year = 2024;
+        return episodeRepository.getEpisodeSummaryPageByActivity(user);
 
-        return episodeRepository.getEpisodeSummaryPageByActivity(user, year, cursorId, pageSize);
+    }
+
+    public List<GetEpisodePage> getEpisodeByDate(Integer year, Integer month, Long cursorId, Integer pageSize) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (pageSize == null) pageSize = 6;
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize);
+    }
+
+    public List<GetEpisodePage> getEpisodeByActivity(String activityTagName, Long cursorId, Integer pageSize) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (pageSize == null) pageSize = 6;
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize);
+    }
+
+    public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        if (!episode.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        }
+
+        return GetEpisodeDetail.of(
+                episode.getTitle(),
+                episode.getActivityTag().getActivityTagName(),
+                LocalDateTimeParser.toStringWithDetail(episode.getCreatedDate()),
+                episode.getEpisodeContents().stream()
+                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getEpisodeContentType(), episodeContent.getContent()))
+                        .collect(Collectors.toList()));
+
     }
 }

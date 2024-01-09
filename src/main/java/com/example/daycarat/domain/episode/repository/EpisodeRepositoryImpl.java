@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.repository;
 
+import com.example.daycarat.domain.episode.dto.GetEpisodePage;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
@@ -10,8 +11,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.daycarat.domain.episode.entity.QEpisode.episode;
+import static com.example.daycarat.domain.episode.entity.QEpisodeContent.episodeContent;
 
 @RequiredArgsConstructor
 public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
@@ -23,7 +26,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
         return jpaQueryFactory
                 .selectFrom(episode)
                 .where(episode.user.eq(user))
-                .orderBy(episode.selectedDate.desc())
+                .orderBy(episode.createdDate.desc())
                 .limit(3)
                 .fetch();
     }
@@ -43,13 +46,65 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user, Integer year, Long cursorId, int pageSize) {
-        // TODO : Get page by activity
-        return null;
+    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodeSummaryByActivity.class,
+                        episode.activityTag.activityTagName,
+                        episode.activityTag.count()))
+                .from(episode)
+                .where(episode.user.eq(user))
+                .groupBy(episode.activityTag.activityTagName)
+                .orderBy(episode.activityTag.count().desc())
+                .fetch();
     }
 
-    private BooleanExpression cursorId(Long cursorId) {
-        return cursorId != null ? episode.id.lt(cursorId) : null;
+    @Override
+    public List<GetEpisodePage> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodePage.class,
+                        episode.id,
+                        episode.title,
+                        episode.selectedDate.stringValue(),
+                        episodeContent.content))
+                .from(episode)
+                .leftJoin(episodeContent)
+                .on(episode.id.eq(episodeContent.episode.id))
+                .where(episode.user.eq(user)
+                        .and(episode.selectedDate.year().eq(year))
+                        .and(episode.selectedDate.month().eq(month))
+                        .and(ltEpisodeId(cursorId)))
+                .orderBy(episode.id.desc())
+                .limit(pageSize)
+                .fetch()
+                .stream().distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetEpisodePage> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodePage.class,
+                        episode.id,
+                        episode.title,
+                        episode.selectedDate.stringValue(),
+                        episodeContent.content))
+                .from(episode)
+                .leftJoin(episodeContent)
+                .on(episode.id.eq(episodeContent.episode.id))
+                .where(episode.user.eq(user)
+                        .and(episode.activityTag.activityTagName.eq(activityTagName))
+                        .and(ltEpisodeId(cursorId)))
+                .orderBy(episode.id.desc())
+                .limit(pageSize)
+                .fetch()
+                .stream().distinct()
+                .collect(Collectors.toList());
+
+    }
+
+    private BooleanExpression ltEpisodeId(Long cursorId) {
+        return cursorId == null ? null : episode.id.lt(cursorId);
     }
 
 }
+

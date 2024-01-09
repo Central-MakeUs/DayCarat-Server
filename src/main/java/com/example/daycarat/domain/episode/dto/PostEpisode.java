@@ -7,6 +7,6 @@ import java.util.List;
 public record PostEpisode (
         @Schema(description = "에피소드 제목", example = "기획 회의") String title,
         @Schema(description = "선택 날짜", example = "2024-01-09") String date,
-        @Schema(description = "활동 태그 ID", example = "[1, 3]") List<Long> activityTagIds,
+        @Schema(description = "활동 태그 ID", example = "1") Long activityTagId,
         List<PostEpisodeContent> episodeContents){
 }
