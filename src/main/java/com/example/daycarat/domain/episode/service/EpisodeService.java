@@ -100,4 +100,13 @@ public class EpisodeService {
         return episodeRepository.getEpisodeSummaryPageByActivity(user);
 
     }
+
+    public List<GetEpisodeByDate> getEpisodeByDate(Integer month, Long cursorId, Integer pageSize) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.getEpisodePageByDate(user, month, cursorId, pageSize);
+    }
 }

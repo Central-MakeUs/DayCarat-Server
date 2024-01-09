@@ -29,6 +29,9 @@ public class Episode extends BaseTimeEntity {
     @OneToMany(mappedBy = "episode")
     private List<EpisodeKeyword> episodeKeywords;
 
+    @OneToMany(mappedBy = "episode")
+    private List<EpisodeContent> episodeContents;
+
     private String title;
 
     // 선택날짜

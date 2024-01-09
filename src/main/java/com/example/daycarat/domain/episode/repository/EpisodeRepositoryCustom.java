@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.repository;
 
+import com.example.daycarat.domain.episode.dto.GetEpisodeByDate;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
@@ -13,5 +14,7 @@ public interface EpisodeRepositoryCustom {
     List<GetEpisodeSummaryByDate> getEpisodeSummaryByDate(User user, Integer year);
 
     List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user);
+
+    List<GetEpisodeByDate> getEpisodePageByDate(User user, Integer month, Long cursorId, Integer pageSize);
 
 }
