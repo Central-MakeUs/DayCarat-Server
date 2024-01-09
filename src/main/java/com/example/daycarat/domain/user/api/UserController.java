@@ -9,8 +9,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @RestController @RequestMapping("/user")
@@ -41,5 +45,13 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(userService.patchUserInfo(patchUserInfo));
     }
+
+    @Operation(summary = "유저 프로필 사진 등록/수정하기")
+    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Boolean> registerProfile(@RequestPart("multipartFile") MultipartFile profileImage) throws IOException {
+        return ResponseEntity.ok()
+                .body(userService.registerProfile(profileImage));
+    }
+
 
 }

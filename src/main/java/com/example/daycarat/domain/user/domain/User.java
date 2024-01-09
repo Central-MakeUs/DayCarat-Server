@@ -17,7 +17,7 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     private String email;
-    private String picture;
+    private String profileImage;
     private String password;
 
     // 추가 정보
@@ -32,10 +32,10 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public User(String email, String nickname, String picture, String password, Role role, String jobTitle, String strength, Boolean pushAllow) {
+    public User(String email, String nickname, String profileImage, String password, Role role, String jobTitle, String strength, Boolean pushAllow) {
         this.email = email;
         this.nickname = nickname;
-        this.picture = picture;
+        this.profileImage = profileImage;
         this.password = password;
         this.role = role;
         this.jobTitle = jobTitle;
@@ -49,5 +49,9 @@ public class User extends BaseTimeEntity {
         this.jobTitle = patchUserInfo.jobTitle() != null ? patchUserInfo.jobTitle() : this.jobTitle;
         this.strength = patchUserInfo.strength() != null ? patchUserInfo.strength() : this.strength;
         this.pushAllow = patchUserInfo.pushAllow() != null ? patchUserInfo.pushAllow() : this.pushAllow;
+    }
+
+    public void updateProfile(String profile) {
+        this.profileImage = profile;
     }
 }
