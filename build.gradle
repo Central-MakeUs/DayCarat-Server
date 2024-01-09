@@ -51,6 +51,9 @@ dependencies {
 	// logback
 	implementation 'com.github.maricn:logback-slack-appender:1.6.0'
 
+	// spring cloud
+//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {
