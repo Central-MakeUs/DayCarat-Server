@@ -10,27 +10,28 @@ import lombok.NoArgsConstructor;
 public class UserDto {
     private String email;
     private String nickname;
-    private String picture;
+    private String profileImage;
 
     @Builder
-    public UserDto(String email, String nickname, String picture) {
+    public UserDto(String email, String nickname, String profileImage) {
         this.email = email;
         this.nickname = nickname;
-        this.picture = picture;
+        this.profileImage = profileImage;
     }
 
     public static UserDto of(User user) {
         return UserDto.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .picture(user.getPicture())
+                .profileImage(user.getProfileImage())
                 .build();
     }
 
-    public static UserDto of(String email, String nickname) {
+    public static UserDto of(String email, String nickname, String profileImage) {
         return UserDto.builder()
                 .email(email)
                 .nickname(nickname)
+                .profileImage(profileImage)
                 .build();
     }
 }
