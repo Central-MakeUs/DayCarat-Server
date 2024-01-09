@@ -75,7 +75,7 @@ public class EpisodeService {
 
         return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
                 .stream()
-                .map(episode -> GetRecentEpisode.of(episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
+                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
                 .collect(Collectors.toList());
 
     }
