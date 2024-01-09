@@ -70,5 +70,5 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "sudo docker rm -f $(docker ps -qa) && sudp docker pull $IMAGE_URI && docker run -d -p 8080:8080 $IMAGE_URI  && sudo docker image prune -f"
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "sudo docker rm -f $(sudo docker ps -qa) && sudp docker pull $IMAGE_URI && docker run -d -p 8080:8080 $IMAGE_URI  && sudo docker image prune -f"
               
