@@ -11,5 +11,7 @@ public interface EpisodeRepositoryCustom {
     List<Episode> findTop3ByUserOrderBySelectedDateDesc(User user);
 
     List<GetEpisodeSummaryByDate> getEpisodeSummaryByDate(User user, Integer year);
-    List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user, Integer year, Long cursorId, int pageSize);
+
+    List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user);
+
 }

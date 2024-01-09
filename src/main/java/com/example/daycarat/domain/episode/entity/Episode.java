@@ -22,8 +22,9 @@ public class Episode extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "episode")
-    private List<EpisodeActivityTag> episodeActivityTags;
+    @ManyToOne
+    @JoinColumn(name="activity_tag_id", nullable = false)
+    private ActivityTag activityTag;
 
     @OneToMany(mappedBy = "episode")
     private List<EpisodeKeyword> episodeKeywords;
@@ -38,19 +39,19 @@ public class Episode extends BaseTimeEntity {
     private boolean isFinalized;
 
     @Builder
-    public Episode(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
+    public Episode(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
         this.user = user;
-        this.episodeActivityTags = episodeActivityTags;
+        this.activityTag = activityTag;
         this.episodeKeywords = episodeKeywords;
         this.title = title;
         this.selectedDate = selectedDate;
         this.isFinalized = isFinalized;
     }
 
-    public static Episode of(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
+    public static Episode of(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
         return Episode.builder()
                 .user(user)
-                .episodeActivityTags(episodeActivityTags)
+                .activityTag(activityTag)
                 .episodeKeywords(episodeKeywords)
                 .title(title)
                 .selectedDate(selectedDate)

@@ -57,14 +57,10 @@ public class EpisodeController {
 
     @Operation(summary = "에피소드 조회: 활동 많은순")
     @GetMapping("/activity")
-    public ResponseEntity<List<GetEpisodeSummaryByActivity>> getEpisodeSummaryByActivity(
-            @Parameter(description = "조회년도, null일 시 2024년") @RequestParam(required = false) Integer year,
-            @Parameter(description = "1번째 페이지 조회시 null, " +
-                    "2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id") @RequestParam(required = false) Long cursorId,
-            @Parameter(description = "한 페이지에 가져올 episode 수") @RequestParam(required = false) int pageSize) {
+    public ResponseEntity<List<GetEpisodeSummaryByActivity>> getEpisodeSummaryByActivity() {
 
         return ResponseEntity.ok()
-                .body(episodeService.getEpisodeSummaryByActivity(year, cursorId, pageSize));
+                .body(episodeService.getEpisodeSummaryByActivity());
 
     }
 
