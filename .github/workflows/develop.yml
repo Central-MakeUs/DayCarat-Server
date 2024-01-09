@@ -62,14 +62,17 @@ jobs:
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
         env:
-          PRIVATE_KEY: ${{ secrets.KEY }}
-          HOST: ${{ secrets.HOST }}
-          USER: ec2-user
           IMAGE_URI: ${{ steps.build-image.outputs.image }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST 'sudo docker rm -f $(sudo docker ps -qa) && sudo docker pull "$IMAGE_URI" && sudo docker run -d -p 8080:8080 "$IMAGE_URI" && sudo docker image prune -f'
+        with:
+          host: ${{ secrets.HOST }}
+          username: ec2-user
+          key: ${{ secrets.KEY }}
+          script: |
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull "$IMAGE_URI"
+            sudo docker run -d -p 8080:8080 "$IMAGE_URI"
+            sudo docker image prune -f
 
               
