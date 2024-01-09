@@ -35,7 +35,7 @@ public class UserController {
                 .body(userService.getUserInfo());
     }
 
-    @Operation(summary = "유저 정보 수정하기")
+    @Operation(summary = "유저 정보 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
     @PatchMapping("/userInfo")
     public ResponseEntity<Boolean> patchUserInfo(@RequestBody PatchUserInfo patchUserInfo) {
         return ResponseEntity.ok()

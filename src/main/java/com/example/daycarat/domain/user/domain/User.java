@@ -25,16 +25,22 @@ public class User extends BaseTimeEntity {
     private String jobTitle;
     private String strength;
 
+    // 푸시알림 허용 여부
+    private Boolean pushAllow;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public User(String email, String nickname, String picture, String password, Role role) {
+    public User(String email, String nickname, String picture, String password, Role role, String jobTitle, String strength, Boolean pushAllow) {
         this.email = email;
         this.nickname = nickname;
         this.picture = picture;
         this.password = password;
         this.role = role;
+        this.jobTitle = jobTitle;
+        this.strength = strength;
+        this.pushAllow = pushAllow;
     }
 
 
@@ -43,5 +49,6 @@ public class User extends BaseTimeEntity {
         this.picture = patchUserInfo.picture() != null ? patchUserInfo.picture() : this.picture;
         this.jobTitle = patchUserInfo.jobTitle() != null ? patchUserInfo.jobTitle() : this.jobTitle;
         this.strength = patchUserInfo.strength() != null ? patchUserInfo.strength() : this.strength;
+        this.pushAllow = patchUserInfo.pushAllow() != null ? patchUserInfo.pushAllow() : this.pushAllow;
     }
 }
