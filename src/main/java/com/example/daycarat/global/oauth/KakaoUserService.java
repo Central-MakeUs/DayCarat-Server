@@ -77,13 +77,15 @@ public class KakaoUserService {
                 .get("nickname").asText();
 
         String email = jsonNode.get("kakao_account").get("email").asText();
-        return UserDto.of(email, nickname);
+
+        String thumbnailImage = jsonNode.get("kakao_account").get("profile").get("thumbnail_image_url").asText();
+
+        return UserDto.of(email, nickname, thumbnailImage);
     }
 
     private User registerKakaoUserIfNeed (UserDto kakaoUserInfo) {
 
         String kakaoEmail = kakaoUserInfo.getEmail();
-        String nickname = kakaoUserInfo.getNickname();
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
                 .orElse(null);
 
@@ -93,7 +95,8 @@ public class KakaoUserService {
 
             kakaoUser = User.builder()
                     .email(kakaoEmail)
-                    .nickname(nickname)
+                    .nickname(kakaoUserInfo.getNickname())
+                    .profileImage(kakaoUserInfo.getProfileImage())
                     .role(Role.USER)
                     .password(password)
                     .pushAllow(false)

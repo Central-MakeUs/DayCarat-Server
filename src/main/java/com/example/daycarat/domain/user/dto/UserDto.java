@@ -27,10 +27,11 @@ public class UserDto {
                 .build();
     }
 
-    public static UserDto of(String email, String nickname) {
+    public static UserDto of(String email, String nickname, String profileImage) {
         return UserDto.builder()
                 .email(email)
                 .nickname(nickname)
+                .profileImage(profileImage)
                 .build();
     }
 }
