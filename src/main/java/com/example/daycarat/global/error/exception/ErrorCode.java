@@ -16,6 +16,8 @@ public enum ErrorCode {
     INVALID_REQUEST_ERROR(400, "C001", "잘못된 요청입니다."),
 
     // Episode
+    EPISODE_NOT_FOUND(404, "C006", "존재하지 않는 에피소드입니다."),
+    EPISODE_USER_NOT_MATCHED(403, "C007", "에피소드의 소유자가 아닙니다."),
     ACTIVITY_TAG_NOT_FOUND(404, "C006", "존재하지 않는 활동 태그입니다.");
 
 

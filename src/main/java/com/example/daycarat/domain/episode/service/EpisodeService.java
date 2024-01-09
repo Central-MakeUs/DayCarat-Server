@@ -122,4 +122,27 @@ public class EpisodeService {
 
         return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize);
     }
+
+    public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        if (!episode.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        }
+
+        return GetEpisodeDetail.of(
+                episode.getTitle(),
+                episode.getActivityTag().getActivityTagName(),
+                LocalDateTimeParser.toStringWithDetail(episode.getCreatedDate()),
+                episode.getEpisodeContents().stream()
+                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getEpisodeContentType(), episodeContent.getContent()))
+                        .collect(Collectors.toList()));
+
+    }
 }

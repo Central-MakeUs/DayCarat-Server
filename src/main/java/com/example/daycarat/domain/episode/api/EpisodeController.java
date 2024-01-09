@@ -39,6 +39,13 @@ public class EpisodeController {
                 .body(episodeService.createEpisode(postEpisode));
     }
 
+    @Operation(summary = "에피소드 상세 조회하기")
+    @GetMapping("/{episodeId}")
+    public ResponseEntity<GetEpisodeDetail> getEpisodeDetail(@PathVariable Long episodeId) {
+        return ResponseEntity.ok()
+                .body(episodeService.getEpisodeDetail(episodeId));
+    }
+
     @Operation(summary = "에피소드 최신순 조회 3개")
     @GetMapping("/recent")
     public ResponseEntity<List<GetRecentEpisode>> getRecentEpisode() {

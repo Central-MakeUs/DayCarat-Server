@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class LocalDateTimeParser {
 
@@ -35,6 +36,11 @@ public class LocalDateTimeParser {
         }
 
         return "방금 전";
+    }
+
+    public static String toStringWithDetail(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 EEEE", Locale.KOREAN);
+        return dateTime.format(formatter);
     }
 
 }
