@@ -46,7 +46,6 @@ public class User extends BaseTimeEntity {
 
     public void update(PatchUserInfo patchUserInfo) {
         this.nickname = patchUserInfo.nickname() != null ? patchUserInfo.nickname() : this.nickname;
-        this.picture = patchUserInfo.picture() != null ? patchUserInfo.picture() : this.picture;
         this.jobTitle = patchUserInfo.jobTitle() != null ? patchUserInfo.jobTitle() : this.jobTitle;
         this.strength = patchUserInfo.strength() != null ? patchUserInfo.strength() : this.strength;
         this.pushAllow = patchUserInfo.pushAllow() != null ? patchUserInfo.pushAllow() : this.pushAllow;
