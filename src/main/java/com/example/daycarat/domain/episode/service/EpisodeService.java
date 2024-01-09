@@ -49,8 +49,6 @@ public class EpisodeService {
                 .user(user)
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
-                .episodeType(postEpisode.episodeType())
-                .participationRole(postEpisode.participationRole())
                 .isFinalized(false)
                 .build();
 
