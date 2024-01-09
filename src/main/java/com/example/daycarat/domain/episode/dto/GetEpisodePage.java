@@ -2,7 +2,7 @@ package com.example.daycarat.domain.episode.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record GetEpisodeByDate(
+public record GetEpisodePage(
         @Schema(description = "에피소드 ID", example = "1") Long id,
         @Schema(description = "에피소드 제목", example = "기획 회의") String title,
         @Schema(description = "선택 날짜", example = "12/28") String date,

@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.episode.repository;
 
-import com.example.daycarat.domain.episode.dto.GetEpisodeByDate;
+import com.example.daycarat.domain.episode.dto.GetEpisodePage;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
@@ -59,9 +59,9 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodeByDate> getEpisodePageByDate(User user, Integer month, Long cursorId, Integer pageSize) {
+    public List<GetEpisodePage> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodeByDate.class,
+                .select(Projections.constructor(GetEpisodePage.class,
                         episode.id,
                         episode.title,
                         episode.selectedDate.stringValue(),
@@ -70,6 +70,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .leftJoin(episodeContent)
                 .on(episode.id.eq(episodeContent.episode.id))
                 .where(episode.user.eq(user)
+                        .and(episode.selectedDate.year().eq(year))
                         .and(episode.selectedDate.month().eq(month))
                         .and(ltEpisodeId(cursorId)))
                 .orderBy(episode.id.desc())
@@ -77,6 +78,28 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .fetch()
                 .stream().distinct()
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetEpisodePage> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodePage.class,
+                        episode.id,
+                        episode.title,
+                        episode.selectedDate.stringValue(),
+                        episodeContent.content))
+                .from(episode)
+                .leftJoin(episodeContent)
+                .on(episode.id.eq(episodeContent.episode.id))
+                .where(episode.user.eq(user)
+                        .and(episode.activityTag.activityTagName.eq(activityTagName))
+                        .and(ltEpisodeId(cursorId)))
+                .orderBy(episode.id.desc())
+                .limit(pageSize)
+                .fetch()
+                .stream().distinct()
+                .collect(Collectors.toList());
+
     }
 
     private BooleanExpression ltEpisodeId(Long cursorId) {
