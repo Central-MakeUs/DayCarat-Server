@@ -1,9 +1,6 @@
 package com.example.daycarat.domain.episode.service;
 
-import com.example.daycarat.domain.episode.dto.GetEpisodeSummary;
-import com.example.daycarat.domain.episode.dto.GetRecentEpisode;
-import com.example.daycarat.domain.episode.dto.PostEpisode;
-import com.example.daycarat.domain.episode.dto.PostEpisodeContent;
+import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeActivityTag;
@@ -49,8 +46,6 @@ public class EpisodeService {
                 .user(user)
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
-                .episodeType(postEpisode.episodeType())
-                .participationRole(postEpisode.participationRole())
                 .isFinalized(false)
                 .build();
 
@@ -96,7 +91,7 @@ public class EpisodeService {
 
     }
 
-    public List<GetEpisodeSummary> getEpisodeByDate(Integer year) {
+    public List<GetEpisodeSummaryByDate> getEpisodeSummaryByDate(Integer year) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
@@ -104,6 +99,17 @@ public class EpisodeService {
 
         if (year == null) year = 2024;
 
-        return episodeRepository.getPageByDate(user, year);
+        return episodeRepository.getEpisodeSummaryByDate(user, year);
+    }
+
+    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryByActivity(Integer year, Long cursorId, int pageSize) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (year == null) year = 2024;
+
+        return episodeRepository.getEpisodeSummaryPageByActivity(user, year, cursorId, pageSize);
     }
 }

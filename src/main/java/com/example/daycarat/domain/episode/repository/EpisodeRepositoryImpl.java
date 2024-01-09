@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.episode.repository;
 
-import com.example.daycarat.domain.episode.dto.GetEpisodeSummary;
+import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
+import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.user.domain.User;
 import com.querydsl.core.types.Projections;
@@ -28,9 +29,9 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodeSummary> getPageByDate(User user, Integer year) {
+    public List<GetEpisodeSummaryByDate> getEpisodeSummaryByDate(User user, Integer year) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodeSummary.class,
+                .select(Projections.constructor(GetEpisodeSummaryByDate.class,
                         episode.selectedDate.month(),
                         episode.selectedDate.count()))
                 .from(episode)
@@ -41,11 +42,14 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
 
     }
 
-    private BooleanExpression cursorId(Long cursorId) { // 첫 페이지 조회와 두번째 이상 페이지 조회를 구분하기 위함
-        if(cursorId == null) return null;
+    @Override
+    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user, Integer year, Long cursorId, int pageSize) {
+        // TODO : Get page by activity
+        return null;
+    }
 
-        return episode.id.lt(cursorId);
-
+    private BooleanExpression cursorId(Long cursorId) {
+        return cursorId != null ? episode.id.lt(cursorId) : null;
     }
 
 }

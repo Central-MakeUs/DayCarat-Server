@@ -33,36 +33,27 @@ public class Episode extends BaseTimeEntity {
     // 선택날짜
     private LocalDate selectedDate;
 
-    // 활동종류
-    private String episodeType;
-
-    // 참여역할
-    private String participationRole;
 
     // 다듬기여부 (soft delete)
     private boolean isFinalized;
 
     @Builder
-    public Episode(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, String episodeType, String participationRole, boolean isFinalized) {
+    public Episode(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
         this.user = user;
         this.episodeActivityTags = episodeActivityTags;
         this.episodeKeywords = episodeKeywords;
         this.title = title;
         this.selectedDate = selectedDate;
-        this.episodeType = episodeType;
-        this.participationRole = participationRole;
         this.isFinalized = isFinalized;
     }
 
-    public static Episode of(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, String episodeType, String participationRole, boolean isFinalized) {
+    public static Episode of(User user, List<EpisodeActivityTag> episodeActivityTags, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
         return Episode.builder()
                 .user(user)
                 .episodeActivityTags(episodeActivityTags)
                 .episodeKeywords(episodeKeywords)
                 .title(title)
                 .selectedDate(selectedDate)
-                .episodeType(episodeType)
-                .participationRole(participationRole)
                 .isFinalized(isFinalized)
                 .build();
     }
