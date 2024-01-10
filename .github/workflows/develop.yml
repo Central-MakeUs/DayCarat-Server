@@ -71,8 +71,8 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             sudo docker rm -f $(sudo docker ps -qa)
-            sudo docker pull $IMAGE_URI
-            sudo docker run -d -p 8080:8080 $IMAGE_URI
+            sudo docker pull ${{ env.IMAGE_URI }}
+            sudo docker run -d -p 8080:8080 ${{ env.IMAGE_URI }}
             sudo docker image prune -f
 
               
