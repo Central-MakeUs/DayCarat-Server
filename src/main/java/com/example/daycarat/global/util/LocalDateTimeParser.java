@@ -38,7 +38,7 @@ public class LocalDateTimeParser {
         return "방금 전";
     }
 
-    public static String toStringWithDetail(LocalDateTime dateTime) {
+    public static String toStringWithDetail(LocalDate dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 EEEE", Locale.KOREAN);
         return dateTime.format(formatter);
     }

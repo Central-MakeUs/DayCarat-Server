@@ -37,4 +37,8 @@ public class EpisodeContent {
                 .build();
     }
 
+    public void update(EpisodeContentType episodeContentType, String content) {
+        this.episodeContentType = episodeContentType;
+        this.content = content;
+    }
 }

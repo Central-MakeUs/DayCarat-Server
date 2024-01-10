@@ -4,6 +4,7 @@ import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
+import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
@@ -47,7 +48,7 @@ public class EpisodeService {
                 .activityTag(activityTag)
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
-                .isFinalized(false)
+                .episodeState(EpisodeState.UNFINALIZED)
                 .build();
 
         episodeRepository.save(episode);
@@ -62,6 +63,63 @@ public class EpisodeService {
                     .build();
             episodeContentRepository.save(episodeContent);
         }
+
+        return true;
+
+    }
+
+    @Transactional
+    public Boolean updateEpisode(PatchEpisode patchEpisode) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // TODO : Validation for tagIds
+
+        // update Episode
+
+        Episode episode = episodeRepository.findById(patchEpisode.episodeId())
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        if (!episode.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        }
+
+        ActivityTag activityTag = activityTagRepository.findById(patchEpisode.activityTagId())
+                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+
+        episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
+
+        // update EpisodeContent
+
+        for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
+            EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
+
+            episodeContent.update(patchEpisodeContent.episodeContentType(), patchEpisodeContent.content());
+        }
+
+        return true;
+
+    }
+
+    public Boolean deleteEpisode(Long episodeId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        if (!episode.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        }
+
+        // soft delete (episodeState = DELETED)
+        episode.delete();
+        episodeRepository.save(episode);
 
         return true;
 
@@ -137,11 +195,12 @@ public class EpisodeService {
         }
 
         return GetEpisodeDetail.of(
+                episode.getId(),
                 episode.getTitle(),
                 episode.getActivityTag().getActivityTagName(),
-                LocalDateTimeParser.toStringWithDetail(episode.getCreatedDate()),
+                LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
                 episode.getEpisodeContents().stream()
-                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getEpisodeContentType(), episodeContent.getContent()))
+                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
                         .collect(Collectors.toList()));
 
     }

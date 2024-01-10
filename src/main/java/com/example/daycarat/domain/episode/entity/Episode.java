@@ -37,29 +37,37 @@ public class Episode extends BaseTimeEntity {
     // 선택날짜
     private LocalDate selectedDate;
 
-
-    // 다듬기여부 (soft delete)
-    private boolean isFinalized;
+    @Enumerated(EnumType.STRING)
+    private EpisodeState episodeState;
 
     @Builder
-    public Episode(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
+    public Episode(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, EpisodeState episodeState) {
         this.user = user;
         this.activityTag = activityTag;
         this.episodeKeywords = episodeKeywords;
         this.title = title;
         this.selectedDate = selectedDate;
-        this.isFinalized = isFinalized;
+        this.episodeState = episodeState;
     }
 
-    public static Episode of(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, boolean isFinalized) {
+    public static Episode of(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, EpisodeState episodeState) {
         return Episode.builder()
                 .user(user)
                 .activityTag(activityTag)
                 .episodeKeywords(episodeKeywords)
                 .title(title)
                 .selectedDate(selectedDate)
-                .isFinalized(isFinalized)
+                .episodeState(episodeState)
                 .build();
     }
 
+    public void update(ActivityTag activityTag, String title, LocalDate selectedDate) {
+        this.activityTag = activityTag;
+        this.title = title;
+        this.selectedDate = selectedDate;
+    }
+
+    public void delete() {
+        this.episodeState = EpisodeState.DELETED;
+    }
 }
