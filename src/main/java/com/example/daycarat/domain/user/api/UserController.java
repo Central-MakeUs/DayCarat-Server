@@ -58,5 +58,10 @@ public class UserController {
         return SuccessResponse.success(userService.registerProfile(profileImage));
     }
 
+    @Operation(summary = "(개발용) 유저 삭제하기", description = "사용자와 사용자의 에피소드 관련 데이터를 모두 삭제합니다. 삭제 후 헤더의 토큰 값을 제거하세요.")
+    @DeleteMapping("/delete")
+    public SuccessResponse<Boolean> deleteUser() {
+        return SuccessResponse.success(userService.deleteUser());
+    }
 
 }
