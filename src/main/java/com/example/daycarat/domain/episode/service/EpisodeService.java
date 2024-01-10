@@ -174,6 +174,7 @@ public class EpisodeService {
         }
 
         return GetEpisodeDetail.of(
+                episode.getId(),
                 episode.getTitle(),
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
