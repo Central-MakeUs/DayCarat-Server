@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,15 +38,15 @@ public class KakaoUserService {
     @Value("${oauth.kakao.client-secret}")
     private String clientSecret;
 
-    public TokenResponse kakaoLogin(String accessToken) throws JsonProcessingException {
+    public Pair<TokenResponse, Boolean> kakaoLogin(String accessToken) throws JsonProcessingException {
 
         UserDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
-        User kakaoUser = registerKakaoUserIfNeed(kakaoUserInfo);
+        Pair<User, Boolean> kakaoUser = registerKakaoUserIfNeed(kakaoUserInfo);
 
-        Authentication authentication = forceLogin(kakaoUser);
+        Authentication authentication = forceLogin(kakaoUser.getLeft());
 
-        return kakaoUsersAuthorizationInput(authentication);
+        return Pair.of(kakaoUsersAuthorizationInput(authentication), kakaoUser.getRight());
 
     }
 
@@ -83,7 +84,7 @@ public class KakaoUserService {
         return UserDto.of(email, nickname, thumbnailImage);
     }
 
-    private User registerKakaoUserIfNeed (UserDto kakaoUserInfo) {
+    private Pair<User, Boolean> registerKakaoUserIfNeed (UserDto kakaoUserInfo) {
 
         String kakaoEmail = kakaoUserInfo.getEmail();
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
@@ -103,8 +104,11 @@ public class KakaoUserService {
                     .build();
 
             userRepository.save(kakaoUser);
+
+            return Pair.of(kakaoUser, true);
+
         }
-        return kakaoUser;
+        return Pair.of(kakaoUser, false);
     }
 
     private Authentication forceLogin(User kakaoUser) {

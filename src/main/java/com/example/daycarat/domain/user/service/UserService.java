@@ -1,5 +1,8 @@
 package com.example.daycarat.domain.user.service;
 
+import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
+import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.dto.GetUserInfo;
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
@@ -10,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +23,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3UploadService s3UploadService;
+    private final EpisodeRepository episodeRepository;
+    private final ActivityTagRepository activityTagRepository;
+    private final EpisodeContentRepository episodeContentRepository;
 
     public GetUserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,5 +68,19 @@ public class UserService {
 
         return true;
 
+    }
+
+    @Transactional
+    public Boolean deleteUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        episodeRepository.deleteAllByUser(user);
+        activityTagRepository.deleteAllByUser(user);
+        userRepository.delete(user);
+
+        return true;
     }
 }

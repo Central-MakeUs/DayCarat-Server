@@ -29,7 +29,7 @@ public class Episode extends BaseTimeEntity {
     @OneToMany(mappedBy = "episode")
     private List<EpisodeKeyword> episodeKeywords;
 
-    @OneToMany(mappedBy = "episode")
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
 
     private String title;
