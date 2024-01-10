@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,11 +25,19 @@ public class UserController {
     private final UserService userService;
     private final KakaoUserService kakaoUserService;
 
-    @Operation(summary = "카카오 액세스 토큰으로 내부 토큰 발급하기")
+    @Operation(summary = "카카오 액세스 토큰으로 내부 토큰 발급하기",
+            description = "최초 회원가입 시 statusCode = 201, 로그인 시 statusCode = 200")
     @GetMapping("/oauth/kakao")
     public SuccessResponse<TokenResponse> kakaoLogin(@Parameter(name = "accessToken", description = "카카오 인증서버에서 받은 토큰", required = true)
                                         @RequestParam String accessToken) throws JsonProcessingException {
-        return SuccessResponse.success(kakaoUserService.kakaoLogin(accessToken));
+        Pair<TokenResponse, Boolean> pair = kakaoUserService.kakaoLogin(accessToken);
+
+        if (pair.getRight()) {
+            return SuccessResponse.createSuccess(pair.getLeft());
+        } else {
+            return SuccessResponse.success(pair.getLeft());
+        }
+
     }
 
     @Operation(summary = "유저 정보 조회하기")
