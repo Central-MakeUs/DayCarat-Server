@@ -104,6 +104,27 @@ public class EpisodeService {
 
     }
 
+    public Boolean deleteEpisode(Long episodeId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Episode episode = episodeRepository.findById(episodeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        if (!episode.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        }
+
+        // soft delete (episodeState = DELETED)
+        episode.delete();
+        episodeRepository.save(episode);
+
+        return true;
+
+    }
+
     public List<GetRecentEpisode> getRecentEpisode() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 

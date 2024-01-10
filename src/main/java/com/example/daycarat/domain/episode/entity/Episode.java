@@ -66,4 +66,8 @@ public class Episode extends BaseTimeEntity {
         this.title = title;
         this.selectedDate = selectedDate;
     }
+
+    public void delete() {
+        this.episodeState = EpisodeState.DELETED;
+    }
 }

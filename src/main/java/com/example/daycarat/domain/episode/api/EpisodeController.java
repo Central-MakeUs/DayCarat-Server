@@ -46,6 +46,13 @@ public class EpisodeController {
                 .body(episodeService.updateEpisode(patchEpisode));
     }
 
+    @Operation(summary = "에피소드 삭제하기")
+    @DeleteMapping("/delete/{episodeId}")
+    public ResponseEntity<Boolean> deleteEpisode(@PathVariable Long episodeId) {
+        return ResponseEntity.ok()
+                .body(episodeService.deleteEpisode(episodeId));
+    }
+
     @Operation(summary = "에피소드 상세 조회하기")
     @GetMapping("/{episodeId}")
     public ResponseEntity<GetEpisodeDetail> getEpisodeDetail(@PathVariable Long episodeId) {
