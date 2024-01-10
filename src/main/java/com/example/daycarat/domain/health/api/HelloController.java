@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.health.api;
 
 
+import com.example.daycarat.global.response.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @GetMapping
-    public ResponseEntity<Boolean> health() {
-        return ResponseEntity.ok().body(true);
+    public SuccessResponse<Boolean> health() {
+        return SuccessResponse.success(true);
     }
-
 
 }
 
