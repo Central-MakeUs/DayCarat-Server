@@ -97,7 +97,7 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return episodeRepository.getEpisodeSummaryPageByActivity(user);
+        return episodeRepository.getEpisodeSummaryByActivity(user);
 
     }
 

@@ -13,7 +13,7 @@ public interface EpisodeRepositoryCustom {
 
     List<GetEpisodeSummaryByDate> getEpisodeSummaryByDate(User user, Integer year);
 
-    List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user);
+    List<GetEpisodeSummaryByActivity> getEpisodeSummaryByActivity(User user);
 
     List<GetEpisodePage> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize);
 

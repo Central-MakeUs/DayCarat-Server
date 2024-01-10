@@ -7,6 +7,8 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.user.domain.User;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +48,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryPageByActivity(User user) {
+    public List<GetEpisodeSummaryByActivity> getEpisodeSummaryByActivity(User user) {
         return jpaQueryFactory
                 .select(Projections.constructor(GetEpisodeSummaryByActivity.class,
                         episode.activityTag.activityTagName,
@@ -64,7 +66,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .select(Projections.constructor(GetEpisodePage.class,
                         episode.id,
                         episode.title,
-                        episode.selectedDate.stringValue(),
+                        convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -86,7 +88,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .select(Projections.constructor(GetEpisodePage.class,
                         episode.id,
                         episode.title,
-                        episode.selectedDate.stringValue(),
+                        convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -100,6 +102,11 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .stream().distinct()
                 .collect(Collectors.toList());
 
+    }
+
+    private StringExpression convertToMonthDayFormat(StringExpression dateExpression) {
+        return Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})", dateExpression, "%m/%d");
     }
 
     private BooleanExpression ltEpisodeId(Long cursorId) {
