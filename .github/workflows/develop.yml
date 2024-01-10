@@ -70,6 +70,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.KEY }}
           script: |
+            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
             sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{ env.IMAGE_URI }}
             sudo docker run -d -p 8080:8080 ${{ env.IMAGE_URI }}
