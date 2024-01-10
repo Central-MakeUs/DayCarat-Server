@@ -37,6 +37,7 @@ public class Episode extends BaseTimeEntity {
     // 선택날짜
     private LocalDate selectedDate;
 
+    @Enumerated(EnumType.STRING)
     private EpisodeState episodeState;
 
     @Builder

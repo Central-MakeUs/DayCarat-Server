@@ -13,6 +13,7 @@ public class EpisodeKeyword extends BaseTimeEntity {
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
+    @Enumerated(EnumType.STRING)
     private Keyword keyword;
 
     // 유저가 작성한 키워드인지 여부

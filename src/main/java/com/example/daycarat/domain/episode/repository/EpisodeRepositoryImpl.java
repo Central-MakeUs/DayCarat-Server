@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.daycarat.domain.episode.entity.EpisodeState.UNFINALIZED;
 import static com.example.daycarat.domain.episode.entity.QEpisode.episode;
 import static com.example.daycarat.domain.episode.entity.QEpisodeContent.episodeContent;
 
@@ -27,7 +28,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     public List<Episode> findTop3ByUserOrderBySelectedDateDesc(User user) {
         return jpaQueryFactory
                 .selectFrom(episode)
-                .where(episode.user.eq(user))
+                .where(episode.user.eq(user)
+                        .and(episode.episodeState.eq(UNFINALIZED)))
                 .orderBy(episode.createdDate.desc())
                 .limit(3)
                 .fetch();
@@ -41,7 +43,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.selectedDate.count()))
                 .from(episode)
                 .where(episode.user.eq(user)
-                        .and(episode.selectedDate.year().eq(year)))
+                        .and(episode.selectedDate.year().eq(year))
+                        .and(episode.episodeState.eq(UNFINALIZED)))
                 .groupBy(episode.selectedDate.month())
                 .fetch();
 
@@ -54,7 +57,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.activityTag.activityTagName,
                         episode.activityTag.count()))
                 .from(episode)
-                .where(episode.user.eq(user))
+                .where(episode.user.eq(user)
+                        .and(episode.episodeState.eq(UNFINALIZED)))
                 .groupBy(episode.activityTag.activityTagName)
                 .orderBy(episode.activityTag.count().desc())
                 .fetch();
@@ -74,7 +78,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .where(episode.user.eq(user)
                         .and(episode.selectedDate.year().eq(year))
                         .and(episode.selectedDate.month().eq(month))
-                        .and(ltEpisodeId(cursorId)))
+                        .and(ltEpisodeId(cursorId))
+                        .and(episode.episodeState.eq(UNFINALIZED)))
                 .orderBy(episode.id.desc())
                 .limit(pageSize)
                 .fetch()
@@ -95,7 +100,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .on(episode.id.eq(episodeContent.episode.id))
                 .where(episode.user.eq(user)
                         .and(episode.activityTag.activityTagName.eq(activityTagName))
-                        .and(ltEpisodeId(cursorId)))
+                        .and(ltEpisodeId(cursorId))
+                        .and(episode.episodeState.eq(UNFINALIZED)))
                 .orderBy(episode.id.desc())
                 .limit(pageSize)
                 .fetch()
