@@ -39,6 +39,13 @@ public class EpisodeController {
                 .body(episodeService.createEpisode(postEpisode));
     }
 
+    @Operation(summary = "에피소드 수정하기")
+    @PatchMapping("/update")
+    public ResponseEntity<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
+        return ResponseEntity.ok()
+                .body(episodeService.updateEpisode(patchEpisode));
+    }
+
     @Operation(summary = "에피소드 상세 조회하기")
     @GetMapping("/{episodeId}")
     public ResponseEntity<GetEpisodeDetail> getEpisodeDetail(@PathVariable Long episodeId) {
