@@ -49,7 +49,7 @@ public class EpisodeController {
     }
 
     @Operation(summary = "에피소드 삭제하기")
-    @DeleteMapping("/delete/{episodeId}")
+    @DeleteMapping("/{episodeId}")
     public SuccessResponse<Boolean> deleteEpisode(@PathVariable Long episodeId) {
         return SuccessResponse.success(episodeService.deleteEpisode(episodeId));
     }
