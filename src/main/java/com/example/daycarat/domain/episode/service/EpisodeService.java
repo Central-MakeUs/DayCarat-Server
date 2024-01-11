@@ -8,6 +8,7 @@ import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
+import com.example.daycarat.domain.episode.validator.EpisodeValidator;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -82,9 +83,7 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(patchEpisode.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
-        if (!episode.getUser().equals(user)) {
-            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
-        }
+        EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         ActivityTag activityTag = activityTagRepository.findById(patchEpisode.activityTagId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
@@ -113,9 +112,7 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
-        if (!episode.getUser().equals(user)) {
-            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
-        }
+        EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         // soft delete (episodeState = DELETED)
         episode.delete();

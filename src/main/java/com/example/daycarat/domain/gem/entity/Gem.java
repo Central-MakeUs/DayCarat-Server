@@ -12,7 +12,8 @@ public class Gem {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "episode_id")
+    @OneToOne
+    @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
     @Enumerated(EnumType.STRING)

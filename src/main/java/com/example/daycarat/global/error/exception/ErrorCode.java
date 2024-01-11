@@ -21,7 +21,13 @@ public enum ErrorCode {
     ACTIVITY_TAG_NOT_FOUND(404, "C006", "존재하지 않는 활동 태그입니다."),
 
     // EpisodeContent
-    EPISODE_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 에피소드 컨텐츠입니다.");
+    EPISODE_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 에피소드 컨텐츠입니다."),
+
+
+    // Gem
+    GEM_NOT_FOUND(404, "C006", "존재하지 않는 보석입니다."),
+    GEM_USER_NOT_MATCHED(403, "C007", "보석의 소유자가 아닙니다."),
+    GEM_ALREADY_EXISTS(409, "C008", "이미 보석이 존재합니다.");
 
 
     private final int status;

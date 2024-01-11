@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.entity;
 
+import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -31,6 +32,9 @@ public class Episode extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
+
+    @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
+    private Gem gem;
 
     private String title;
 
@@ -69,5 +73,9 @@ public class Episode extends BaseTimeEntity {
 
     public void delete() {
         this.episodeState = EpisodeState.DELETED;
+    }
+
+    public void makeFinalized() {
+        this.episodeState = EpisodeState.FINALIZED;
     }
 }
