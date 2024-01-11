@@ -1,13 +1,14 @@
 package com.example.daycarat.domain.gem.entity;
 
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Gem {
+public class Gem extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

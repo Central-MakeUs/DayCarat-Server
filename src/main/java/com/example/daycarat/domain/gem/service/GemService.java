@@ -5,7 +5,6 @@ import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
-import com.example.daycarat.domain.gem.validator.GemValidator;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
@@ -34,8 +33,8 @@ public class GemService {
         Episode episode = episodeRepository.findById(postGem.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
-        GemValidator.checkIfUnfinalized(episode);
-
+        EpisodeValidator.checkIfDeleted(episode);
+        EpisodeValidator.checkIfUnfinalized(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         gemRepository.save(postGem.toEntity(episode));

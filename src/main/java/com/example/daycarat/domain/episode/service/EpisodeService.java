@@ -83,6 +83,7 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(patchEpisode.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
+        EpisodeValidator.checkIfDeleted(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         ActivityTag activityTag = activityTagRepository.findById(patchEpisode.activityTagId())
@@ -112,9 +113,9 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
+        EpisodeValidator.checkIfDeleted(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        // soft delete (episodeState = DELETED)
         episode.delete();
         episodeRepository.save(episode);
 

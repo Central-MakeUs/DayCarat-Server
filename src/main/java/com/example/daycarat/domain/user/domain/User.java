@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.user.domain;
 
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
-import com.example.daycarat.global.entity.BaseTimeEntity;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity @Getter
 @NoArgsConstructor
-public class User extends BaseTimeEntity {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;

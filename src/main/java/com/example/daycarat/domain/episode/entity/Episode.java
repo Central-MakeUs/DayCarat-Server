@@ -2,7 +2,7 @@ package com.example.daycarat.domain.episode.entity;
 
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.user.domain.User;
-import com.example.daycarat.global.entity.BaseTimeEntity;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Episode extends BaseTimeEntity {
+public class Episode extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,7 +72,7 @@ public class Episode extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.episodeState = EpisodeState.DELETED;
+        this.isDeleted = true;
     }
 
     public void makeFinalized() {

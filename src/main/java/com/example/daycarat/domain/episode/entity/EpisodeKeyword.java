@@ -1,10 +1,10 @@
 package com.example.daycarat.domain.episode.entity;
 
-import com.example.daycarat.global.entity.BaseTimeEntity;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-public class EpisodeKeyword extends BaseTimeEntity {
+public class EpisodeKeyword extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -19,6 +19,7 @@ public enum ErrorCode {
     EPISODE_NOT_FOUND(404, "C006", "존재하지 않는 에피소드입니다."),
     EPISODE_USER_NOT_MATCHED(403, "C007", "에피소드의 소유자가 아닙니다."),
     ACTIVITY_TAG_NOT_FOUND(404, "C006", "존재하지 않는 활동 태그입니다."),
+    ACTIVITY_TAG_CANNOT_DELETE(403, "C007", "에피소드에 연결된 활동 태그는 삭제할 수 없습니다."),
 
     // EpisodeContent
     EPISODE_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 에피소드 컨텐츠입니다."),
