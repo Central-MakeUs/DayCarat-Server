@@ -2,13 +2,14 @@ package com.example.daycarat.domain.health.api;
 
 
 import com.example.daycarat.global.response.SuccessResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/health")
-public class HelloController {
+@Tag(name = "Health", description = "서버 상태 체크 API")
+@RestController @RequestMapping("/health")
+public class HealthController {
 
     @GetMapping
     public SuccessResponse<Boolean> health() {
