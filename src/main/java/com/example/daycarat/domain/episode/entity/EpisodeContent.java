@@ -39,8 +39,8 @@ public class EpisodeContent extends BaseEntity {
     }
 
     public void update(EpisodeContentType episodeContentType, String content) {
-        this.episodeContentType = episodeContentType;
-        this.content = content;
+        this.episodeContentType = episodeContentType == null ? this.episodeContentType : episodeContentType;
+        this.content = content == null ? this.content : content;
     }
 
     public void delete() {

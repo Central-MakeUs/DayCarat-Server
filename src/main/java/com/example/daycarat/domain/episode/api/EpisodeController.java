@@ -42,7 +42,7 @@ public class EpisodeController {
         return SuccessResponse.success(episodeService.createEpisode(postEpisode));
     }
 
-    @Operation(summary = "에피소드 수정하기")
+    @Operation(summary = "에피소드 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
         return SuccessResponse.success(episodeService.updateEpisode(patchEpisode));

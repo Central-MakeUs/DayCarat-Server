@@ -66,9 +66,9 @@ public class Episode extends BaseEntity {
     }
 
     public void update(ActivityTag activityTag, String title, LocalDate selectedDate) {
-        this.activityTag = activityTag;
-        this.title = title;
-        this.selectedDate = selectedDate;
+        this.activityTag = activityTag == null ? this.activityTag : activityTag;
+        this.title = title == null ? this.title : title;
+        this.selectedDate = selectedDate == null ? this.selectedDate : selectedDate;
     }
 
     public void delete() {

@@ -3,6 +3,7 @@ package com.example.daycarat.domain.gem.service;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
+import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
@@ -67,5 +68,25 @@ public class GemService {
         gemRepository.save(gem);
 
         return true;
+    }
+
+    public Boolean updateGem(PatchGem patchGem) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Gem gem = gemRepository.findById(patchGem.gemId())
+                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        Episode episode = episodeRepository.findByGemId(patchGem.gemId())
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+
+        gem.update(patchGem.appealPoint(), patchGem.content1(), patchGem.content2(), patchGem.content3());
+
+        return true;
+
     }
 }

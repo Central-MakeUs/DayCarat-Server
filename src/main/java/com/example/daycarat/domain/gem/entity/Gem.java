@@ -47,4 +47,10 @@ public class Gem extends BaseEntity {
         this.isDeleted = true;
     }
 
+    public void update(AppealPoint appealPoint, String content1, String content2, String content3) {
+        this.appealPoint = appealPoint == null ? this.appealPoint : appealPoint;
+        this.content1 = content1 == null ? this.content1 : content1;
+        this.content2 = content2 == null ? this.content2 : content2;
+        this.content3 = content3 == null ? this.content3 : content3;
+    }
 }
