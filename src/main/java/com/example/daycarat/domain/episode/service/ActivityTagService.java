@@ -4,6 +4,7 @@ import com.example.daycarat.domain.episode.dto.GetActivityTag;
 import com.example.daycarat.domain.episode.dto.PostActivityTag;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -13,12 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class ActivityTagService {
 
     private final UserRepository userRepository;
     private final ActivityTagRepository activityTagRepository;
+    private final EpisodeRepository episodeRepository;
 
     public Boolean createActivityTag(PostActivityTag postActivityTag) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -41,7 +44,29 @@ public class ActivityTagService {
 
         List<ActivityTag> allByUserId = activityTagRepository.findAllByUserId(user.getId());
 
+        allByUserId = allByUserId.stream()
+                .filter(activityTag -> !activityTag.getIsDeleted())
+                .collect(Collectors.toList());
+
         return GetActivityTag.listOf(allByUserId);
 
+    }
+
+    public Boolean deleteActivityTag(Long activityTagId) {
+        ActivityTag activityTag = activityTagRepository.findById(activityTagId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+
+        // check isDeleted
+        episodeRepository.findByActivityTagId(activityTagId)
+                .forEach(episode -> {
+                    if (!episode.getIsDeleted()) {
+                        throw new CustomException(ErrorCode.ACTIVITY_TAG_CANNOT_DELETE);
+                    }
+                });
+
+        activityTag.delete();
+        activityTagRepository.save(activityTag);
+
+        return true;
     }
 }

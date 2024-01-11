@@ -1,7 +1,8 @@
 package com.example.daycarat.domain.episode.entity;
 
+import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.user.domain.User;
-import com.example.daycarat.global.entity.BaseTimeEntity;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Episode extends BaseTimeEntity {
+public class Episode extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +32,9 @@ public class Episode extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
+
+    @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
+    private Gem gem;
 
     private String title;
 
@@ -62,12 +66,16 @@ public class Episode extends BaseTimeEntity {
     }
 
     public void update(ActivityTag activityTag, String title, LocalDate selectedDate) {
-        this.activityTag = activityTag;
-        this.title = title;
-        this.selectedDate = selectedDate;
+        this.activityTag = activityTag == null ? this.activityTag : activityTag;
+        this.title = title == null ? this.title : title;
+        this.selectedDate = selectedDate == null ? this.selectedDate : selectedDate;
     }
 
     public void delete() {
-        this.episodeState = EpisodeState.DELETED;
+        this.isDeleted = true;
+    }
+
+    public void makeFinalized() {
+        this.episodeState = EpisodeState.FINALIZED;
     }
 }

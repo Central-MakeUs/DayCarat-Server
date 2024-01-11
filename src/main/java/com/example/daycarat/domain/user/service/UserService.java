@@ -1,8 +1,8 @@
 package com.example.daycarat.domain.user.service;
 
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
-import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
+import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.dto.GetUserInfo;
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
@@ -25,7 +25,7 @@ public class UserService {
     private final S3UploadService s3UploadService;
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
-    private final EpisodeContentRepository episodeContentRepository;
+    private final GemRepository gemRepository;
 
     public GetUserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

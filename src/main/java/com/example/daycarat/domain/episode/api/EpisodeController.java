@@ -30,13 +30,19 @@ public class EpisodeController {
         return SuccessResponse.success(activityTagService.getActivityTagList());
     }
 
+    @Operation(summary = "활동 태그 삭제하기")
+    @DeleteMapping("/activityTag/{activityTagId}")
+    public SuccessResponse<Boolean> deleteActivityTag(@PathVariable Long activityTagId) {
+        return SuccessResponse.deleteSuccess(activityTagService.deleteActivityTag(activityTagId));
+    }
+
     @Operation(summary = "에피소드 등록하기")
     @PostMapping("/register")
     public SuccessResponse<Boolean> createEpisode(@RequestBody PostEpisode postEpisode) {
         return SuccessResponse.success(episodeService.createEpisode(postEpisode));
     }
 
-    @Operation(summary = "에피소드 수정하기")
+    @Operation(summary = "에피소드 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
         return SuccessResponse.success(episodeService.updateEpisode(patchEpisode));

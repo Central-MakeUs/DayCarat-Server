@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.episode.entity;
 
 import com.example.daycarat.domain.user.domain.User;
-import com.example.daycarat.global.entity.BaseTimeEntity;
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActivityTag extends BaseTimeEntity {
+public class ActivityTag extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +35,7 @@ public class ActivityTag extends BaseTimeEntity {
                 .build();
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

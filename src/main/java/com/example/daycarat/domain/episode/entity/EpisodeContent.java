@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.entity;
 
+import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EpisodeContent {
+public class EpisodeContent extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +39,11 @@ public class EpisodeContent {
     }
 
     public void update(EpisodeContentType episodeContentType, String content) {
-        this.episodeContentType = episodeContentType;
-        this.content = content;
+        this.episodeContentType = episodeContentType == null ? this.episodeContentType : episodeContentType;
+        this.content = content == null ? this.content : content;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
