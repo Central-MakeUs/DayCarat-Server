@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(title = "DayCarat API", version = "v1"),
         servers = {
-                @Server(url = "https://www.daycarat.shop/api", description = "Production Server URL"),
-                @Server(url = "http://localhost:8080/api", description = "Dev Server URL")
+                @Server(url = "https://www.daycarat.shop/api", description = "Server URL"),
+                @Server(url = "http://localhost:8080/api", description = "Local Server URL")
         },
         security = {
                 @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth")

@@ -49,19 +49,19 @@ public class UserController {
     @Operation(summary = "유저 정보 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
     @PatchMapping("/userInfo")
     public SuccessResponse<Boolean> patchUserInfo(@RequestBody PatchUserInfo patchUserInfo) {
-        return SuccessResponse.success(userService.patchUserInfo(patchUserInfo));
+        return SuccessResponse.updateSuccess(userService.patchUserInfo(patchUserInfo));
     }
 
     @Operation(summary = "유저 프로필 사진 등록/수정하기")
     @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SuccessResponse<Boolean> registerProfile(@RequestPart("multipartFile") MultipartFile profileImage) throws IOException {
-        return SuccessResponse.success(userService.registerProfile(profileImage));
+        return SuccessResponse.updateSuccess(userService.registerProfile(profileImage));
     }
 
     @Operation(summary = "(개발용) 유저 삭제하기", description = "사용자와 사용자의 에피소드 관련 데이터를 모두 삭제합니다. 삭제 후 헤더의 토큰 값을 제거하세요.")
     @DeleteMapping("/delete")
     public SuccessResponse<Boolean> deleteUser() {
-        return SuccessResponse.success(userService.deleteUser());
+        return SuccessResponse.deleteSuccess(userService.deleteUser());
     }
 
 }

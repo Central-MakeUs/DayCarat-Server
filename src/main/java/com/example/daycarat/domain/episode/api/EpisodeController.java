@@ -21,7 +21,7 @@ public class EpisodeController {
     @Operation(summary = "활동 태그 등록하기")
     @PostMapping("/activityTag")
     public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
-        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
+        return SuccessResponse.createSuccess(activityTagService.createActivityTag(postActivityTag));
     }
 
     @Operation(summary = "활동 태그 조회하기")
@@ -39,19 +39,19 @@ public class EpisodeController {
     @Operation(summary = "에피소드 등록하기")
     @PostMapping("/register")
     public SuccessResponse<Boolean> createEpisode(@RequestBody PostEpisode postEpisode) {
-        return SuccessResponse.success(episodeService.createEpisode(postEpisode));
+        return SuccessResponse.createSuccess(episodeService.createEpisode(postEpisode));
     }
 
     @Operation(summary = "에피소드 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
-        return SuccessResponse.success(episodeService.updateEpisode(patchEpisode));
+        return SuccessResponse.updateSuccess(episodeService.updateEpisode(patchEpisode));
     }
 
     @Operation(summary = "에피소드 삭제하기")
     @DeleteMapping("/delete/{episodeId}")
     public SuccessResponse<Boolean> deleteEpisode(@PathVariable Long episodeId) {
-        return SuccessResponse.success(episodeService.deleteEpisode(episodeId));
+        return SuccessResponse.deleteSuccess(episodeService.deleteEpisode(episodeId));
     }
 
     @Operation(summary = "에피소드 상세 조회하기")
