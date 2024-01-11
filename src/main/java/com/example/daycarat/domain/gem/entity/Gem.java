@@ -43,4 +43,8 @@ public class Gem extends BaseEntity {
                 .build();
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
 }

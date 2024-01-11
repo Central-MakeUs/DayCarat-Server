@@ -29,7 +29,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
         return jpaQueryFactory
                 .selectFrom(episode)
                 .where(episode.user.eq(user)
-                        .and(episode.episodeState.eq(UNFINALIZED)))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .orderBy(episode.createdDate.desc())
                 .limit(3)
                 .fetch();
@@ -44,7 +45,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .from(episode)
                 .where(episode.user.eq(user)
                         .and(episode.selectedDate.year().eq(year))
-                        .and(episode.episodeState.eq(UNFINALIZED)))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .groupBy(episode.selectedDate.month())
                 .fetch();
 
@@ -58,7 +60,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.activityTag.count()))
                 .from(episode)
                 .where(episode.user.eq(user)
-                        .and(episode.episodeState.eq(UNFINALIZED)))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .groupBy(episode.activityTag.activityTagName)
                 .orderBy(episode.activityTag.count().desc())
                 .fetch();
@@ -79,7 +82,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         .and(episode.selectedDate.year().eq(year))
                         .and(episode.selectedDate.month().eq(month))
                         .and(ltEpisodeId(cursorId))
-                        .and(episode.episodeState.eq(UNFINALIZED)))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .orderBy(episode.id.desc())
                 .limit(pageSize)
                 .fetch()
@@ -101,7 +105,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .where(episode.user.eq(user)
                         .and(episode.activityTag.activityTagName.eq(activityTagName))
                         .and(ltEpisodeId(cursorId))
-                        .and(episode.episodeState.eq(UNFINALIZED)))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .orderBy(episode.id.desc())
                 .limit(pageSize)
                 .fetch()

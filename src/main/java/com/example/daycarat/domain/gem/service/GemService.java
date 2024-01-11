@@ -4,6 +4,7 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
 import com.example.daycarat.domain.gem.dto.PostGem;
+import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
@@ -45,5 +46,26 @@ public class GemService {
 
         return true;
 
+    }
+
+    public Boolean deleteGem(Long gemId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Gem gem = gemRepository.findById(gemId)
+                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        Episode episode = episodeRepository.findByGemId(gemId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+
+        gem.delete();
+
+        gemRepository.save(gem);
+
+        return true;
     }
 }
