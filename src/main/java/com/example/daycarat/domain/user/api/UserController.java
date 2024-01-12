@@ -80,7 +80,7 @@ public class UserController {
                     """)
     @PatchMapping("/userInfo")
     public SuccessResponse<Boolean> patchUserInfo(@RequestBody PatchUserInfo patchUserInfo) {
-        return SuccessResponse.updateSuccess(userService.patchUserInfo(patchUserInfo));
+        return SuccessResponse.success(userService.patchUserInfo(patchUserInfo));
     }
 
     @Operation(summary = "유저 프로필 사진 등록/수정하기",
@@ -91,7 +91,7 @@ public class UserController {
                     """)
     @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SuccessResponse<Boolean> registerProfile(@RequestPart("multipartFile") MultipartFile profileImage) throws IOException {
-        return SuccessResponse.updateSuccess(userService.registerProfile(profileImage));
+        return SuccessResponse.success(userService.registerProfile(profileImage));
     }
 
     @Operation(summary = "(개발용) 유저 삭제하기",
@@ -107,7 +107,7 @@ public class UserController {
                     """)
     @DeleteMapping("/delete")
     public SuccessResponse<Boolean> deleteUser() {
-        return SuccessResponse.deleteSuccess(userService.deleteUser());
+        return SuccessResponse.success(userService.deleteUser());
     }
 
 }

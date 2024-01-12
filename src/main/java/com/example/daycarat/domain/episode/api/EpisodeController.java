@@ -27,7 +27,7 @@ public class EpisodeController {
                     """)
     @PostMapping("/activityTag")
     public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
-        return SuccessResponse.createSuccess(activityTagService.createActivityTag(postActivityTag));
+        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
     }
 
     @Operation(summary = "활동 태그 조회하기",
@@ -46,7 +46,7 @@ public class EpisodeController {
                     """)
     @DeleteMapping("/activityTag/{activityTagId}")
     public SuccessResponse<Boolean> deleteActivityTag(@PathVariable Long activityTagId) {
-        return SuccessResponse.deleteSuccess(activityTagService.deleteActivityTag(activityTagId));
+        return SuccessResponse.success(activityTagService.deleteActivityTag(activityTagId));
     }
 
     @Operation(summary = "에피소드 등록하기",
@@ -61,7 +61,7 @@ public class EpisodeController {
                     """)
     @PostMapping("/register")
     public SuccessResponse<Boolean> createEpisode(@RequestBody PostEpisode postEpisode) {
-        return SuccessResponse.createSuccess(episodeService.createEpisode(postEpisode));
+        return SuccessResponse.success(episodeService.createEpisode(postEpisode));
     }
 
     @Operation(summary = "에피소드 수정하기",
@@ -77,7 +77,7 @@ public class EpisodeController {
                     """)
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
-        return SuccessResponse.updateSuccess(episodeService.updateEpisode(patchEpisode));
+        return SuccessResponse.success(episodeService.updateEpisode(patchEpisode));
     }
 
     @Operation(summary = "에피소드 삭제하기",
@@ -87,7 +87,7 @@ public class EpisodeController {
                     """)
     @DeleteMapping("/delete/{episodeId}")
     public SuccessResponse<Boolean> deleteEpisode(@PathVariable Long episodeId) {
-        return SuccessResponse.deleteSuccess(episodeService.deleteEpisode(episodeId));
+        return SuccessResponse.success(episodeService.deleteEpisode(episodeId));
     }
 
     @Operation(summary = "에피소드 상세 조회하기",
