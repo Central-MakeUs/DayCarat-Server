@@ -76,33 +76,31 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Pull image from Amazon ECR and restart container
-        run: |
-          docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          docker stop dc && docker rm dc
-          docker run -d --name dc -p 8080:8080 --restart unless-stopped ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          sudo docker image prune -f
-          
-          
-#
-#      - name: Deploy to EC2
-#        uses: appleboy/ssh-action@master
-#        env:
-#          IMAGE_URI: ${{ steps.build-image.outputs.image }}
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ec2-user
-#          key: ${{ secrets.KEY }}
-#          script: |
+#      - name: Pull image from Amazon ECR and restart container
+#        run: |
+#          docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+#          docker stop dc && docker rm dc
+#          docker run -d --name dc -p 8080:8080 --restart unless-stopped ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+#          sudo docker image prune -f
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ec2-user
+          key: ${{ secrets.KEY }}
+          script: |
 #            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
 #            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #            aws configure set default.region ${{ env.AWS_REGION }}
 #            aws configure set default.output json
-#            aws ecr get-login-password --region ap-northeast-2
-#            sudo docker login --username AWS --password-stdin 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
 #            sudo docker rm -f $(sudo docker ps -qa)
 #            sudo docker pull ${{ env.IMAGE_URI }}
 #            sudo docker run -d -p 8080:8080 ${{ env.IMAGE_URI }}
-#            sudo docker image prune -f
-#
-#
+            aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
+            sudo docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            sudo docker stop dc && docker rm dc
+            sudo docker run -d --name dc -p 8080:8080 --restart unless-stopped ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            sudo docker image prune -f
+
+
