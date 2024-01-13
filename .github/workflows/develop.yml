@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URI }}
+  ECR_REGISTRY: 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
   ECR_REPOSITORY: daycarat
   IMAGE_TAG: ${{ github.sha }}
 
