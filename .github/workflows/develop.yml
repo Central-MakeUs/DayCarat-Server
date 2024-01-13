@@ -62,7 +62,7 @@ jobs:
   deploy:
     needs: build
     name: CD
-    runs-on: [ self-hosted, label-ecr-test ]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Configure AWS credentials
