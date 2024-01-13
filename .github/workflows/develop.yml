@@ -6,14 +6,16 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URI }}
   ECR_REPOSITORY: daycarat
+  IMAGE_TAG: ${{ github.sha }}
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: CI
     runs-on: ubuntu-latest
     environment: production
 
@@ -53,32 +55,54 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        env:
-          IMAGE_URI: ${{ steps.build-image.outputs.image }}
+  deploy:
+    needs: build
+    name: CD
+    runs-on: [ self-hosted, label-ecr-test ]
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          host: ${{ secrets.HOST }}
-          username: ec2-user
-          key: ${{ secrets.KEY }}
-          script: |
-            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws configure set default.region ${{ env.AWS_REGION }}
-            aws configure set default.output json
-            aws ecr get-login-password --region ap-northeast-2
-            sudo docker login --username AWS --password-stdin 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
-            sudo docker rm -f $(sudo docker ps -qa)
-            sudo docker pull ${{ env.IMAGE_URI }}
-            sudo docker run -d -p 8080:8080 ${{ env.IMAGE_URI }}
-            sudo docker image prune -f
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-              
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Pull image from Amazon ECR and restart container
+        run: |
+          docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker stop dc && docker rm dc
+          docker run -d --name dc -p 8080:8080 --restart unless-stopped ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          sudo docker image prune -f
+          
+          
+#
+#      - name: Deploy to EC2
+#        uses: appleboy/ssh-action@master
+#        env:
+#          IMAGE_URI: ${{ steps.build-image.outputs.image }}
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ec2-user
+#          key: ${{ secrets.KEY }}
+#          script: |
+#            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+#            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#            aws configure set default.region ${{ env.AWS_REGION }}
+#            aws configure set default.output json
+#            aws ecr get-login-password --region ap-northeast-2
+#            sudo docker login --username AWS --password-stdin 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
+#            sudo docker rm -f $(sudo docker ps -qa)
+#            sudo docker pull ${{ env.IMAGE_URI }}
+#            sudo docker run -d -p 8080:8080 ${{ env.IMAGE_URI }}
+#            sudo docker image prune -f
+#
+#
