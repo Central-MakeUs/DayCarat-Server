@@ -27,9 +27,6 @@ public class Episode extends BaseEntity {
     @JoinColumn(name="activity_tag_id", nullable = false)
     private ActivityTag activityTag;
 
-    @OneToMany(mappedBy = "episode")
-    private List<EpisodeKeyword> episodeKeywords;
-
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
 
@@ -45,20 +42,18 @@ public class Episode extends BaseEntity {
     private EpisodeState episodeState;
 
     @Builder
-    public Episode(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
         this.user = user;
         this.activityTag = activityTag;
-        this.episodeKeywords = episodeKeywords;
         this.title = title;
         this.selectedDate = selectedDate;
         this.episodeState = episodeState;
     }
 
-    public static Episode of(User user, ActivityTag activityTag, List<EpisodeKeyword> episodeKeywords, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public static Episode of(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
         return Episode.builder()
                 .user(user)
                 .activityTag(activityTag)
-                .episodeKeywords(episodeKeywords)
                 .title(title)
                 .selectedDate(selectedDate)
                 .episodeState(episodeState)
@@ -75,7 +70,7 @@ public class Episode extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void makeFinalized() {
-        this.episodeState = EpisodeState.FINALIZED;
+    public void updateState(EpisodeState episodeState) {
+        this.episodeState = episodeState;
     }
 }

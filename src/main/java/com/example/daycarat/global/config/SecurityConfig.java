@@ -41,6 +41,10 @@ public class SecurityConfig {
             "/episode/**"
     };
 
+    private final String[] GemPatterns = {
+            "/gem/**"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -52,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(securityPatterns).permitAll()
                         .requestMatchers(UserPatterns).authenticated()
                         .requestMatchers(EpisodePatterns).authenticated()
+                        .requestMatchers(GemPatterns).authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )

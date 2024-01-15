@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.api;
 
+import com.example.daycarat.domain.gem.dto.GetRecommedation;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.service.GemService;
@@ -34,6 +35,14 @@ public class GemController {
     public SuccessResponse<Boolean> deleteGem(@PathVariable Long gemId) {
         return SuccessResponse.success(gemService.deleteGem(gemId));
     }
+
+    @Operation(summary = "AI 추천 키워드 및 문장 조회하기")
+    @GetMapping("/recommend/{gemId}")
+    public SuccessResponse<GetRecommedation> getRecommend(@PathVariable Long gemId) {
+        return SuccessResponse.success(gemService.getRecommend(gemId));
+    }
+
+
 
 
 
