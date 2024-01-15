@@ -4,11 +4,9 @@ import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
-import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
-import com.example.daycarat.domain.episode.repository.EpisodeKeywordRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
 import com.example.daycarat.domain.user.domain.User;
@@ -31,7 +29,6 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
-    private final EpisodeKeywordRepository episodeKeywordRepository;
 
     @Transactional
     public Boolean createEpisode(PostEpisode postEpisode) {
@@ -118,9 +115,6 @@ public class EpisodeService {
 
         EpisodeValidator.checkIfDeleted(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
-
-        episodeKeywordRepository.findByEpisodeId(episodeId)
-                .forEach(EpisodeKeyword::delete);
 
         episodeContentRepository.findByEpisodeId(episodeId)
                 .forEach(EpisodeContent::delete);
