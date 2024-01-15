@@ -26,6 +26,7 @@ public enum ErrorCode {
 
 
     // Gem
+    JSON_FILE_UPLOAD_FAILED(500, "C004", "JSON 파일 업로드에 실패했습니다."),
     GEM_NOT_FOUND(404, "C006", "존재하지 않는 보석입니다."),
     GEM_USER_NOT_MATCHED(403, "C007", "보석의 소유자가 아닙니다."),
     GEM_ALREADY_EXISTS(409, "C008", "이미 보석이 존재합니다.");

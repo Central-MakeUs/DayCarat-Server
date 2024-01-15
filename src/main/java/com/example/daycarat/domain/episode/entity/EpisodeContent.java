@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.episode.entity;
 
 import com.example.daycarat.global.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class EpisodeContent extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne @JsonIgnore
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 

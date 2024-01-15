@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.gem.service;
 
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
 import com.example.daycarat.domain.gem.dto.PatchGem;
@@ -12,10 +13,16 @@ import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service @RequiredArgsConstructor
 public class GemService {
@@ -41,9 +48,34 @@ public class GemService {
 
         gemRepository.save(postGem.toEntity(episode));
 
-        episode.makeFinalized();
+        episode.updateState(EpisodeState.FINALIZED);
 
-        // TODO : Upload data to S3
+        try {
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+            // user, episodeContents, postGem을 JSON으로 변환
+            String userJson = objectMapper.writeValueAsString(user);
+            String episodeContentsJson = objectMapper.writeValueAsString(episode.getEpisodeContents());
+            String postGemJson = objectMapper.writeValueAsString(postGem);
+
+            // 각각의 JSON을 하나의 Map에 저장
+            Map<String, String> jsonMap = new HashMap<>();
+            jsonMap.put("user", userJson);
+            jsonMap.put("episodeContents", episodeContentsJson);
+            jsonMap.put("postGem", postGemJson);
+
+            // 최종적으로 이 Map을 다시 JSON으로 변환
+            String finalJson = objectMapper.writeValueAsString(jsonMap);
+
+            String fileName = LocalDateTime.now().toString() + episode.getId();
+
+            // 최종 JSON을 파일로 저장
+            s3UploadService.saveJsonFileContent(fileName, finalJson);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.JSON_FILE_UPLOAD_FAILED);
+        }
 
         return true;
 
@@ -62,6 +94,10 @@ public class GemService {
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+
+        episode.updateState(EpisodeState.UNFINALIZED);
+
+        episodeRepository.save(episode);
 
         gem.delete();
 

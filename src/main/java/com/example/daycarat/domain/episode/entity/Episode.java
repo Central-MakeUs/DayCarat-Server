@@ -75,7 +75,7 @@ public class Episode extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void makeFinalized() {
-        this.episodeState = EpisodeState.FINALIZED;
+    public void updateState(EpisodeState episodeState) {
+        this.episodeState = episodeState;
     }
 }
