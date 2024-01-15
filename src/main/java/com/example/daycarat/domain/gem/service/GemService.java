@@ -10,6 +10,7 @@ import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.entity.Keyword;
 import com.example.daycarat.domain.gem.repository.GemRepository;
+import com.example.daycarat.domain.gem.validator.GemValidator;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
@@ -37,6 +38,33 @@ public class GemService {
     private final EpisodeRepository episodeRepository;
     private final S3UploadService s3UploadService;
 
+    private void uploadJsonFile(User user, Episode episode, PostGem gem, String s3ObjectName) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+            // user, episodeContents, postGem을 JSON으로 변환
+            String userJson = objectMapper.writeValueAsString(user);
+            String episodeContentsJson = objectMapper.writeValueAsString(episode.getEpisodeContents());
+            String postGemJson = objectMapper.writeValueAsString(gem);
+
+            // 각각의 JSON을 하나의 Map에 저장
+            Map<String, String> jsonMap = new HashMap<>();
+            jsonMap.put("user", userJson);
+            jsonMap.put("episodeContents", episodeContentsJson);
+            jsonMap.put("postGem", postGemJson);
+
+            // 최종적으로 이 Map을 다시 JSON으로 변환
+            String finalJson = objectMapper.writeValueAsString(jsonMap);
+
+            // 최종 JSON을 파일로 저장
+            s3UploadService.saveJsonFileContent(episode.getId().toString(), s3ObjectName, finalJson);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.JSON_FILE_UPLOAD_FAILED);
+        }
+    }
+
     @Transactional
     public Boolean createGem(PostGem postGem) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -57,31 +85,7 @@ public class GemService {
 
         episode.updateState(EpisodeState.FINALIZED);
 
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
-            // user, episodeContents, postGem을 JSON으로 변환
-            String userJson = objectMapper.writeValueAsString(user);
-            String episodeContentsJson = objectMapper.writeValueAsString(episode.getEpisodeContents());
-            String postGemJson = objectMapper.writeValueAsString(postGem);
-
-            // 각각의 JSON을 하나의 Map에 저장
-            Map<String, String> jsonMap = new HashMap<>();
-            jsonMap.put("user", userJson);
-            jsonMap.put("episodeContents", episodeContentsJson);
-            jsonMap.put("postGem", postGemJson);
-
-            // 최종적으로 이 Map을 다시 JSON으로 변환
-            String finalJson = objectMapper.writeValueAsString(jsonMap);
-
-            // 최종 JSON을 파일로 저장
-            s3UploadService.saveJsonFileContent(episode.getId().toString(), s3ObjectName, finalJson);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CustomException(ErrorCode.JSON_FILE_UPLOAD_FAILED);
-        }
+        uploadJsonFile(user, episode, postGem, s3ObjectName);
 
         return true;
 
@@ -112,6 +116,7 @@ public class GemService {
         return true;
     }
 
+    @Transactional
     public Boolean updateGem(PatchGem patchGem) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -130,6 +135,18 @@ public class GemService {
 
         gem.update(patchGem.appealPoint(), patchGem.content1(), patchGem.content2(), patchGem.content3(), s3ObjectName);
 
+        gemRepository.save(gem);
+
+        PostGem postGem = new PostGem(
+                episode.getId(),
+                patchGem.appealPoint(),
+                patchGem.content1(),
+                patchGem.content2(),
+                patchGem.content3()
+        );
+
+        uploadJsonFile(user, episode, postGem, s3ObjectName);
+
         return true;
 
     }
@@ -142,6 +159,9 @@ public class GemService {
 
         Gem gem = gemRepository.findById(gemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        GemValidator.checkIfGemExists(gem);
+
 
         Episode episode = episodeRepository.findByGemId(gemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
