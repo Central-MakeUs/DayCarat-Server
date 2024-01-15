@@ -46,9 +46,12 @@ public class GemService {
         EpisodeValidator.checkIfUnfinalized(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        gemRepository.save(postGem.toEntity(episode));
+        String s3ObjectName = LocalDateTime.now().toString();
+
+        gemRepository.save(postGem.toEntity(episode, s3ObjectName));
 
         episode.updateState(EpisodeState.FINALIZED);
+
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -67,10 +70,8 @@ public class GemService {
             // 최종적으로 이 Map을 다시 JSON으로 변환
             String finalJson = objectMapper.writeValueAsString(jsonMap);
 
-            String fileName = LocalDateTime.now().toString() + episode.getId();
-
             // 최종 JSON을 파일로 저장
-            s3UploadService.saveJsonFileContent(fileName, finalJson);
+            s3UploadService.saveJsonFileContent(episode.getId().toString(), s3ObjectName, finalJson);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +121,9 @@ public class GemService {
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        gem.update(patchGem.appealPoint(), patchGem.content1(), patchGem.content2(), patchGem.content3());
+        String s3ObjectName = LocalDateTime.now().toString();
+
+        gem.update(patchGem.appealPoint(), patchGem.content1(), patchGem.content2(), patchGem.content3(), s3ObjectName);
 
         return true;
 

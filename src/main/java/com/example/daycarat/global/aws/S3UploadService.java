@@ -30,12 +30,12 @@ public class S3UploadService {
         return amazonS3.getUrl(bucket + "/" + path, originalFilename).toString();
     }
 
-    public void saveJsonFileContent(String fileName, String jsonContent) {
+    public void saveJsonFileContent(String path, String fileName, String jsonContent) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(jsonContent.getBytes(StandardCharsets.UTF_8).length);
         metadata.setContentType("application/json");
 
-        amazonS3.putObject(bucket + "/content", fileName, new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8)), metadata);
+        amazonS3.putObject(bucket + "/content/" + path, fileName, new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8)), metadata);
     }
 
 }
