@@ -6,9 +6,11 @@ import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.service.GemService;
 import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Gem", description = "보석 관련 API")
 @RestController @RequestMapping("/gem") @RequiredArgsConstructor
 public class GemController {
 

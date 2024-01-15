@@ -15,11 +15,4 @@ public record SuccessResponse<T> (
         return new SuccessResponse<>(201, "생성에 성공하였습니다.", result);
     }
 
-    public static <T> SuccessResponse<T> updateSuccess(T result) {
-        return new SuccessResponse<>(202, "수정에 성공하였습니다.", result);
-    }
-
-    public static <T> SuccessResponse<T> deleteSuccess(T result) {
-        return new SuccessResponse<>(203, "삭제에 성공하였습니다.", result);
-    }
 }
