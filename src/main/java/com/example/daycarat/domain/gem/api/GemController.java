@@ -52,7 +52,7 @@ public class GemController {
                     - 500 : 서버 에러 (AI 추천 키워드 생성 실패)
                     
                     반환값:
-                    - keywords[] : AI 추천 키워드 (배열)
+                    - keywords[] : AI 추천 키워드 (배열) : 키워드가 없을 수 있음
                     - suggestedContent1: AI 추천 문장 1
                     - suggestedContent2: AI 추천 문장 2
                     - suggestedContent3: AI 추천 문장 3
