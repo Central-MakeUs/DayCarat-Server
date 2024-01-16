@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
         
         개발용 토큰 (유저 삭제 하지 말아주세요):
         
-        eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtdXNocm9vbTEzMjRAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDUzODQwOTgsImV4cCI6MTcxNDAyNDA5OH0.wNgNarrtQsVGwqVINLN81b7LHKotk9oPlzJ06qYe4-4
+        eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtdXNocm9vbTEzMjRAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDU0MTE5MTAsImV4cCI6MTcxNDA1MTkxMH0._qYlVOQKnYwQtUXetaVRftc0E4BJZ99-r9iu6kztdv4
         """),
         servers = {
                 @Server(url = "https://www.daycarat.shop/api", description = "Server URL"),
