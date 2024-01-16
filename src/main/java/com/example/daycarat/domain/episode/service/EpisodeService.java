@@ -31,8 +31,12 @@ public class EpisodeService {
     private final EpisodeContentRepository episodeContentRepository;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
-        return activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
+        ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
                 .orElse(ActivityTag.of(user, activityTagName));
+
+        if (activityTag.getIsDeleted()) return ActivityTag.of(user, activityTagName);
+        else return activityTag;
+
     }
 
     @Transactional

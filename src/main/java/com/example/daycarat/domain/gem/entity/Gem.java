@@ -15,7 +15,7 @@ public class Gem extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
