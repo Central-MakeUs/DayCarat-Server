@@ -9,7 +9,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "DayCarat API", version = "v1"),
+        info = @Info(title = "DayCarat API", version = "v1", description = """
+        데이캐럿 API 문서입니다.
+        
+        개발용 토큰 (유저 삭제 하지 말아주세요):
+        
+        eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtdXNocm9vbTEzMjRAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDUzODQwOTgsImV4cCI6MTcxNDAyNDA5OH0.wNgNarrtQsVGwqVINLN81b7LHKotk9oPlzJ06qYe4-4
+        """),
         servers = {
                 @Server(url = "https://www.daycarat.shop/api", description = "Server URL"),
                 @Server(url = "http://localhost:8080/api", description = "Local Server URL")
