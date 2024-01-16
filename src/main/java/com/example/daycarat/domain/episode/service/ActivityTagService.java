@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.episode.dto.GetActivityTag;
+import com.example.daycarat.domain.episode.dto.PatchActivityTag;
 import com.example.daycarat.domain.episode.entity.ActivityTag;
 import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
@@ -49,6 +50,23 @@ public class ActivityTagService {
                 .collect(Collectors.toList());
 
         return GetActivityTag.listOf(allByUserId);
+
+    }
+
+    public Boolean updateActivityTag(PatchActivityTag patchActivityTag) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        ActivityTag activityTag = activityTagRepository.findById(patchActivityTag.activityTagId())
+                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+
+        activityTag.update(patchActivityTag.activityTagName());
+
+        activityTagRepository.save(activityTag);
+
+        return true;
 
     }
 

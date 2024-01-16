@@ -38,4 +38,8 @@ public class ActivityTag extends BaseEntity {
     public void delete() {
         this.isDeleted = true;
     }
+
+    public void update(String activityTagName) {
+        this.activityTagName = activityTagName;
+    }
 }
