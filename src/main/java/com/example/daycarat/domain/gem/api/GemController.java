@@ -42,6 +42,7 @@ public class GemController {
         return SuccessResponse.success(gemService.deleteGem(gemId));
     }
 
+  
     @Operation(summary = "AI 추천 키워드 및 문장 조회하기",
             description = """
                     보석 ID를 받아서 해당 보석에 대한 AI 추천 키워드 및 문장을 조회합니다.
