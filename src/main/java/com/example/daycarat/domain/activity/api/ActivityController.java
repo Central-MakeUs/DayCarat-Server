@@ -5,11 +5,13 @@ import com.example.daycarat.domain.activity.dto.PatchActivityTag;
 import com.example.daycarat.domain.activity.service.ActivityTagService;
 import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Activity", description = "활동 태그 관련 API")
 @RestController @RequestMapping("/activity") @RequiredArgsConstructor
 public class ActivityController {
 
