@@ -53,8 +53,6 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // create Episode
-
         ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
         activityTagRepository.save(activityTag);
