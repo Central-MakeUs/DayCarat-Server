@@ -30,8 +30,8 @@ public class Episode extends BaseEntity {
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
 
-    @OneToOne(mappedBy = "episode", cascade = CascadeType.ALL)
-    private Gem gem;
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
+    private List<Gem> gem;
 
     private String title;
 

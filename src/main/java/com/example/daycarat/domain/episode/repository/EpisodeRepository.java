@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EpisodeRepository extends JpaRepository<Episode, Long>, EpisodeRepositoryCustom {
     void deleteAllByUser(User user);
-    List<Episode> findByActivityTagId(Long activityTagId);
+    List<Episode> findAllByActivityTagId(Long activityTagId);
 
     Optional<Episode> findByGemId(Long gemId);
 }

@@ -40,6 +40,18 @@ public class EpisodeController {
         return SuccessResponse.success(activityTagService.getActivityTagList());
     }
 
+    @Operation(summary = "활동 태그 수정하기",
+            description = """
+                    활동 태그를 수정합니다.
+                    - activityTagId: 수정할 활동 태그의 ID입니다.
+                    - activityTagName: 수정할 활동 태그의 이름입니다.
+                    """)
+    @PatchMapping("/activityTag")
+    public SuccessResponse<Boolean> updateActivityTag(@RequestBody PatchActivityTag patchActivityTag) {
+        return SuccessResponse.success(activityTagService.updateActivityTag(patchActivityTag));
+    }
+
+
     @Operation(summary = "활동 태그 삭제하기",
             description = """
                     활동 태그를 삭제합니다.

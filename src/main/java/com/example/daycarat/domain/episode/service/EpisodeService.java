@@ -31,8 +31,19 @@ public class EpisodeService {
     private final EpisodeContentRepository episodeContentRepository;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
-        return activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
+        ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
                 .orElse(ActivityTag.of(user, activityTagName));
+
+        if (activityTag.getIsDeleted()) return ActivityTag.of(user, activityTagName);
+        else return activityTag;
+
+    }
+
+    private void createEpisodeContent(Episode episode, List<PostEpisodeContent> postEpisodeContents) {
+        for (PostEpisodeContent postEpisodeContent : postEpisodeContents) {
+            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content());
+            episodeContentRepository.save(episodeContent);
+        }
     }
 
     @Transactional
@@ -41,8 +52,6 @@ public class EpisodeService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        // create Episode
 
         ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
@@ -58,11 +67,7 @@ public class EpisodeService {
 
         episodeRepository.save(episode);
 
-        // create EpisodeContent
-        for (PostEpisodeContent postEpisodeContent : postEpisode.episodeContents()) {
-            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content());
-            episodeContentRepository.save(episodeContent);
-        }
+        createEpisodeContent(episode, postEpisode.episodeContents());
 
         return true;
 
@@ -89,13 +94,14 @@ public class EpisodeService {
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 
-        // update EpisodeContent
         for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
             EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
                     .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
 
             episodeContent.update(patchEpisodeContent.episodeContentType(), patchEpisodeContent.content());
         }
+
+        createEpisodeContent(episode, patchEpisode.newEpisodeContents());
 
         return true;
 
