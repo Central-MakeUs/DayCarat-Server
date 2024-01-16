@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.repository;
 
+import com.example.daycarat.domain.episode.dto.GetEpisodeCount;
 import com.example.daycarat.domain.episode.dto.GetEpisodePage;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
@@ -113,6 +114,20 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .stream().distinct()
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public GetEpisodeCount getEpisodeCountOfTheMonth(User user, Integer year, Integer month) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodeCount.class,
+                        episode.selectedDate.count()))
+                .from(episode)
+                .where(episode.user.eq(user)
+                        .and(episode.selectedDate.year().eq(year))
+                        .and(episode.selectedDate.month().eq(month))
+                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
+                .fetchOne();
     }
 
     private StringExpression convertToMonthDayFormat(StringExpression dateExpression) {

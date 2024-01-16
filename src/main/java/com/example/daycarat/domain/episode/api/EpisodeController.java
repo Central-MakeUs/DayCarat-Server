@@ -189,5 +189,14 @@ public class EpisodeController {
         return SuccessResponse.success(episodeService.getEpisodeByActivity(activityTagName, cursorId, pageSize));
     }
 
+    @Operation(summary = "이번 달 나의 에피소드 개수 조회하기",
+            description = """
+                    이번 달 나의 에피소드 개수를 조회합니다.
+                    """)
+    @GetMapping("/count")
+    public SuccessResponse<GetEpisodeCount> getEpisodeCount() {
+        return SuccessResponse.success(episodeService.getEpisodeCount());
+    }
+
 
 }

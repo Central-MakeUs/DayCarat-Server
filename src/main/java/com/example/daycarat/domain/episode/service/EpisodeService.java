@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -206,6 +207,18 @@ public class EpisodeService {
                 episode.getEpisodeContents().stream()
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
                         .collect(Collectors.toList()));
+
+    }
+
+    public GetEpisodeCount getEpisodeCount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return episodeRepository.getEpisodeCountOfTheMonth(user, now.getYear(), now.getMonthValue());
 
     }
 }
