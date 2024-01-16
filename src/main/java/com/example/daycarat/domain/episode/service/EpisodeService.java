@@ -30,6 +30,11 @@ public class EpisodeService {
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
 
+    private ActivityTag getActivityTag(User user, String activityTagName) {
+        return activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
+                .orElse(ActivityTag.of(user, activityTagName));
+    }
+
     @Transactional
     public Boolean createEpisode(PostEpisode postEpisode) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -37,12 +42,9 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // TODO : Validation for tagIds
-
         // create Episode
 
-        ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), postEpisode.activityTag())
-                .orElse(ActivityTag.of(user, postEpisode.activityTag()));
+        ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
         activityTagRepository.save(activityTag);
 
@@ -57,13 +59,8 @@ public class EpisodeService {
         episodeRepository.save(episode);
 
         // create EpisodeContent
-
         for (PostEpisodeContent postEpisodeContent : postEpisode.episodeContents()) {
-            EpisodeContent episodeContent = EpisodeContent.builder()
-                    .episode(episode)
-                    .episodeContentType(postEpisodeContent.episodeContentType())
-                    .content(postEpisodeContent.content())
-                    .build();
+            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content());
             episodeContentRepository.save(episodeContent);
         }
 
@@ -78,8 +75,6 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // TODO : Validation for tagIds
-
         // update Episode
 
         Episode episode = episodeRepository.findById(patchEpisode.episodeId())
@@ -88,13 +83,13 @@ public class EpisodeService {
         EpisodeValidator.checkIfDeleted(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        ActivityTag activityTag = activityTagRepository.findById(patchEpisode.activityTagId())
-                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+        ActivityTag activityTag = getActivityTag(user, patchEpisode.activityTag());
+
+        activityTagRepository.save(activityTag);
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 
         // update EpisodeContent
-
         for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
             EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
                     .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
