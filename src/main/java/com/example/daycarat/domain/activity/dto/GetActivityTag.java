@@ -1,6 +1,6 @@
-package com.example.daycarat.domain.episode.dto;
+package com.example.daycarat.domain.activity.dto;
 
-import com.example.daycarat.domain.episode.entity.ActivityTag;
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

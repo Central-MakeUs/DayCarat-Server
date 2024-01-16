@@ -1,11 +1,11 @@
 package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.episode.dto.*;
-import com.example.daycarat.domain.episode.entity.ActivityTag;
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
-import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;

@@ -1,6 +1,6 @@
-package com.example.daycarat.domain.episode.validator;
+package com.example.daycarat.domain.activity.validator;
 
-import com.example.daycarat.domain.episode.entity.ActivityTag;
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
 
