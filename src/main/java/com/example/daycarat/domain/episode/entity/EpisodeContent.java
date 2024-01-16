@@ -22,6 +22,7 @@ public class EpisodeContent extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EpisodeContentType episodeContentType;
 
+    @Column(length = 50000)
     private String content;
 
     @Builder
