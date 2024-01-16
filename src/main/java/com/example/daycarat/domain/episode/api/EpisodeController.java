@@ -20,15 +20,16 @@ public class EpisodeController {
     private final ActivityTagService activityTagService;
     private final EpisodeService episodeService;
 
-    @Operation(summary = "활동 태그 등록하기",
-            description = """
-                    활동 태그를 등록합니다.
-                    - activityTagName: 활동 태그 이름입니다.
-                    """)
-    @PostMapping("/activityTag")
-    public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
-        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
-    }
+//    * Deprecated method
+//    @Operation(summary = "활동 태그 등록하기",
+//            description = """
+//                    활동 태그를 등록합니다.
+//                    - activityTagName: 활동 태그 이름입니다.
+//                    """)
+//    @PostMapping("/activityTag")
+//    public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
+//        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
+//    }
 
     @Operation(summary = "활동 태그 조회하기",
             description = """

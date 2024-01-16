@@ -41,8 +41,10 @@ public class EpisodeService {
 
         // create Episode
 
-        ActivityTag activityTag = activityTagRepository.findById(postEpisode.activityTagId())
-                .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
+        ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), postEpisode.activityTag())
+                .orElse(ActivityTag.of(user, postEpisode.activityTag()));
+
+        activityTagRepository.save(activityTag);
 
         Episode episode = Episode.builder()
                 .user(user)
