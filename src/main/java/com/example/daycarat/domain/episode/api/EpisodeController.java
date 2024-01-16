@@ -20,15 +20,16 @@ public class EpisodeController {
     private final ActivityTagService activityTagService;
     private final EpisodeService episodeService;
 
-    @Operation(summary = "활동 태그 등록하기",
-            description = """
-                    활동 태그를 등록합니다.
-                    - activityTagName: 활동 태그 이름입니다.
-                    """)
-    @PostMapping("/activityTag")
-    public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
-        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
-    }
+//    * Deprecated method
+//    @Operation(summary = "활동 태그 등록하기",
+//            description = """
+//                    활동 태그를 등록합니다.
+//                    - activityTagName: 활동 태그 이름입니다.
+//                    """)
+//    @PostMapping("/activityTag")
+//    public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
+//        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
+//    }
 
     @Operation(summary = "활동 태그 조회하기",
             description = """
@@ -54,7 +55,7 @@ public class EpisodeController {
                     에피소드를 등록합니다.
                     - title: 에피소드의 제목입니다.
                     - date: 'yyyy-MM-dd' 형식으로 입력해야 합니다.
-                    - activityTagId: 활동 태그 ID로, 활동 태그 조회하기 API를 통해 확인할 수 있습니다.
+                    - activityTag: 활동 태그 이름입니다. 처음 기입한 활동 태그는 자동으로 DB에 등록됩니다.
                     - episodeContents: 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
                         - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
                         - content: 작성한 내용입니다.\s
