@@ -1,11 +1,11 @@
 package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.episode.dto.*;
-import com.example.daycarat.domain.episode.entity.ActivityTag;
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
-import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -206,6 +207,18 @@ public class EpisodeService {
                 episode.getEpisodeContents().stream()
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
                         .collect(Collectors.toList()));
+
+    }
+
+    public GetEpisodeCount getEpisodeCount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return episodeRepository.getEpisodeCountOfTheMonth(user, now.getYear(), now.getMonthValue());
 
     }
 }

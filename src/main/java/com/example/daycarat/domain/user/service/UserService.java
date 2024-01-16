@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.user.service;
 
-import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.user.domain.User;

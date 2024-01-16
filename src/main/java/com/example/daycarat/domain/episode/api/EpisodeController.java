@@ -1,7 +1,6 @@
 package com.example.daycarat.domain.episode.api;
 
 import com.example.daycarat.domain.episode.dto.*;
-import com.example.daycarat.domain.episode.service.ActivityTagService;
 import com.example.daycarat.domain.episode.service.EpisodeService;
 import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,50 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EpisodeController {
 
-    private final ActivityTagService activityTagService;
     private final EpisodeService episodeService;
-
-//    * Deprecated method
-//    @Operation(summary = "활동 태그 등록하기",
-//            description = """
-//                    활동 태그를 등록합니다.
-//                    - activityTagName: 활동 태그 이름입니다.
-//                    """)
-//    @PostMapping("/activityTag")
-//    public SuccessResponse<Boolean> createActivtyTag(@RequestBody PostActivityTag postActivityTag) {
-//        return SuccessResponse.success(activityTagService.createActivityTag(postActivityTag));
-//    }
-
-    @Operation(summary = "활동 태그 조회하기",
-            description = """
-                        활동 태그를 조회합니다.
-                        """)
-    @GetMapping("/activityTag")
-    public SuccessResponse<List<GetActivityTag>> getActivtyTag() {
-        return SuccessResponse.success(activityTagService.getActivityTagList());
-    }
-
-    @Operation(summary = "활동 태그 수정하기",
-            description = """
-                    활동 태그를 수정합니다.
-                    - activityTagId: 수정할 활동 태그의 ID입니다.
-                    - activityTagName: 수정할 활동 태그의 이름입니다.
-                    """)
-    @PatchMapping("/activityTag")
-    public SuccessResponse<Boolean> updateActivityTag(@RequestBody PatchActivityTag patchActivityTag) {
-        return SuccessResponse.success(activityTagService.updateActivityTag(patchActivityTag));
-    }
-
-
-    @Operation(summary = "활동 태그 삭제하기",
-            description = """
-                    활동 태그를 삭제합니다.
-                    - activityTagId: 삭제할 활동 태그의 ID입니다.
-                    """)
-    @DeleteMapping("/activityTag/{activityTagId}")
-    public SuccessResponse<Boolean> deleteActivityTag(@PathVariable Long activityTagId) {
-        return SuccessResponse.success(activityTagService.deleteActivityTag(activityTagId));
-    }
 
     @Operation(summary = "에피소드 등록하기",
             description = """
@@ -189,5 +145,13 @@ public class EpisodeController {
         return SuccessResponse.success(episodeService.getEpisodeByActivity(activityTagName, cursorId, pageSize));
     }
 
+    @Operation(summary = "이번 달 나의 에피소드 개수 조회하기",
+            description = """
+                    이번 달 나의 에피소드 개수를 조회합니다.
+                    """)
+    @GetMapping("/count")
+    public SuccessResponse<GetEpisodeCount> getEpisodeCount() {
+        return SuccessResponse.success(episodeService.getEpisodeCount());
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.episode.entity;
 
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.global.entity.BaseEntity;

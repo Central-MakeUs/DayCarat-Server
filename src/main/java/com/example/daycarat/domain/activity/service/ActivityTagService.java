@@ -1,11 +1,11 @@
-package com.example.daycarat.domain.episode.service;
+package com.example.daycarat.domain.activity.service;
 
-import com.example.daycarat.domain.episode.dto.GetActivityTag;
-import com.example.daycarat.domain.episode.dto.PatchActivityTag;
-import com.example.daycarat.domain.episode.entity.ActivityTag;
-import com.example.daycarat.domain.episode.repository.ActivityTagRepository;
+import com.example.daycarat.domain.activity.dto.GetActivityTag;
+import com.example.daycarat.domain.activity.dto.PatchActivityTag;
+import com.example.daycarat.domain.activity.entity.ActivityTag;
+import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
-import com.example.daycarat.domain.episode.validator.ActivityTagValidator;
+import com.example.daycarat.domain.activity.validator.ActivityTagValidator;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
