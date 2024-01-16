@@ -26,7 +26,8 @@ public enum ErrorCode {
 
 
     // Gem
-    AI_RECOMMENDATION_NOT_FOUND(404, "C006", "존재하지 않는 AI 추천 결과입니다."),
+    AI_RECOMMENDATION_NOT_FOUND(404, "C006", "AI 추천이 생성중입니다."),
+    AI_RECOMMENDATION_FAILED(500, "C004", "AI 추천에 실패했습니다."),
     JSON_FILE_UPLOAD_FAILED(500, "C004", "JSON 파일 업로드에 실패했습니다."),
     JSON_FILE_READ_FAILED(500, "C004", "JSON 파일 읽기에 실패했습니다."),
     GEM_NOT_FOUND(404, "C006", "존재하지 않는 보석입니다."),
