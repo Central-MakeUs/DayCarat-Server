@@ -196,7 +196,13 @@ public class GemService {
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new CustomException(ErrorCode.JSON_FILE_READ_FAILED);
+            // gem이 생성된지 2분이 지났다면 AI_RECOMMENDATION_FAILED
+            if (gem.getLastModifiedDate().isBefore(LocalDateTime.now().minusMinutes(2))) {
+                throw new CustomException(ErrorCode.AI_RECOMMENDATION_FAILED);
+            }
+            else {
+                throw new CustomException(ErrorCode.AI_RECOMMENDATION_NOT_FOUND);
+            }
         }
 
     }
