@@ -47,10 +47,10 @@ public class EpisodeService {
         }
     }
 
-    private void selectMainContent(Long episodeId) {
+    public void selectMainContent(Long episodeId) {
         List<EpisodeContent> episodeContents = episodeContentRepository.findByEpisodeIdAndIsDeleted(episodeId, false);
         if (episodeContents.stream().noneMatch(EpisodeContent::getIsMainContent)) {
-            episodeContents.get(0).toMainContent();
+            episodeContents.get(0).setIsMainContent(true);
         }
     }
 

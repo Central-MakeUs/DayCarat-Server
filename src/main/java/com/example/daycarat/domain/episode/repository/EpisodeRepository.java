@@ -11,4 +11,5 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>, Episode
     void deleteAllByUser(User user);
     List<Episode> findAllByActivityTagId(Long activityTagId);
     Optional<Episode> findByGemId(Long gemId);
+    List<Episode> findAllByIsDeleted(boolean isDeleted);
 }

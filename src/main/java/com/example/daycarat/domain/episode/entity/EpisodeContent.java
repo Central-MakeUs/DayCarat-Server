@@ -49,8 +49,8 @@ public class EpisodeContent extends BaseEntity {
         this.content = content == null ? this.content : content;
     }
 
-    public void toMainContent() {
-        this.isMainContent = true;
+    public void setIsMainContent(Boolean isMainContent) {
+        this.isMainContent = isMainContent;
     }
 
     public void delete() {

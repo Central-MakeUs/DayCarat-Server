@@ -45,6 +45,10 @@ public class SecurityConfig {
             "/gem/**"
     };
 
+    private final String[] AdminPatterns = {
+            "/admin/**"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(UserPatterns).authenticated()
                         .requestMatchers(EpisodePatterns).authenticated()
                         .requestMatchers(GemPatterns).authenticated()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers(AdminPatterns).hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
