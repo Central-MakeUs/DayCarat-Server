@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.api;
 
+import com.example.daycarat.domain.gem.dto.GetGemCount;
 import com.example.daycarat.domain.gem.dto.GetRecommedation;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
@@ -73,7 +74,18 @@ public class GemController {
         return SuccessResponse.success(gemService.getRecommend(gemId));
     }
 
-
+    @Operation(summary = "보석 개수 조회하기",
+            description = """
+                    보석 개수를 조회합니다.
+                    
+                    반환값:
+                    - gemCount: 보석 개수
+                    
+                    """)
+    @GetMapping("/count")
+    public SuccessResponse<GetGemCount> getGemCount() {
+        return SuccessResponse.success(gemService.getGemCount());
+    }
 
 
 
