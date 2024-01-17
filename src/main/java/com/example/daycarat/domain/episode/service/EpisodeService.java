@@ -42,8 +42,15 @@ public class EpisodeService {
 
     private void createEpisodeContent(Episode episode, List<PostEpisodeContent> postEpisodeContents) {
         for (PostEpisodeContent postEpisodeContent : postEpisodeContents) {
-            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content());
+            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content(), false);
             episodeContentRepository.save(episodeContent);
+        }
+    }
+
+    public void selectMainContent(Long episodeId) {
+        List<EpisodeContent> episodeContents = episodeContentRepository.findByEpisodeIdAndIsDeleted(episodeId, false);
+        if (episodeContents.stream().noneMatch(EpisodeContent::getIsMainContent)) {
+            episodeContents.get(0).setIsMainContent(true);
         }
     }
 
@@ -70,6 +77,8 @@ public class EpisodeService {
 
         createEpisodeContent(episode, postEpisode.episodeContents());
 
+        selectMainContent(episode.getId());
+
         return true;
 
     }
@@ -95,6 +104,14 @@ public class EpisodeService {
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 
+        // delete EpisodeContent
+        List<Long> episodeContentIds = patchEpisode.episodeContents().stream()
+                .map(PatchEpisodeContent::episodeContentId)
+                .toList();
+
+        deleteEpisodeContent(episode.getId(), episodeContentIds);
+
+        // update EpisodeContent
         for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
             EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
                     .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
@@ -102,9 +119,24 @@ public class EpisodeService {
             episodeContent.update(patchEpisodeContent.episodeContentType(), patchEpisodeContent.content());
         }
 
+        // create EpisodeContent
         createEpisodeContent(episode, patchEpisode.newEpisodeContents());
 
+        selectMainContent(episode.getId());
+
         return true;
+
+    }
+
+    private void deleteEpisodeContent(Long episodeId, List<Long> episodeContentIds) {
+
+        List<EpisodeContent> byEpisodeId = episodeContentRepository.findByEpisodeId(episodeId);
+
+        for (EpisodeContent episodeContent : byEpisodeId) {
+            if (!episodeContentIds.contains(episodeContent.getId())) {
+                episodeContent.delete();
+            }
+        }
 
     }
 
@@ -205,6 +237,7 @@ public class EpisodeService {
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
                 episode.getEpisodeContents().stream()
+                        .filter(episodeContent -> !episodeContent.getIsDeleted())
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
                         .collect(Collectors.toList()));
 
