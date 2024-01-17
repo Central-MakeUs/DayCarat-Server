@@ -25,26 +25,32 @@ public class EpisodeContent extends BaseEntity {
     @Column(length = 50000)
     private String content;
 
-    // TODO : isMainContent 필드 추가
+    private Boolean isMainContent = false;
 
     @Builder
-    public EpisodeContent(Episode episode, EpisodeContentType episodeContentType, String content) {
+    public EpisodeContent(Episode episode, EpisodeContentType episodeContentType, String content, Boolean isMainContent) {
         this.episode = episode;
         this.episodeContentType = episodeContentType;
         this.content = content;
+        this.isMainContent = isMainContent;
     }
 
-    public static EpisodeContent of(Episode episode, EpisodeContentType episodeContentType, String content) {
+    public static EpisodeContent of(Episode episode, EpisodeContentType episodeContentType, String content, Boolean isMainContent) {
         return EpisodeContent.builder()
                 .episode(episode)
                 .episodeContentType(episodeContentType)
                 .content(content)
+                .isMainContent(isMainContent)
                 .build();
     }
 
     public void update(EpisodeContentType episodeContentType, String content) {
         this.episodeContentType = episodeContentType == null ? this.episodeContentType : episodeContentType;
         this.content = content == null ? this.content : content;
+    }
+
+    public void toMainContent() {
+        this.isMainContent = true;
     }
 
     public void delete() {

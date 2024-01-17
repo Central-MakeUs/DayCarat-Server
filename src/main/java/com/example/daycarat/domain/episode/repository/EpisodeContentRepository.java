@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EpisodeContentRepository extends JpaRepository<EpisodeContent, Long> {
     List<EpisodeContent> findByEpisodeId(Long episodeId);
+    List<EpisodeContent> findByEpisodeIdAndIsDeleted(Long episodeId, boolean isDeleted);
 }

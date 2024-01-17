@@ -42,8 +42,15 @@ public class EpisodeService {
 
     private void createEpisodeContent(Episode episode, List<PostEpisodeContent> postEpisodeContents) {
         for (PostEpisodeContent postEpisodeContent : postEpisodeContents) {
-            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content());
+            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content(), false);
             episodeContentRepository.save(episodeContent);
+        }
+    }
+
+    private void selectMainContent(Long episodeId) {
+        List<EpisodeContent> episodeContents = episodeContentRepository.findByEpisodeIdAndIsDeleted(episodeId, false);
+        if (episodeContents.stream().noneMatch(EpisodeContent::getIsMainContent)) {
+            episodeContents.get(0).toMainContent();
         }
     }
 
@@ -69,6 +76,8 @@ public class EpisodeService {
         episodeRepository.save(episode);
 
         createEpisodeContent(episode, postEpisode.episodeContents());
+
+        selectMainContent(episode.getId());
 
         return true;
 
@@ -113,6 +122,8 @@ public class EpisodeService {
         // create EpisodeContent
         createEpisodeContent(episode, patchEpisode.newEpisodeContents());
 
+        selectMainContent(episode.getId());
+
         return true;
 
     }
@@ -124,7 +135,6 @@ public class EpisodeService {
         for (EpisodeContent episodeContent : byEpisodeId) {
             if (!episodeContentIds.contains(episodeContent.getId())) {
                 episodeContent.delete();
-//                episodeContentRepository.save(episodeContent);
             }
         }
 
