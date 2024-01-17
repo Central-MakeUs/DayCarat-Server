@@ -95,6 +95,14 @@ public class EpisodeService {
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 
+        // delete EpisodeContent
+        List<Long> episodeContentIds = patchEpisode.episodeContents().stream()
+                .map(PatchEpisodeContent::episodeContentId)
+                .toList();
+
+        deleteEpisodeContent(episode.getId(), episodeContentIds);
+
+        // update EpisodeContent
         for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
             EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
                     .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
@@ -102,9 +110,23 @@ public class EpisodeService {
             episodeContent.update(patchEpisodeContent.episodeContentType(), patchEpisodeContent.content());
         }
 
+        // create EpisodeContent
         createEpisodeContent(episode, patchEpisode.newEpisodeContents());
 
         return true;
+
+    }
+
+    private void deleteEpisodeContent(Long episodeId, List<Long> episodeContentIds) {
+
+        List<EpisodeContent> byEpisodeId = episodeContentRepository.findByEpisodeId(episodeId);
+
+        for (EpisodeContent episodeContent : byEpisodeId) {
+            if (!episodeContentIds.contains(episodeContent.getId())) {
+                episodeContent.delete();
+//                episodeContentRepository.save(episodeContent);
+            }
+        }
 
     }
 
@@ -205,6 +227,7 @@ public class EpisodeService {
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
                 episode.getEpisodeContents().stream()
+                        .filter(episodeContent -> !episodeContent.getIsDeleted())
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
                         .collect(Collectors.toList()));
 

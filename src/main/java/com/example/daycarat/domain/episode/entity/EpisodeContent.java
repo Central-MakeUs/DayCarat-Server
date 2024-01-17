@@ -25,6 +25,8 @@ public class EpisodeContent extends BaseEntity {
     @Column(length = 50000)
     private String content;
 
+    // TODO : isMainContent 필드 추가
+
     @Builder
     public EpisodeContent(Episode episode, EpisodeContentType episodeContentType, String content) {
         this.episode = episode;

@@ -36,13 +36,20 @@ public class EpisodeController {
     @Operation(summary = "에피소드 수정하기",
             description = """
                     에피소드를 수정합니다. 작성하지 않은 내용은 기존 값을 유지합니다.
+                    
+                    **episodeContent는 작성하지 않은 값을 삭제함에 주의하세요.**
+                    
                     - episodeId: 수정할 에피소드의 ID입니다.
                     - title: 에피소드의 제목입니다.
                     - date: 'yyyy-MM-dd' 형식으로 입력해야 합니다.
                     - activityTagId: 활동 태그 ID로, 활동 태그 조회하기 API를 통해 확인할 수 있습니다.
                     - episodeContents: 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
+                        - episodeContentId: 수정할 에피소드의 내용의 ID입니다.
                         - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
-                        - content: 작성한 내용입니다.\s
+                        - content: 작성한 내용입니다.
+                    - newEpisodeContents: 새로 추가할 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
+                        - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
+                        - content: 작성한 내용입니다.
                     """)
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateEpisode(@RequestBody PatchEpisode patchEpisode) {
