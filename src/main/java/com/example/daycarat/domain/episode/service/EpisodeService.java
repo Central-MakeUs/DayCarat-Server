@@ -171,7 +171,7 @@ public class EpisodeService {
 
         return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
                 .stream()
-                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
+                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate()), episode.getEpisodeState()))
                 .collect(Collectors.toList());
 
     }
@@ -237,6 +237,7 @@ public class EpisodeService {
                 episode.getTitle(),
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
+                episode.getEpisodeState(),
                 episode.getEpisodeContents().stream()
                         .filter(episodeContent -> !episodeContent.getIsDeleted())
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))

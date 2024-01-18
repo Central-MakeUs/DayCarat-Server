@@ -75,6 +75,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
+                        episode.episodeState,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -101,6 +102,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
+                        episode.episodeState,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
