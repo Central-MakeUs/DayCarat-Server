@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
         개발용 토큰 (유저 삭제 하지 말아주세요):
         
         eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtdXNocm9vbTEzMjRAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDU0MTE5MTAsImV4cCI6MTcxNDA1MTkxMH0._qYlVOQKnYwQtUXetaVRftc0E4BJZ99-r9iu6kztdv4
+        
+        업데이트:
+        - 01-18 에피소드 등록 수정: episodeContentType을 '배운 점', '아쉬운 점', '자유롭게 작성' 중 하나를 입력해야 합니다.
         """),
         servers = {
                 @Server(url = "https://www.daycarat.shop/api", description = "Server URL"),

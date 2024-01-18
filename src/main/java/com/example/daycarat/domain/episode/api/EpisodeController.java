@@ -25,7 +25,7 @@ public class EpisodeController {
                     - date: 'yyyy-MM-dd' 형식으로 입력해야 합니다.
                     - activityTag: 활동 태그 이름입니다. 처음 기입한 활동 태그는 자동으로 DB에 등록됩니다.
                     - episodeContents: 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
-                        - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
+                        - episodeContentType: '배운 점', '아쉬운 점', '자유롭게 작성' 중 하나를 입력해야 합니다.
                         - content: 작성한 내용입니다.\s
                     """)
     @PostMapping("/register")
@@ -45,10 +45,10 @@ public class EpisodeController {
                     - activityTagId: 활동 태그 ID로, 활동 태그 조회하기 API를 통해 확인할 수 있습니다.
                     - episodeContents: 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
                         - episodeContentId: 수정할 에피소드의 내용의 ID입니다.
-                        - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
+                        - episodeContentType: '배운 점', '아쉬운 점', '자유롭게 작성' 중 하나를 입력해야 합니다.
                         - content: 작성한 내용입니다.
                     - newEpisodeContents: 새로 추가할 에피소드의 내용입니다. 배열로 여러 개를 보낼 수 있습니다.
-                        - episodeContentType: 현재 'T', 'E', 'M', 'P' 중 하나를 입력해야 합니다. (미정)
+                        - episodeContentType: '배운 점', '아쉬운 점', '자유롭게 작성' 중 하나를 입력해야 합니다.
                         - content: 작성한 내용입니다.
                     """)
     @PatchMapping("/update")

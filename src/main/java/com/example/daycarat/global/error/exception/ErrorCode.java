@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     // EpisodeContent
     EPISODE_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 에피소드 컨텐츠입니다."),
+    INVALID_EPISODE_CONTENT_TYPE(400, "C001", "잘못된 에피소드 컨텐츠 타입입니다."),
 
 
     // Gem
