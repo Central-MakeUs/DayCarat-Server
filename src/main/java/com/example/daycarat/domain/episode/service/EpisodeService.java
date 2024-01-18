@@ -4,6 +4,7 @@ import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
+import com.example.daycarat.domain.episode.entity.EpisodeContentType;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
@@ -42,7 +43,7 @@ public class EpisodeService {
 
     private void createEpisodeContent(Episode episode, List<PostEpisodeContent> postEpisodeContents) {
         for (PostEpisodeContent postEpisodeContent : postEpisodeContents) {
-            EpisodeContent episodeContent = EpisodeContent.of(episode, postEpisodeContent.episodeContentType(), postEpisodeContent.content(), false);
+            EpisodeContent episodeContent = EpisodeContent.of(episode, EpisodeContentType.fromValue(postEpisodeContent.episodeContentType()), postEpisodeContent.content(), false);
             episodeContentRepository.save(episodeContent);
         }
     }
@@ -116,7 +117,7 @@ public class EpisodeService {
             EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
                     .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
 
-            episodeContent.update(patchEpisodeContent.episodeContentType(), patchEpisodeContent.content());
+            episodeContent.update(EpisodeContentType.fromValue(patchEpisodeContent.episodeContentType()), patchEpisodeContent.content());
         }
 
         // create EpisodeContent
@@ -170,7 +171,7 @@ public class EpisodeService {
 
         return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
                 .stream()
-                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate())))
+                .map(episode -> GetRecentEpisode.of(episode.getId(), episode.getTitle(), LocalDateTimeParser.toTimeAgo(episode.getCreatedDate()), episode.getEpisodeState()))
                 .collect(Collectors.toList());
 
     }
@@ -236,6 +237,7 @@ public class EpisodeService {
                 episode.getTitle(),
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
+                episode.getEpisodeState(),
                 episode.getEpisodeContents().stream()
                         .filter(episodeContent -> !episodeContent.getIsDeleted())
                         .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
