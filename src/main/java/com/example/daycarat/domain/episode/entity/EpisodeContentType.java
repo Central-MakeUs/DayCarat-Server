@@ -6,7 +6,7 @@ import static com.example.daycarat.global.error.exception.ErrorCode.INVALID_EPIS
 
 public enum EpisodeContentType {
     T(1, "더미1"), E(2, "더미2"), M(3, "더미3"), P(4, "더미4"),
-    LessonsLearned(5, "배울 점"),
+    LessonsLearned(5, "배운 점"),
     AreasForImprovement(6, "아쉬운 점"),
     WriteFreely(7, "자유롭게 작성");
 
