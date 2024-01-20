@@ -54,9 +54,9 @@ public class GemController {
                     
                     반환값:
                     - keyword : AI 추천 키워드
-                    - suggestedContent1: AI 추천 문장 1
-                    - suggestedContent2: AI 추천 문장 2
-                    - suggestedContent3: AI 추천 문장 3
+                    - generatedContent1: AI 추천 문장 1
+                    - generatedContent2: AI 추천 문장 2
+                    - generatedContent3: AI 추천 문장 3
                     
                     """)
     @GetMapping("/recommend/{episodeId}")
