@@ -63,5 +63,7 @@ public class GeneratedContentService {
             generatedContent.delete();
         }
 
+        generatedContentRepository.saveAll(generatedContentList);
+
     }
 }

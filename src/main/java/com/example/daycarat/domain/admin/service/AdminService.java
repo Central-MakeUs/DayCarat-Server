@@ -4,7 +4,6 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
-import com.example.daycarat.domain.episode.service.EpisodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +14,6 @@ import java.util.List;
 public class AdminService {
 
     private final EpisodeRepository episodeRepository;
-    private final EpisodeService episodeService;
     private final EpisodeContentRepository episodeContentRepository;
 
     @Transactional

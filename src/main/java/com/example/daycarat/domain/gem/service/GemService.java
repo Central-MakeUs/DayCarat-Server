@@ -9,6 +9,7 @@ import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
+import com.example.daycarat.domain.gem.validator.GemValidator;
 import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
@@ -24,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,6 +103,8 @@ public class GemService {
         Gem gem = gemRepository.findById(gemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
 
+        GemValidator.checkIfGemExists(gem);
+
         Episode episode = episodeRepository.findByGemId(gemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
@@ -168,8 +172,21 @@ public class GemService {
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
+        Gem gem = gemRepository.findByEpisodeIdAndIsDeleted(episodeId, false)
+                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        LocalDateTime createdDate = gem.getLastModifiedDate();
+
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(createdDate, now);
+
         GeneratedContent generatedContent = generatedContentRepository.findByEpisodeIdAndIsDeleted(episodeId, false)
-                .orElseThrow(() -> new CustomException(ErrorCode.GENERATED_CONTENT_NOT_FOUND));
+                .orElseThrow(() -> {
+                    if (duration.toMinutes() >= 2) {
+                        return new CustomException(ErrorCode.AI_RECOMMENDATION_FAILED);
+                    }
+                    return new CustomException(ErrorCode.AI_RECOMMENDATION_NOT_FOUND);
+                });
 
         return new GetRecommedation(
                 generatedContent.getGeneratedContent1(),
