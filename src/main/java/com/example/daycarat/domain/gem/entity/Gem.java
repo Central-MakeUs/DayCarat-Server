@@ -19,6 +19,8 @@ public class Gem extends BaseEntity {
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
+    private String s3ObjectKey;
+
     private String content1;
     private String content2;
     private String content3;
@@ -26,8 +28,9 @@ public class Gem extends BaseEntity {
     private String content5;
 
     @Builder
-    public Gem(Episode episode, String content1, String content2, String content3, String content4, String content5) {
+    public Gem(Episode episode, String s3ObjectKey, String content1, String content2, String content3, String content4, String content5) {
         this.episode = episode;
+        this.s3ObjectKey = s3ObjectKey;
         this.content1 = content1;
         this.content2 = content2;
         this.content3 = content3;
@@ -35,9 +38,10 @@ public class Gem extends BaseEntity {
         this.content5 = content5;
     }
 
-    public static Gem of(Episode episode, String content1, String content2, String content3, String content4, String content5) {
+    public static Gem of(Episode episode, String s3ObjectKey, String content1, String content2, String content3, String content4, String content5) {
         return Gem.builder()
                 .episode(episode)
+                .s3ObjectKey(s3ObjectKey)
                 .content1(content1)
                 .content2(content2)
                 .content3(content3)
@@ -50,7 +54,8 @@ public class Gem extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void update(String content1, String content2, String content3, String content4, String content5) {
+    public void update(String s3ObjectKey, String content1, String content2, String content3, String content4, String content5) {
+        this.s3ObjectKey = s3ObjectKey;
         this.content1 = content1 == null ? this.content1 : content1;
         this.content2 = content2 == null ? this.content2 : content2;
         this.content3 = content3 == null ? this.content3 : content3;

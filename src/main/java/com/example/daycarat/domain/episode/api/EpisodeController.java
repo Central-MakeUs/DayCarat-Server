@@ -161,4 +161,13 @@ public class EpisodeController {
         return SuccessResponse.success(episodeService.getEpisodeCount());
     }
 
+    @Operation(summary = "에피소드 키워드 수정하기",
+            description = """
+                    에피소드의 키워드를 수정합니다.
+                    """)
+    @PatchMapping("/keyword")
+    public SuccessResponse<Boolean> updateEpisodeKeyword(@RequestBody PatchEpisodeKeyword patchEpisodeKeyword) {
+        return SuccessResponse.success(episodeService.updateEpisodeKeyword(patchEpisodeKeyword));
+    }
+
 }

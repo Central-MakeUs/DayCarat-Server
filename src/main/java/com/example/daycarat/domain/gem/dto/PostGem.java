@@ -12,7 +12,7 @@ public record PostGem(
         @Schema(description = "내용4", example = "팀원 간의 소통에 있어 부족한 부분이 많이 보여 PM으로서 이를 해결하는 방법에 대한 고민이 많았는데, 1:1 대화를 도입함으로써 그동안의 소통 문제를 해결할 수 있었다. ") String content4,
         @Schema(description = "내용5", example = "팀원 간의 소통에 있어 부족한 부분이 많이 보여 PM으로서 이를 해결하는 방법에 대한 고민이 많았는데, 1:1 대화를 도입함으로써 그동안의 소통 문제를 해결할 수 있었다. ") String content5
 ) {
-    public Gem toEntity(PostGem postGem, Episode episode) {
-        return Gem.of(episode, content1, content2, content3, content4, content5);
+    public Gem toEntity(PostGem postGem, Episode episode, String s3ObjectKey) {
+        return Gem.of(episode, s3ObjectKey, content1, content2, content3, content4, content5);
     }
 }

@@ -10,6 +10,7 @@ import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.gem.validator.GemValidator;
+import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
@@ -33,10 +34,9 @@ public class GemService {
     private final UserRepository userRepository;
     private final EpisodeRepository episodeRepository;
     private final S3UploadService s3UploadService;
+    private final GeneratedContentService generatedContentService;
 
-    private void uploadJsonFile(User user, Episode episode, PostGem gem) {
-
-        String s3ObjectName = LocalDateTime.now().toString();
+    private void uploadJsonFile(User user, Episode episode, PostGem gem, String s3ObjectKey) {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -56,7 +56,7 @@ public class GemService {
             String finalJson = objectMapper.writeValueAsString(jsonMap);
 
             // 최종 JSON을 파일로 저장
-            s3UploadService.saveJsonFileContent(episode.getId().toString(), s3ObjectName, finalJson);
+            s3UploadService.saveJsonFileContent(episode.getId().toString(), s3ObjectKey, finalJson);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,12 +78,13 @@ public class GemService {
         EpisodeValidator.checkIfUnfinalized(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
+        String s3ObjectKey = LocalDateTime.now().toString();
 
-        gemRepository.save(postGem.toEntity(postGem, episode));
+        gemRepository.save(postGem.toEntity(postGem, episode, s3ObjectKey));
 
         episode.updateState(EpisodeState.FINALIZED);
 
-        uploadJsonFile(user, episode, postGem);
+        uploadJsonFile(user, episode, postGem, s3ObjectKey);
 
         return true;
 
@@ -111,6 +112,8 @@ public class GemService {
 
         gemRepository.save(gem);
 
+        generatedContentService.deleteGeneratedContent(episode.getId());
+
         return true;
     }
 
@@ -129,9 +132,9 @@ public class GemService {
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        String s3ObjectName = LocalDateTime.now().toString();
+        String s3ObjectKey = LocalDateTime.now().toString();
 
-        gem.update(patchGem.content1(), patchGem.content2(), patchGem.content3(), patchGem.content4(), patchGem.content5());
+        gem.update(s3ObjectKey, patchGem.content1(), patchGem.content2(), patchGem.content3(), patchGem.content4(), patchGem.content5());
 
         gemRepository.save(gem);
 
@@ -144,7 +147,9 @@ public class GemService {
                 patchGem.content5()
         );
 
-        uploadJsonFile(user, episode, postGem);
+        uploadJsonFile(user, episode, postGem, s3ObjectKey);
+
+        generatedContentService.deleteGeneratedContent(episode.getId());
 
         return true;
 

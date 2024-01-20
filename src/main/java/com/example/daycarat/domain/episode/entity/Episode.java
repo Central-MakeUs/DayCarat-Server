@@ -42,6 +42,9 @@ public class Episode extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EpisodeState episodeState;
 
+    @Enumerated(EnumType.STRING)
+    private EpisodeKeyword episodeKeyword;
+
     @Builder
     public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
         this.user = user;
@@ -73,5 +76,8 @@ public class Episode extends BaseEntity {
 
     public void updateState(EpisodeState episodeState) {
         this.episodeState = episodeState;
+    }
+    public void updateKeyword(EpisodeKeyword episodeKeyword) {
+        this.episodeKeyword = episodeKeyword;
     }
 }

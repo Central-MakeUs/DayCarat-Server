@@ -26,6 +26,10 @@ public enum ErrorCode {
     EPISODE_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 에피소드 컨텐츠입니다."),
     INVALID_EPISODE_CONTENT_TYPE(400, "C001", "잘못된 에피소드 컨텐츠 타입입니다."),
 
+    // EpisodeKeyword
+    INVALID_KEYWORD_ID(400, "C001", "잘못된 키워드 ID입니다."),
+    INVALID_KEYWORD(400, "C001", "잘못된 키워드입니다."),
+
 
     // Gem
     AI_RECOMMENDATION_NOT_FOUND(404, "C006", "AI 추천이 생성중입니다."),
@@ -34,7 +38,10 @@ public enum ErrorCode {
     JSON_FILE_READ_FAILED(500, "C004", "JSON 파일 읽기에 실패했습니다."),
     GEM_NOT_FOUND(404, "C006", "존재하지 않는 보석입니다."),
     GEM_USER_NOT_MATCHED(403, "C007", "보석의 소유자가 아닙니다."),
-    GEM_ALREADY_EXISTS(409, "C008", "이미 보석이 존재합니다.");
+    GEM_ALREADY_EXISTS(409, "C008", "이미 보석이 존재합니다."),
+
+    // GeneratedContent
+    GENERATED_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 AI 생성 컨텐츠입니다.");
 
 
     private final int status;
