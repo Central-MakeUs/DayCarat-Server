@@ -19,32 +19,30 @@ public class Gem extends BaseEntity {
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
-    @Enumerated(EnumType.STRING)
-    private AppealPoint appealPoint;
-
     private String content1;
     private String content2;
     private String content3;
-    private String s3ObjectName;
+    private String content4;
+    private String content5;
 
     @Builder
-    public Gem(Episode episode, AppealPoint appealPoint, String content1, String content2, String content3, String s3ObjectName) {
+    public Gem(Episode episode, String content1, String content2, String content3, String content4, String content5) {
         this.episode = episode;
-        this.appealPoint = appealPoint;
         this.content1 = content1;
         this.content2 = content2;
         this.content3 = content3;
-        this.s3ObjectName = s3ObjectName;
+        this.content4 = content4;
+        this.content5 = content5;
     }
 
-    public static Gem of(Episode episode, AppealPoint appealPoint, String content1, String content2, String content3, String s3ObjectName) {
+    public static Gem of(Episode episode, String content1, String content2, String content3, String content4, String content5) {
         return Gem.builder()
                 .episode(episode)
-                .appealPoint(appealPoint)
                 .content1(content1)
                 .content2(content2)
                 .content3(content3)
-                .s3ObjectName(s3ObjectName)
+                .content4(content4)
+                .content5(content5)
                 .build();
     }
 
@@ -52,11 +50,11 @@ public class Gem extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void update(AppealPoint appealPoint, String content1, String content2, String content3, String s3ObjectName) {
-        this.appealPoint = appealPoint == null ? this.appealPoint : appealPoint;
+    public void update(String content1, String content2, String content3, String content4, String content5) {
         this.content1 = content1 == null ? this.content1 : content1;
         this.content2 = content2 == null ? this.content2 : content2;
         this.content3 = content3 == null ? this.content3 : content3;
-        this.s3ObjectName = s3ObjectName;
+        this.content4 = content4 == null ? this.content4 : content4;
+        this.content5 = content5 == null ? this.content5 : content5;
     }
 }
