@@ -9,7 +9,8 @@ import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
-import com.example.daycarat.domain.gem.validator.GemValidator;
+import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
+import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
@@ -35,6 +36,7 @@ public class GemService {
     private final EpisodeRepository episodeRepository;
     private final S3UploadService s3UploadService;
     private final GeneratedContentService generatedContentService;
+    private final GeneratedContentRepository generatedContentRepository;
 
     private void uploadJsonFile(User user, Episode episode, PostGem gem, String s3ObjectKey) {
 
@@ -155,26 +157,25 @@ public class GemService {
 
     }
 
-    public GetRecommedation getRecommend(Long gemId) {
+    public GetRecommedation getRecommend(Long episodeId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        Gem gem = gemRepository.findById(gemId)
-                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
-
-        GemValidator.checkIfGemExists(gem);
-
-
-        Episode episode = episodeRepository.findByGemId(gemId)
+        Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        // TODO : Generated Content 가져오기
+        GeneratedContent generatedContent = generatedContentRepository.findByEpisodeIdAndIsDeleted(episodeId, false)
+                .orElseThrow(() -> new CustomException(ErrorCode.GENERATED_CONTENT_NOT_FOUND));
 
-        return null;
+        return new GetRecommedation(
+                generatedContent.getGeneratedContent1(),
+                generatedContent.getGeneratedContent2(),
+                generatedContent.getGeneratedContent3()
+        );
 
     }
 }
