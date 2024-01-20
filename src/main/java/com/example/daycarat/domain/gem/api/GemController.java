@@ -45,7 +45,7 @@ public class GemController {
   
     @Operation(summary = "AI 추천 키워드 및 문장 조회하기",
             description = """
-                    보석 ID를 받아서 해당 보석에 대한 AI 추천 키워드 및 문장을 조회합니다.
+                    에피소드 ID를 받아서 해당 보석에 대한 AI 추천 키워드 및 문장을 조회합니다.
                     
                     상태 코드:
                     - 200 : 조회 성공
@@ -53,13 +53,13 @@ public class GemController {
                     - 500 : 서버 에러 (AI 추천 키워드 생성 실패)
                     
                     반환값:
-                    - keywords[] : AI 추천 키워드 (배열) : 키워드가 없을 수 있음
+                    - keyword : AI 추천 키워드
                     - suggestedContent1: AI 추천 문장 1
                     - suggestedContent2: AI 추천 문장 2
                     - suggestedContent3: AI 추천 문장 3
                     
                     """)
-    @GetMapping("/recommend/{gemId}")
+    @GetMapping("/recommend/{episodeId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "AI 추천 키워드 생성중"
@@ -69,8 +69,8 @@ public class GemController {
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE
                                         , schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public SuccessResponse<GetRecommedation> getRecommend(@PathVariable Long gemId) {
-        return SuccessResponse.success(gemService.getRecommend(gemId));
+    public SuccessResponse<GetRecommedation> getRecommend(@PathVariable Long episodeId) {
+        return SuccessResponse.success(gemService.getRecommend(episodeId));
     }
 
 
