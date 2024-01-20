@@ -1,4 +1,4 @@
-package com.example.daycarat.domain.gem.entity;
+package com.example.daycarat.domain.gereratedcontent.entity;
 
 public enum Keyword {
     COMMUNICATION(1, "커뮤니케이션"),

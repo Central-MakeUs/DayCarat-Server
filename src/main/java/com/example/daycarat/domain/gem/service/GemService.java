@@ -8,7 +8,7 @@ import com.example.daycarat.domain.gem.dto.GetRecommedation;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
-import com.example.daycarat.domain.gem.entity.Keyword;
+import com.example.daycarat.domain.gereratedcontent.entity.Keyword;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.gem.validator.GemValidator;
 import com.example.daycarat.domain.user.domain.User;
