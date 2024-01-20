@@ -6,6 +6,7 @@ import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class GeneratedContentController {
     private final GeneratedContentService generatedContentService;
 
     @PostMapping("/register")
-    public SuccessResponse<Boolean> registerGeneratedContent(PostGeneratedContent postGeneratedContent) {
+    public SuccessResponse<Boolean> registerGeneratedContent(@RequestBody PostGeneratedContent postGeneratedContent) {
         return SuccessResponse.success(generatedContentService.registerGeneratedContent(postGeneratedContent));
     }
 }
