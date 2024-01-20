@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface GemRepository extends JpaRepository<Gem, Long> {
     Optional<Gem> findByS3ObjectKeyAndIsDeleted(String s3ObjectKey, boolean isDeleted);
+
+    Optional<Gem> findByEpisodeIdAndIsDeleted(Long episodeId, boolean isDeleted);
 }
