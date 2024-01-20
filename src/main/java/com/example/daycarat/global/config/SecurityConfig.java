@@ -49,6 +49,10 @@ public class SecurityConfig {
             "/admin/**"
     };
 
+    private final String[] GeneratedContentPatterns = {
+            "/generated-content/**"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -62,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers(EpisodePatterns).authenticated()
                         .requestMatchers(GemPatterns).authenticated()
                         .requestMatchers(AdminPatterns).hasAuthority("ADMIN")
+                        .requestMatchers(GeneratedContentPatterns).hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class)

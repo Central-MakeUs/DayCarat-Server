@@ -2,14 +2,12 @@ package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.activity.entity.ActivityTag;
-import com.example.daycarat.domain.episode.entity.Episode;
-import com.example.daycarat.domain.episode.entity.EpisodeContent;
-import com.example.daycarat.domain.episode.entity.EpisodeContentType;
-import com.example.daycarat.domain.episode.entity.EpisodeState;
+import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
+import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -31,6 +29,7 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
+    private final GeneratedContentService generatedContentService;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
         ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
@@ -254,6 +253,29 @@ public class EpisodeService {
         LocalDateTime now = LocalDateTime.now();
 
         return episodeRepository.getEpisodeCountOfTheMonth(user, now.getYear(), now.getMonthValue());
+
+    }
+
+    public Boolean updateEpisodeKeyword(PatchEpisodeKeyword patchEpisodeKeyword) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Episode episode = episodeRepository.findById(patchEpisodeKeyword.episodeId())
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
+        EpisodeValidator.checkIfDeleted(episode);
+        EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+        EpisodeValidator.checkIfUnfinalized(episode);
+
+        generatedContentService.checkIfGeneratedContentExists(episode.getId());
+
+        episode.updateKeyword(EpisodeKeyword.fromValue(patchEpisodeKeyword.keyword()));
+
+        episodeRepository.save(episode);
+
+        return true;
 
     }
 }
