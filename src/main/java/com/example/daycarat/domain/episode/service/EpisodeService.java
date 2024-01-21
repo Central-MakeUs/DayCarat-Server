@@ -1,9 +1,9 @@
 package com.example.daycarat.domain.episode.service;
 
-import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.activity.entity.ActivityTag;
-import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
+import com.example.daycarat.domain.episode.dto.*;
+import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
@@ -204,7 +204,10 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize);
+        return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize)
+                .stream()
+                .map(GetEpisodePage::convert)
+                .collect(Collectors.toList());
     }
 
     public List<GetEpisodePage> getEpisodeByActivity(String activityTagName, Long cursorId, Integer pageSize) {
@@ -215,7 +218,10 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize);
+        return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize)
+                .stream()
+                .map(GetEpisodePage::convert)
+                .collect(Collectors.toList());
     }
 
     public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
@@ -227,20 +233,13 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
+        EpisodeValidator.checkIfDeleted(episode);
+
         if (!episode.getUser().equals(user)) {
             throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
         }
 
-        return GetEpisodeDetail.of(
-                episode.getId(),
-                episode.getTitle(),
-                episode.getActivityTag().getActivityTagName(),
-                LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
-                episode.getEpisodeState(),
-                episode.getEpisodeContents().stream()
-                        .filter(episodeContent -> !episodeContent.getIsDeleted())
-                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
-                        .collect(Collectors.toList()));
+        return GetEpisodeDetail.of(episode);
 
     }
 
@@ -253,6 +252,16 @@ public class EpisodeService {
         LocalDateTime now = LocalDateTime.now();
 
         return episodeRepository.getEpisodeCountOfTheMonth(user, now.getYear(), now.getMonthValue());
+
+    }
+
+    public GetEpisodeCount getAllEpisodeCount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.getEpisodeCount(user);
 
     }
 

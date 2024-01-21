@@ -2,6 +2,7 @@ package com.example.daycarat.domain.episode.entity;
 
 import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.gem.entity.Gem;
+import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -30,6 +31,9 @@ public class Episode extends BaseEntity {
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<EpisodeContent> episodeContents;
+
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
+    private List<GeneratedContent> generatedContents;
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     private List<Gem> gem;

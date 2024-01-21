@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.episode.repository;
 
 import com.example.daycarat.domain.episode.dto.GetEpisodeCount;
-import com.example.daycarat.domain.episode.dto.GetEpisodePage;
+import com.example.daycarat.domain.episode.dto.GetEpisodePageDto;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.daycarat.domain.episode.entity.EpisodeState.UNFINALIZED;
 import static com.example.daycarat.domain.episode.entity.QEpisode.episode;
 import static com.example.daycarat.domain.episode.entity.QEpisodeContent.episodeContent;
 
@@ -30,7 +29,6 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
         return jpaQueryFactory
                 .selectFrom(episode)
                 .where(episode.user.eq(user)
-                        .and(episode.episodeState.eq(UNFINALIZED))
                         .and(episode.isDeleted.eq(false)))
                 .orderBy(episode.createdDate.desc())
                 .limit(3)
@@ -46,7 +44,6 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .from(episode)
                 .where(episode.user.eq(user)
                         .and(episode.selectedDate.year().eq(year))
-                        .and(episode.episodeState.eq(UNFINALIZED))
                         .and(episode.isDeleted.eq(false)))
                 .groupBy(episode.selectedDate.month())
                 .fetch();
@@ -61,7 +58,6 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         episode.activityTag.count()))
                 .from(episode)
                 .where(episode.user.eq(user)
-                        .and(episode.episodeState.eq(UNFINALIZED))
                         .and(episode.isDeleted.eq(false)))
                 .groupBy(episode.activityTag.activityTagName)
                 .orderBy(episode.activityTag.count().desc())
@@ -69,13 +65,14 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodePage> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
+    public List<GetEpisodePageDto> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodePage.class,
+                .select(Projections.constructor(GetEpisodePageDto.class,
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
+                        episode.episodeKeyword,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -84,7 +81,6 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         .and(episode.selectedDate.year().eq(year))
                         .and(episode.selectedDate.month().eq(month))
                         .and(ltEpisodeId(cursorId))
-                        .and(episode.episodeState.eq(UNFINALIZED))
                         .and(episode.isDeleted.eq(false))
                         .and(episodeContent.isDeleted.eq(false))
                         .and(episodeContent.isMainContent.eq(true)))
@@ -96,13 +92,14 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodePage> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
+    public List<GetEpisodePageDto> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodePage.class,
+                .select(Projections.constructor(GetEpisodePageDto.class,
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
+                        episode.episodeKeyword,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -110,7 +107,6 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .where(episode.user.eq(user)
                         .and(episode.activityTag.activityTagName.eq(activityTagName))
                         .and(ltEpisodeId(cursorId))
-                        .and(episode.episodeState.eq(UNFINALIZED))
                         .and(episode.isDeleted.eq(false))
                         .and(episodeContent.isDeleted.eq(false))
                         .and(episodeContent.isMainContent.eq(true)))
@@ -131,7 +127,17 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .where(episode.user.eq(user)
                         .and(episode.selectedDate.year().eq(year))
                         .and(episode.selectedDate.month().eq(month))
-                        .and(episode.episodeState.eq(UNFINALIZED))
+                        .and(episode.isDeleted.eq(false)))
+                .fetchOne();
+    }
+
+    @Override
+    public GetEpisodeCount getEpisodeCount(User user) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetEpisodeCount.class,
+                        episode.selectedDate.count()))
+                .from(episode)
+                .where(episode.user.eq(user)
                         .and(episode.isDeleted.eq(false)))
                 .fetchOne();
     }

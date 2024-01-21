@@ -156,10 +156,20 @@ public class EpisodeController {
             description = """
                     이번 달 나의 에피소드 개수를 조회합니다.
                     """)
-    @GetMapping("/count")
+    @GetMapping("/count/month")
     public SuccessResponse<GetEpisodeCount> getEpisodeCount() {
         return SuccessResponse.success(episodeService.getEpisodeCount());
     }
+
+    @Operation(summary = "내 전체 에피소드(원석) 개수 가져오기",
+            description = """
+                    내 전체 에피소드(원석) 개수를 가져옵니다.
+                    """)
+    @GetMapping("/count/all")
+    public SuccessResponse<GetEpisodeCount> getAllEpisodeCount() {
+        return SuccessResponse.success(episodeService.getAllEpisodeCount());
+    }
+
 
     @Operation(summary = "에피소드 키워드 수정하기",
             description = """
