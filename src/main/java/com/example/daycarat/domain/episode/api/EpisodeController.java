@@ -69,7 +69,33 @@ public class EpisodeController {
     @Operation(summary = "에피소드 상세 조회하기",
             description = """
                     에피소드의 상세 정보를 조회합니다.
+                    
+                    요청값
                     - episodeId: 조회할 에피소드의 ID입니다.
+                    
+                    반환값
+                    - episodeId : 에피소드 ID
+                    - title : 에피소드 제목
+                    - activityTagName : 활동 태그명
+                    - selectedDate : 선택 날짜
+                    - episodeState : 보석 다듬기 여부 (UNFINALIZED || FINALIZED)
+                    - episodeKeyword : 에피소드 키워드
+                    - episodeContents : 에피소드 내용
+                        - episodeContentId : 에피소드 내용 ID
+                        - episodeContentType : 에피소드 내용 타입
+                        - content : 에피소드 내용
+                    - generatedContents : AI 생성 컨텐츠
+                        - generatedContentId : AI 생성 컨텐츠 ID
+                        - generatedContent1 : AI 생성 문장 1
+                        - generatedContent2 : AI 생성 문장 2
+                        - generatedContent3 : AI 생성 문장 3
+                    - gem : 보석
+                        - gemId : 보석 ID
+                        - content1 : SOARA 문장 1
+                        - content2 : SOARA 문장 2
+                        - content3 : SOARA 문장 3
+                        - content4 : SOARA 문장 4
+                        - content5 : SOARA 문장 5
                     """)
     @GetMapping("/{episodeId}")
     public SuccessResponse<GetEpisodeDetail> getEpisodeDetail(@PathVariable Long episodeId) {

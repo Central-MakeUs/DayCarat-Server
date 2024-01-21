@@ -30,7 +30,7 @@ public record GetEpisodeDetail(
                 episode.getTitle(),
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
-                episode.getEpisodeKeyword().getValue(),
+                episode.getEpisodeKeyword() == null ? null : episode.getEpisodeKeyword().getValue(),
                 episode.getEpisodeState(),
                 GetEpisodeContent.listOf(episode.getEpisodeContents()),
                 GetGeneratedContent.of(episode.getGeneratedContents()),
