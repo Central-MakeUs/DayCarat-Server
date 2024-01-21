@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.daycarat.domain.episode.entity.EpisodeState.UNFINALIZED;
 import static com.example.daycarat.domain.episode.entity.QEpisode.episode;
 import static com.example.daycarat.domain.episode.entity.QEpisodeContent.episodeContent;
 
