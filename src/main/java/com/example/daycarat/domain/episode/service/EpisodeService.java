@@ -256,6 +256,16 @@ public class EpisodeService {
 
     }
 
+    public GetEpisodeCount getAllEpisodeCount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return episodeRepository.getEpisodeCount(user);
+
+    }
+
     public Boolean updateEpisodeKeyword(PatchEpisodeKeyword patchEpisodeKeyword) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 

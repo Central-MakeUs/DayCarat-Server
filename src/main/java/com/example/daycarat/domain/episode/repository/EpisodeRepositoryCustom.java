@@ -21,5 +21,6 @@ public interface EpisodeRepositoryCustom {
     List<GetEpisodePage> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize);
 
     GetEpisodeCount getEpisodeCountOfTheMonth(User user, Integer year, Integer month);
+    GetEpisodeCount getEpisodeCount(User user);
 
 }

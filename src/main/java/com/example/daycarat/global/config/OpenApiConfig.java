@@ -28,6 +28,14 @@ import org.springframework.context.annotation.Configuration;
 
         > 에피소드 상세 조회, 최신순 3개 조회, 에피소드 조회: 활동 많은순: 활동별 조회, 에피소드 조회: 날짜 최신순: 월별 조회 시 episodeState 추가
                         - 'UNFINALIZED'는 다듬지 않은 에피소드를, 'FINALIZED'는 다듬은 에피소드를 의미합니다.
+                        
+        - 01-21
+        
+        > 이번달 에피소드 개수 조회
+                        - 요청 경로 "/episode/count/month" 로 수정
+        
+        > 전체 에피소드 개수 조회
+                        - 전체 에피소드 개수 조회 API 추가 : "/episode/count/all" 로 요청
 
         """),
         servers = {

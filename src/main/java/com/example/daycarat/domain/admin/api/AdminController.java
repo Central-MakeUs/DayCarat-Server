@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Admin", description = """
-    # 관리자 API: 개발용 토큰으로만 작동함
-    
+    관리자 API: 개발용 토큰으로만 작동함
     서버 관리자가 비상용으로 쓰려고 만든거라 무시하셔도 됩니다.
 """)
 @RestController
