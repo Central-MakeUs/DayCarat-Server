@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.episode.repository;
 
 import com.example.daycarat.domain.episode.dto.GetEpisodeCount;
-import com.example.daycarat.domain.episode.dto.GetEpisodePage;
+import com.example.daycarat.domain.episode.dto.GetEpisodePageDto;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
@@ -65,9 +65,9 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodePage> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
+    public List<GetEpisodePageDto> getEpisodePageByDate(User user, Integer year, Integer month, Long cursorId, Integer pageSize) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodePage.class,
+                .select(Projections.constructor(GetEpisodePageDto.class,
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
@@ -92,9 +92,9 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
     }
 
     @Override
-    public List<GetEpisodePage> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
+    public List<GetEpisodePageDto> getEpisodePageByActivity(User user, String activityTagName, Long cursorId, Integer pageSize) {
         return jpaQueryFactory
-                .select(Projections.constructor(GetEpisodePage.class,
+                .select(Projections.constructor(GetEpisodePageDto.class,
                         episode.id,
                         episode.title,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),

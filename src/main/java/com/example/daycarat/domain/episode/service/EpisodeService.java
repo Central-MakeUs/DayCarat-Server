@@ -204,7 +204,10 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize);
+        return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize)
+                .stream()
+                .map(GetEpisodePage::convert)
+                .collect(Collectors.toList());
     }
 
     public List<GetEpisodePage> getEpisodeByActivity(String activityTagName, Long cursorId, Integer pageSize) {
@@ -215,7 +218,10 @@ public class EpisodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize);
+        return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize)
+                .stream()
+                .map(GetEpisodePage::convert)
+                .collect(Collectors.toList());
     }
 
     public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
