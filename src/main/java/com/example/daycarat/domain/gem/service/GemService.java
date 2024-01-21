@@ -4,7 +4,7 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
-import com.example.daycarat.domain.gem.dto.GetRecommedation;
+import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.entity.Gem;
@@ -161,7 +161,7 @@ public class GemService {
 
     }
 
-    public GetRecommedation getRecommend(Long episodeId) {
+    public GetGeneratedContent getRecommend(Long episodeId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
@@ -188,7 +188,8 @@ public class GemService {
                     return new CustomException(ErrorCode.AI_RECOMMENDATION_NOT_FOUND);
                 });
 
-        return new GetRecommedation(
+        return new GetGeneratedContent(
+                generatedContent.getId(),
                 generatedContent.getGeneratedContent1(),
                 generatedContent.getGeneratedContent2(),
                 generatedContent.getGeneratedContent3()

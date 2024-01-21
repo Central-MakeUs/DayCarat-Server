@@ -227,20 +227,13 @@ public class EpisodeService {
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
+        EpisodeValidator.checkIfDeleted(episode);
+
         if (!episode.getUser().equals(user)) {
             throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
         }
 
-        return GetEpisodeDetail.of(
-                episode.getId(),
-                episode.getTitle(),
-                episode.getActivityTag().getActivityTagName(),
-                LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
-                episode.getEpisodeState(),
-                episode.getEpisodeContents().stream()
-                        .filter(episodeContent -> !episodeContent.getIsDeleted())
-                        .map(episodeContent -> GetEpisodeContent.of(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
-                        .collect(Collectors.toList()));
+        return GetEpisodeDetail.of(episode);
 
     }
 

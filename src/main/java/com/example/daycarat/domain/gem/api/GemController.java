@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.gem.api;
 
-import com.example.daycarat.domain.gem.dto.GetRecommedation;
+import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.service.GemService;
@@ -69,7 +69,7 @@ public class GemController {
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE
                                         , schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public SuccessResponse<GetRecommedation> getRecommend(@PathVariable Long episodeId) {
+    public SuccessResponse<GetGeneratedContent> getRecommend(@PathVariable Long episodeId) {
         return SuccessResponse.success(gemService.getRecommend(episodeId));
     }
 

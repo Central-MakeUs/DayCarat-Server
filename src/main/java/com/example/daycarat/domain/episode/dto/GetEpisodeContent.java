@@ -1,7 +1,10 @@
 package com.example.daycarat.domain.episode.dto;
 
+import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.entity.EpisodeContentType;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.List;
 
 public record GetEpisodeContent(
         @Schema(description = "내용 ID", example = "1") Long episodeContentId,
@@ -11,5 +14,12 @@ public record GetEpisodeContent(
 
     public static GetEpisodeContent of(Long episodeContentId, EpisodeContentType episodeContentType, String content) {
         return new GetEpisodeContent(episodeContentId, episodeContentType, content);
+    }
+
+    public static List<GetEpisodeContent> listOf(List<EpisodeContent> episodeContents) {
+        return episodeContents.stream()
+                .filter(episodeContent -> !episodeContent.getIsDeleted())
+                .map(episodeContent -> new GetEpisodeContent(episodeContent.getId(), episodeContent.getEpisodeContentType(), episodeContent.getContent()))
+                .toList();
     }
 }
