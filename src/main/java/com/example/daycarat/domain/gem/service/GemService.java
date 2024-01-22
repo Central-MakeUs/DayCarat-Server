@@ -4,6 +4,7 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
+import com.example.daycarat.domain.gem.dto.GetGemCount;
 import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
@@ -194,6 +195,16 @@ public class GemService {
                 generatedContent.getGeneratedContent2(),
                 generatedContent.getGeneratedContent3()
         );
+
+    }
+
+    public GetGemCount getGemCount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return gemRepository.getGemCount(user.getId());
 
     }
 }
