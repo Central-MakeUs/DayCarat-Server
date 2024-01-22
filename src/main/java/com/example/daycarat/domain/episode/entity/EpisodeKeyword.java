@@ -12,7 +12,8 @@ public enum EpisodeKeyword {
     DILIGENCE(4, "성실"),
     COLLABORATION(5, "협업 능력"),
     LEADERSHIP(6, "리더십"),
-    FEEDBACK(7, "피드백");
+    FEEDBACK(7, "피드백"),
+    UNSET(8, "미선택");
 
     private final int id;
     private final String value;

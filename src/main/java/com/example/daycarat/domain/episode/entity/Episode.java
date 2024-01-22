@@ -50,21 +50,23 @@ public class Episode extends BaseEntity {
     private EpisodeKeyword episodeKeyword;
 
     @Builder
-    public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {
         this.user = user;
         this.activityTag = activityTag;
         this.title = title;
         this.selectedDate = selectedDate;
         this.episodeState = episodeState;
+        this.episodeKeyword = episodeKeyword;
     }
 
-    public static Episode of(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public static Episode of(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {
         return Episode.builder()
                 .user(user)
                 .activityTag(activityTag)
                 .title(title)
                 .selectedDate(selectedDate)
                 .episodeState(episodeState)
+                .episodeKeyword(episodeKeyword)
                 .build();
     }
 

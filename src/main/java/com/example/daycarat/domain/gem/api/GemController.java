@@ -1,10 +1,11 @@
 package com.example.daycarat.domain.gem.api;
 
 import com.example.daycarat.domain.gem.dto.GetGemCount;
-import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
+import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeyword;
 import com.example.daycarat.domain.gem.dto.PatchGem;
 import com.example.daycarat.domain.gem.dto.PostGem;
 import com.example.daycarat.domain.gem.service.GemService;
+import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.global.error.ErrorResponse;
 import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Gem", description = "보석 관련 API")
 @RestController @RequestMapping("/gem") @RequiredArgsConstructor
@@ -86,6 +89,16 @@ public class GemController {
         return SuccessResponse.success(gemService.getGemCount());
     }
 
+    @Operation(summary = "보석 키워드별 개수 조회하기",
+            description = """
+                    보석 키워드별 개수를 조회합니다.
+                    
+                    반환값:
+                    """)
+    @GetMapping("/keyword")
+    public SuccessResponse<List<GetGemSummaryByKeyword>> getGemSummaryByKeyword() {
+        return SuccessResponse.success(gemService.getGemSummaryByKeyword());
+    }
 
 
 }

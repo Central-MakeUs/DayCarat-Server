@@ -1,9 +1,12 @@
 package com.example.daycarat.domain.gem.repository;
 
 import com.example.daycarat.domain.gem.dto.GetGemCount;
+import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeywordDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import static com.example.daycarat.domain.gem.entity.QGem.gem;
 
@@ -22,5 +25,19 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
                 .where(gem.episode.user.id.eq(userId)
                         .and(gem.isDeleted.eq(false)))
                 .fetchOne();
+    }
+
+    @Override
+    public List<GetGemSummaryByKeywordDto> getGemSummaryByKeyword(Long userId) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetGemSummaryByKeywordDto.class,
+                        gem.episode.episodeKeyword,
+                        gem.count()
+                ))
+                .from(gem)
+                .where(gem.episode.user.id.eq(userId)
+                        .and(gem.isDeleted.eq(false)))
+                .groupBy(gem.episode.episodeKeyword)
+                .fetch();
     }
 }

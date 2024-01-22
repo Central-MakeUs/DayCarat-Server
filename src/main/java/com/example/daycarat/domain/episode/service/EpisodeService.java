@@ -71,6 +71,7 @@ public class EpisodeService {
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
                 .episodeState(EpisodeState.UNFINALIZED)
+                .episodeKeyword(EpisodeKeyword.UNSET)
                 .build();
 
         episodeRepository.save(episode);

@@ -1,16 +1,15 @@
 package com.example.daycarat.domain.gem.service;
 
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
-import com.example.daycarat.domain.gem.dto.GetGemCount;
-import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
-import com.example.daycarat.domain.gem.dto.PatchGem;
-import com.example.daycarat.domain.gem.dto.PostGem;
+import com.example.daycarat.domain.gem.dto.*;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.gem.validator.GemValidator;
+import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
@@ -29,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service @RequiredArgsConstructor
@@ -205,6 +205,35 @@ public class GemService {
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return gemRepository.getGemCount(user.getId());
+
+    }
+
+    public List<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        List<GetGemSummaryByKeywordDto> getGemSummaryByKeywordDtoList = gemRepository.getGemSummaryByKeyword(user.getId());
+
+        // 0개인 키워드들을 반환하기 위해 리스트에 추가
+        for (EpisodeKeyword episodeKeyword : EpisodeKeyword.values()) {
+            boolean isExist = false;
+            for (GetGemSummaryByKeywordDto getGemSummaryByKeywordDto : getGemSummaryByKeywordDtoList) {
+                if (getGemSummaryByKeywordDto.episodeKeyword().equals(episodeKeyword)) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                getGemSummaryByKeywordDtoList.add(new GetGemSummaryByKeywordDto(episodeKeyword, 0L));
+            }
+        }
+
+        return getGemSummaryByKeywordDtoList
+                .stream()
+                .map(GetGemSummaryByKeywordDto::toGetGemSummaryByKeyword)
+                .toList();
 
     }
 }
