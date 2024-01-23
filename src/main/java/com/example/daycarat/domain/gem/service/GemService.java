@@ -111,8 +111,7 @@ public class GemService {
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        episode.updateState(EpisodeState.UNFINALIZED);
-
+        episode.initEpisodeKeyword();
         episodeRepository.save(episode);
 
         gem.delete();
@@ -138,6 +137,9 @@ public class GemService {
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+
+        episode.initEpisodeKeyword();
+        episodeRepository.save(episode);
 
         String s3ObjectKey = LocalDateTime.now().toString();
 

@@ -49,6 +49,9 @@ public class Episode extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EpisodeKeyword episodeKeyword;
 
+    @Column(columnDefinition = "Boolean default false")
+    private Boolean isEpisodeKeywordUserSelected;
+
     @Builder
     public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {
         this.user = user;
@@ -85,5 +88,14 @@ public class Episode extends BaseEntity {
     }
     public void updateKeyword(EpisodeKeyword episodeKeyword) {
         this.episodeKeyword = episodeKeyword;
+    }
+
+    public void updateIsEpisodeKeywordUserSelected(boolean isEpisodeKeywordUserSelected) {
+        this.isEpisodeKeywordUserSelected = isEpisodeKeywordUserSelected;
+    }
+
+    public void initEpisodeKeyword() {
+        this.episodeKeyword = EpisodeKeyword.UNSET;
+        this.isEpisodeKeywordUserSelected = false;
     }
 }

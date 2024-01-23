@@ -16,12 +16,13 @@ public record GetEpisodeDetail(
         @Schema(description = "선택 날짜", example = "2024년 01월 09일 화요일") String selectedDate,
         @Schema(description = "보석 다듬기 여부", example = "UNFINALIZED") EpisodeState episodeState,
         @Schema(description = "에피소드 키워드", example = "커뮤니케이션") String episodeKeyword,
+        @Schema(description = "에피소드 키워드 유저 작성 여부", example = "true") Boolean isEpisodeKeywordUserSelected,
         List<GetEpisodeContent> episodeContents,
         GetGeneratedContent generatedContents,
         GetGem gem
 ) {
-    public static GetEpisodeDetail of(Long episodeId, String title, String activityTagName, String selectedDate, String episodeKeyword, EpisodeState episodeState, List<GetEpisodeContent> episodeContents, GetGeneratedContent generatedContents, GetGem gem) {
-        return new GetEpisodeDetail(episodeId, title, activityTagName, selectedDate, episodeState, episodeKeyword, episodeContents, generatedContents, gem);
+    public static GetEpisodeDetail of(Long episodeId, String title, String activityTagName, String selectedDate, String episodeKeyword, Boolean isEpisodeKeywordUserSelected, EpisodeState episodeState, List<GetEpisodeContent> episodeContents, GetGeneratedContent generatedContents, GetGem gem) {
+        return new GetEpisodeDetail(episodeId, title, activityTagName, selectedDate, episodeState, episodeKeyword, isEpisodeKeywordUserSelected, episodeContents, generatedContents, gem);
     }
 
     public static GetEpisodeDetail of(Episode episode) {
@@ -31,6 +32,7 @@ public record GetEpisodeDetail(
                 episode.getActivityTag().getActivityTagName(),
                 LocalDateTimeParser.toStringWithDetail(episode.getSelectedDate()),
                 episode.getEpisodeKeyword() == null ? null : episode.getEpisodeKeyword().getValue(),
+                episode.getIsEpisodeKeywordUserSelected(),
                 episode.getEpisodeState(),
                 GetEpisodeContent.listOf(episode.getEpisodeContents()),
                 GetGeneratedContent.of(episode.getGeneratedContents()),
