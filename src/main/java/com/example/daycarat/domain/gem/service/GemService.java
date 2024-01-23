@@ -211,9 +211,7 @@ public class GemService {
     }
 
     public List<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         List<GetGemSummaryByKeywordDto> getGemSummaryByKeywordDtoList = gemRepository.getGemSummaryByKeyword(user.getId());
@@ -235,6 +233,19 @@ public class GemService {
         return getGemSummaryByKeywordDtoList
                 .stream()
                 .map(GetGemSummaryByKeywordDto::toGetGemSummaryByKeyword)
+                .toList();
+
+    }
+
+    public List<GetGemPageByKeyword> getGemPageByKeyword(String keyword, Long cursorId, Integer pageSize) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (pageSize == null) pageSize = 6;
+
+        return episodeRepository.getEpisodePageByKeyword(user, EpisodeKeyword.fromValue(keyword), cursorId, pageSize)
+                .stream()
+                .map(GetGemPageByKeywordDto::toGetGemPageByKeyword)
                 .toList();
 
     }

@@ -1,14 +1,12 @@
 package com.example.daycarat.domain.gem.api;
 
-import com.example.daycarat.domain.gem.dto.GetGemCount;
-import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeyword;
-import com.example.daycarat.domain.gem.dto.PatchGem;
-import com.example.daycarat.domain.gem.dto.PostGem;
+import com.example.daycarat.domain.gem.dto.*;
 import com.example.daycarat.domain.gem.service.GemService;
 import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.global.error.ErrorResponse;
 import com.example.daycarat.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -100,5 +98,19 @@ public class GemController {
         return SuccessResponse.success(gemService.getGemSummaryByKeyword());
     }
 
+    @Operation(summary = "보석 키워드별 보석 리스트 조회하기",
+            description = """
+                    보석 키워드별 보석 리스트를 조회합니다.
+                    
+                    반환값:
+                    """)
+    @GetMapping("/keyword/{keyword}")
+    public SuccessResponse<List<GetGemPageByKeyword>> getGemSummaryByKeyword(
+            @PathVariable String keyword,
+            @Parameter(description = "1번째 페이지 조회시 null, " +
+                    "2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id") @RequestParam(required = false) Long cursorId,
+            @Parameter(description = "한 페이지에 가져올 에피소드 개수, 기본값 6") @RequestParam(required = false) Integer pageSize) {
+        return SuccessResponse.success(gemService.getGemPageByKeyword(keyword, cursorId, pageSize));
+    }
 
 }
