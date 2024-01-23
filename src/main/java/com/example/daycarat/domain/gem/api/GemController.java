@@ -92,6 +92,9 @@ public class GemController {
                     보석 키워드별 개수를 조회합니다.
                     
                     반환값:
+                    배열로 반환됩니다.
+                        - episodeKeyword : 에피소드 키워드
+                        - count : 개수
                     """)
     @GetMapping("/keyword")
     public SuccessResponse<List<GetGemSummaryByKeyword>> getGemSummaryByKeyword() {
@@ -102,7 +105,17 @@ public class GemController {
             description = """
                     보석 키워드별 보석 리스트를 조회합니다.
                     
+                    요청값:
+                    - keyword: 에피소드 키워드입니다. (커뮤니케이션, 갈등 해결, 열정, 성실, 협업 능력, 리더십, 피드백, 미선택)
+                    - cursorId: 1번째 페이지 조회시 null, 2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id을 입력합니다.
+                    - pageSize: 한 페이지에 가져올 에피소드 개수, 기본값은 6입니다.
+                    
                     반환값:
+                    배열로 반환됩니다.
+                        - episodeId : 에피소드 ID
+                        - title : 보석 제목
+                        - date : 보석 생성 날짜
+                        - content : 보석 내용
                     """)
     @GetMapping("/keyword/{keyword}")
     public SuccessResponse<List<GetGemPageByKeyword>> getGemSummaryByKeyword(

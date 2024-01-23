@@ -13,14 +13,4 @@ public record GetEpisodePage(
     String episodeKeyword,
     @Schema(description = "내용", example = "배운 점 / 팀원 간의 소통에 있어 부족한 부분이 많이 보여 PM으로서 이를 해결하는 방법에 대한 ...") String content
 ) {
-    public static GetEpisodePage convert(GetEpisodePageDto getEpisodePageDto) {
-        return new GetEpisodePage(
-            getEpisodePageDto.id(),
-            getEpisodePageDto.title(),
-            getEpisodePageDto.date(),
-            getEpisodePageDto.episodeState(),
-            getEpisodePageDto.episodeKeyword() == null ? null : getEpisodePageDto.episodeKeyword().getValue(),
-            getEpisodePageDto.content()
-        );
-    }
 }

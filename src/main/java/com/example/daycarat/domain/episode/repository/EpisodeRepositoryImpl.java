@@ -76,6 +76,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
                         episode.episodeKeyword,
+                        episodeContent.episodeContentType,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -103,6 +104,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
                         episode.episodeKeyword,
+                        episodeContent.episodeContentType,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -151,8 +153,8 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .select(Projections.constructor(GetGemPageByKeywordDto.class,
                         episode.id,
                         episode.title,
-                        episode.episodeKeyword,
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
+                        episodeContent.episodeContentType,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)

@@ -1,20 +1,20 @@
 package com.example.daycarat.domain.gem.dto;
 
-import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
+import com.example.daycarat.domain.episode.entity.EpisodeContentType;
+import com.example.daycarat.global.util.StringParser;
 
-public record GetGemPageByKeywordDto(
-        Long epiodeId,
+public record GetGemPageByKeywordDto (
+        Long episodeId,
         String title,
-        EpisodeKeyword EpisodeKeyword,
         String date,
+        EpisodeContentType contentType,
         String content) {
-    public GetGemPageByKeyword toGetGemPageByKeyword() {
+    public GetGemPageByKeyword convert() {
         return new GetGemPageByKeyword(
-                this.epiodeId,
-                this.title,
-                this.EpisodeKeyword.getValue(),
-                this.date,
-                this.content
+                episodeId,
+                title,
+                date,
+                contentType.getValue() + " / " + StringParser.getSubString(content)
         );
     }
 }

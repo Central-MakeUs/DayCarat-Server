@@ -207,7 +207,7 @@ public class EpisodeService {
 
         return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize)
                 .stream()
-                .map(GetEpisodePage::convert)
+                .map(GetEpisodePageDto::convert)
                 .collect(Collectors.toList());
     }
 
@@ -221,7 +221,7 @@ public class EpisodeService {
 
         return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize)
                 .stream()
-                .map(GetEpisodePage::convert)
+                .map(GetEpisodePageDto::convert)
                 .collect(Collectors.toList());
     }
 

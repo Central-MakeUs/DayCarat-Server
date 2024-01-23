@@ -50,7 +50,7 @@ public class Episode extends BaseEntity {
     private EpisodeKeyword episodeKeyword;
 
     @Column(columnDefinition = "Boolean default false")
-    private Boolean isEpisodeKeywordUserSelected;
+    private Boolean isEpisodeKeywordUserSelected = false;
 
     @Builder
     public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {

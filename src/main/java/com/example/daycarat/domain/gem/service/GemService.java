@@ -245,7 +245,7 @@ public class GemService {
 
         return episodeRepository.getEpisodePageByKeyword(user, EpisodeKeyword.fromValue(keyword), cursorId, pageSize)
                 .stream()
-                .map(GetGemPageByKeywordDto::toGetGemPageByKeyword)
+                .map(GetGemPageByKeywordDto::convert)
                 .toList();
 
     }
