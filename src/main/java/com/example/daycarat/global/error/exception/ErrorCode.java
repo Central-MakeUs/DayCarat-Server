@@ -39,6 +39,7 @@ public enum ErrorCode {
     GEM_NOT_FOUND(404, "C006", "존재하지 않는 보석입니다."),
     GEM_USER_NOT_MATCHED(403, "C007", "보석의 소유자가 아닙니다."),
     GEM_ALREADY_EXISTS(409, "C008", "이미 보석이 존재합니다."),
+    GEM_CONTENTS_NOT_FILLED(400, "C001", "보석의 내용이 모두 채워지지 않았습니다."),
 
     // GeneratedContent
     GENERATED_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 AI 생성 컨텐츠입니다.");

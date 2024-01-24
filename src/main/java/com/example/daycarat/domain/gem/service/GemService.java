@@ -94,6 +94,8 @@ public class GemService {
 
         episode.updateState(EpisodeState.FINALIZED);
 
+        GemValidator.validateContents(gem);
+
         PostSoara postSoara = new PostSoara(
                 episode.getId(),
                 gem.getContent1(),

@@ -12,4 +12,9 @@ public class GemValidator {
         }
     }
 
+    public static void validateContents(Gem gem) {
+        if (gem.getContent1() == null || gem.getContent2() == null || gem.getContent3() == null || gem.getContent4() == null || gem.getContent5() == null) {
+            throw new CustomException(ErrorCode.GEM_CONTENTS_NOT_FILLED);
+        }
+    }
 }
