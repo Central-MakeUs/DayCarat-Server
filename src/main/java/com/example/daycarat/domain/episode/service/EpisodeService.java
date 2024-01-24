@@ -7,7 +7,6 @@ import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
-import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -29,7 +28,6 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
-    private final GeneratedContentService generatedContentService;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
         ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)

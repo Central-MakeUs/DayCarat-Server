@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.gem.service;
 
 import com.example.daycarat.domain.activity.entity.ActivityTag;
+import com.example.daycarat.domain.gem.dto.GetEpisodeClipboard;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
@@ -19,6 +20,7 @@ import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
+import com.example.daycarat.global.util.StringParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
@@ -202,13 +204,17 @@ public class GemService {
     }
 
     public GetGemCount getGemCount() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return gemRepository.getGemCount(user.getId());
+    }
 
+    public GetGemCount getGemCountByMonth() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return gemRepository.getGemCountByMonth(user.getId());
     }
 
     public List<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
@@ -275,5 +281,19 @@ public class GemService {
         }
 
         return new GetMostGemActivity(activityTag.getActivityTagName());
+    }
+
+
+    public GetEpisodeClipboard getEpisodeClipboard(Long episodeId) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        GetEpisodeClipboardDto getEpisodeClipboardDto = gemRepository.getEpisodeClipboard(episodeId);
+
+        if (!getEpisodeClipboardDto.userId().equals(user.getId()))
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+
+        return new GetEpisodeClipboard(StringParser.getClipboard(getEpisodeClipboardDto));
+
     }
 }

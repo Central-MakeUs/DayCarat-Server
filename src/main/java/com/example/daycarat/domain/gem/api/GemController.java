@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.api;
 
+import com.example.daycarat.domain.gem.dto.GetEpisodeClipboard;
 import com.example.daycarat.domain.gem.dto.*;
 import com.example.daycarat.domain.gem.service.GemService;
 import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
@@ -75,18 +76,6 @@ public class GemController {
         return SuccessResponse.success(gemService.getRecommend(episodeId));
     }
 
-    @Operation(summary = "보석 개수 조회하기",
-            description = """
-                    보석 개수를 조회합니다.
-                    
-                    반환값:
-                    - gemCount : 보석 개수
-                    """)
-    @GetMapping("/count")
-    public SuccessResponse<GetGemCount> getGemCount() {
-        return SuccessResponse.success(gemService.getGemCount());
-    }
-
     @Operation(summary = "보석 키워드별 개수 조회하기",
             description = """
                     보석 키워드별 개수를 조회합니다.
@@ -126,6 +115,30 @@ public class GemController {
         return SuccessResponse.success(gemService.getGemPageByKeyword(keyword, cursorId, pageSize));
     }
 
+    @Operation(summary = "보석 개수 조회하기",
+            description = """
+                    보석 개수를 조회합니다.
+                    
+                    반환값:
+                    - gemCount : 보석 개수
+                    """)
+    @GetMapping("/count")
+    public SuccessResponse<GetGemCount> getGemCount() {
+        return SuccessResponse.success(gemService.getGemCount());
+    }
+
+    @Operation(summary = "이번달 보석 개수 조회하기",
+            description = """
+                    이번달 보석 개수를 조회합니다.
+                    
+                    반환값:
+                    - gemCount : 보석 개수
+                    """)
+    @GetMapping("/report/month-count")
+    public SuccessResponse<GetGemCount> getGemCountByMonth() {
+        return SuccessResponse.success(gemService.getGemCountByMonth());
+    }
+
     @Operation(summary = "가장 보석이 많은 키워드 조회하기",
             description = """
                     가장 보석이 많은 키워드를 조회합니다.
@@ -148,6 +161,15 @@ public class GemController {
     @GetMapping("/report/activity")
     public SuccessResponse<GetMostGemActivity> getMostGemActivity() {
         return SuccessResponse.success(gemService.getMostGemActivity());
+    }
+
+    @Operation(summary = "에피소드 클립보드 복사용 문자열 가져오기",
+            description = """
+                    에피소드 클립보드 복사용 문자열을 가져옵니다.
+                    """)
+    @GetMapping("/clipboard/{episodeId}")
+    public SuccessResponse<GetEpisodeClipboard> getEpisodeClipboard(@PathVariable Long episodeId) {
+        return SuccessResponse.success(gemService.getEpisodeClipboard(episodeId));
     }
 
 }
