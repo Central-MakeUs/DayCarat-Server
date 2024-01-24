@@ -126,7 +126,13 @@ public class GemController {
         return SuccessResponse.success(gemService.getGemPageByKeyword(keyword, cursorId, pageSize));
     }
 
-    @Operation(summary = "가장 보석이 많은 키워드 조회하기")
+    @Operation(summary = "가장 보석이 많은 키워드 조회하기",
+            description = """
+                    가장 보석이 많은 키워드를 조회합니다.
+                    
+                    반환값:
+                    - episodeKeyword : 에피소드 키워드, **보석이 하나도 없으면 "보석 없음" 이라고 반환합니다.**
+                    """)
     @GetMapping("/report/keyword")
     public SuccessResponse<GetMostGemKeyword> getMostGemKeyword() {
         return SuccessResponse.success(gemService.getMostGemKeyword());
