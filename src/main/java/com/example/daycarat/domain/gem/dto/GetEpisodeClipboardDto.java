@@ -1,7 +1,6 @@
 package com.example.daycarat.domain.gem.dto;
 
 public record GetEpisodeClipboardDto(
-        Long userId,
         String content1,
         String content2,
         String content3,

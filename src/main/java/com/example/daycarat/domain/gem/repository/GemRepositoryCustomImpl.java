@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.daycarat.domain.episode.entity.QEpisode.episode;
 import static com.example.daycarat.domain.gem.entity.QGem.gem;
@@ -95,10 +96,9 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
     }
 
     @Override
-    public GetEpisodeClipboardDto getEpisodeClipboard(Long episodeId) {
-        return jpaQueryFactory
+    public Optional<GetEpisodeClipboardDto> getEpisodeClipboard(Long userId, Long episodeId) {
+        return Optional.ofNullable(jpaQueryFactory
                 .select(Projections.constructor(GetEpisodeClipboardDto.class,
-                        episode.user.id,
                         gem.content1,
                         gem.content2,
                         gem.content3,
@@ -112,10 +112,11 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
                 .leftJoin(gem).on(episode.id.eq(gem.episode.id))
                 .leftJoin(generatedContent).on(episode.id.eq(generatedContent.episode.id))
                 .where(episode.id.eq(episodeId)
+                        .and(episode.user.id.eq(userId))
                         .and(episode.isDeleted.eq(false))
                         .and(gem.isDeleted.eq(false))
                         .and(generatedContent.isDeleted.eq(false)))
-                .fetchOne();
+                .fetchOne());
     }
 
 }

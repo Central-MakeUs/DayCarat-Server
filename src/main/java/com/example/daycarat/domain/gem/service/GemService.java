@@ -1,7 +1,6 @@
 package com.example.daycarat.domain.gem.service;
 
 import com.example.daycarat.domain.activity.entity.ActivityTag;
-import com.example.daycarat.domain.gem.dto.GetEpisodeClipboard;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
@@ -288,10 +287,8 @@ public class GemService {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        GetEpisodeClipboardDto getEpisodeClipboardDto = gemRepository.getEpisodeClipboard(episodeId);
-
-        if (!getEpisodeClipboardDto.userId().equals(user.getId()))
-            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+        GetEpisodeClipboardDto getEpisodeClipboardDto = gemRepository.getEpisodeClipboard(user.getId(), episodeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
         return new GetEpisodeClipboard(StringParser.getClipboard(getEpisodeClipboardDto));
 

@@ -7,6 +7,7 @@ import com.example.daycarat.domain.gem.dto.GetGemCount;
 import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeywordDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GemRepositoryCustom {
     GetGemCount getGemCount(Long userId);
@@ -19,5 +20,5 @@ public interface GemRepositoryCustom {
 
     ActivityTag getMostGemActivity(Long userId);
 
-    GetEpisodeClipboardDto getEpisodeClipboard(Long episodeId);
+    Optional<GetEpisodeClipboardDto> getEpisodeClipboard(Long userId, Long episodeId);
 }
