@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.repository;
 
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.gem.dto.GetGemCount;
@@ -59,6 +60,20 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
                 .orderBy(episode.episodeKeyword.count().desc())
                 .fetchFirst();
 
+    }
+
+    @Override
+    public ActivityTag getMostGemActivity(Long userId) {
+        return jpaQueryFactory
+                .select(gem.episode.activityTag)
+                .from(gem)
+                .where(gem.episode.user.id.eq(userId)
+                        .and(gem.isDeleted.eq(false))
+                        .and(gem.episode.isDeleted.eq(false))
+                        .and(gem.episode.episodeState.eq(EpisodeState.FINALIZED)))
+                .groupBy(gem.episode.activityTag)
+                .orderBy(gem.episode.activityTag.count().desc())
+                .fetchFirst();
     }
 
 }

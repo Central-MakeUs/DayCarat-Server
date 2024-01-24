@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.service;
 
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
@@ -261,5 +262,18 @@ public class GemService {
         }
 
         return new GetMostGemKeyword(episodeKeyword.getValue());
+    }
+
+    public GetMostGemActivity getMostGemActivity() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        ActivityTag activityTag = gemRepository.getMostGemActivity(user.getId());
+
+        if (activityTag == null) {
+            return new GetMostGemActivity("보석 없음");
+        }
+
+        return new GetMostGemActivity(activityTag.getActivityTagName());
     }
 }

@@ -138,4 +138,16 @@ public class GemController {
         return SuccessResponse.success(gemService.getMostGemKeyword());
     }
 
+    @Operation(summary = "가장 보석이 많은 활동 조회하기",
+            description = """
+                    가장 보석이 많은 활동을 조회합니다.
+                    
+                    반환값:
+                    - episodeKeyword : 에피소드 키워드, **보석이 하나도 없으면 "보석 없음" 이라고 반환합니다.**
+                    """)
+    @GetMapping("/report/activity")
+    public SuccessResponse<GetMostGemActivity> getMostGemActivity() {
+        return SuccessResponse.success(gemService.getMostGemActivity());
+    }
+
 }

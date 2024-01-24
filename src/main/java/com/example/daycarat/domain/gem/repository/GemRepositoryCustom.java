@@ -1,5 +1,6 @@
 package com.example.daycarat.domain.gem.repository;
 
+import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.gem.dto.GetGemCount;
 import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeywordDto;
@@ -12,4 +13,6 @@ public interface GemRepositoryCustom {
     List<GetGemSummaryByKeywordDto> getGemSummaryByKeyword(Long userId);
 
     EpisodeKeyword getMostGemKeyword(Long userId);
+
+    ActivityTag getMostGemActivity(Long userId);
 }
