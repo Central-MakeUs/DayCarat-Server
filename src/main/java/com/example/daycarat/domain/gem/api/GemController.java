@@ -25,6 +25,42 @@ public class GemController {
 
     private final GemService gemService;
 
+    @Operation(summary = "SOARA 작성 항목 조회하기",
+            description = """
+                    SOARA 작성 항목을 조회합니다.
+                    
+                    요청값:
+                    - episodeId : 에피소드 ID
+                    
+                    반환값:
+                    - gemId : 보석 ID
+                    - content1 : 내용1
+                    - content2 : 내용2
+                    - content3 : 내용3
+                    - content4 : 내용4
+                    - content5 : 내용5
+                    """)
+    @GetMapping("/soara/{episodeId}")
+    public SuccessResponse<GetGem> getSoara(@PathVariable Long episodeId) {
+        return SuccessResponse.success(gemService.getGem(episodeId));
+    }
+
+    @Operation(summary = "SOARA 작성 항목 개별 등록하기",
+            description = """
+                    SOARA 작성 항목을 개별 등록합니다.
+                    
+                    요청값 예시: 1번 에피소드의 content1을 개별 등록하기
+                    {
+                      "episodeId": 1,
+                      "content1": "내용1"
+                    }
+                    
+                    보내지 않은 부분들(null)은 기존 값이 유지됩니다.
+                    """)
+    @PatchMapping("/soara")
+    public SuccessResponse<Boolean> createSoara(@RequestBody PostSoara postSoara) {
+        return SuccessResponse.success(gemService.updateSoara(postSoara));
+    }
 
     @Operation(summary = "보석 등록하기")
     @PostMapping("/register")

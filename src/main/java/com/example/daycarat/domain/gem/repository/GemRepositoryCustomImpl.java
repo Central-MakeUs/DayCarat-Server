@@ -6,6 +6,7 @@ import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.gem.dto.GetEpisodeClipboardDto;
 import com.example.daycarat.domain.gem.dto.GetGemCount;
 import com.example.daycarat.domain.gem.dto.GetGemSummaryByKeywordDto;
+import com.example.daycarat.domain.gem.entity.Gem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -116,6 +117,16 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
                         .and(episode.isDeleted.eq(false))
                         .and(gem.isDeleted.eq(false))
                         .and(generatedContent.isDeleted.eq(false)))
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<Gem> findByEpisodeIdAndUserId(Long episodeId, Long id) {
+        return Optional.ofNullable(jpaQueryFactory
+                .selectFrom(gem)
+                .where(gem.episode.id.eq(episodeId)
+                        .and(gem.episode.user.id.eq(id))
+                        .and(gem.isDeleted.eq(false)))
                 .fetchOne());
     }
 

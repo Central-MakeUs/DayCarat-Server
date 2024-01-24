@@ -43,7 +43,7 @@ public class GemService {
     private final GeneratedContentService generatedContentService;
     private final GeneratedContentRepository generatedContentRepository;
 
-    private void uploadJsonFile(User user, Episode episode, PostGem gem, String s3ObjectKey) {
+    private void uploadJsonFile(User user, Episode episode, PostSoara gem, String s3ObjectKey) {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -73,9 +73,7 @@ public class GemService {
 
     @Transactional
     public Boolean createGem(PostGem postGem) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(postGem.episodeId())
@@ -87,11 +85,24 @@ public class GemService {
 
         String s3ObjectKey = LocalDateTime.now().toString();
 
-        gemRepository.save(postGem.toEntity(postGem, episode, s3ObjectKey));
+        Gem gem = gemRepository.findByEpisodeIdAndUserId(postGem.episodeId(), user.getId())
+                        .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        gem.updateS3ObjectKey(s3ObjectKey);
+
+        gemRepository.save(gem);
 
         episode.updateState(EpisodeState.FINALIZED);
 
-        uploadJsonFile(user, episode, postGem, s3ObjectKey);
+        PostSoara postSoara = new PostSoara(
+                episode.getId(),
+                gem.getContent1(),
+                gem.getContent2(),
+                gem.getContent3(),
+                gem.getContent4(),
+                gem.getContent5());
+
+        uploadJsonFile(user, episode, postSoara, s3ObjectKey);
 
         return true;
 
@@ -145,20 +156,20 @@ public class GemService {
 
         String s3ObjectKey = LocalDateTime.now().toString();
 
-        gem.update(s3ObjectKey, patchGem.content1(), patchGem.content2(), patchGem.content3(), patchGem.content4(), patchGem.content5());
+        gem.updateS3ObjectKey(s3ObjectKey);
 
         gemRepository.save(gem);
 
-        PostGem postGem = new PostGem(
+        PostSoara postSoara = new PostSoara(
                 episode.getId(),
-                patchGem.content1(),
-                patchGem.content2(),
-                patchGem.content3(),
-                patchGem.content4(),
-                patchGem.content5()
+                gem.getContent1(),
+                gem.getContent2(),
+                gem.getContent3(),
+                gem.getContent4(),
+                gem.getContent5()
         );
 
-        uploadJsonFile(user, episode, postGem, s3ObjectKey);
+        uploadJsonFile(user, episode, postSoara, s3ObjectKey);
 
         generatedContentService.deleteGeneratedContent(episode.getId());
 
@@ -293,5 +304,30 @@ public class GemService {
 
         return new GetEpisodeClipboard(StringParser.getClipboard(getEpisodeClipboardDto));
 
+    }
+
+    public Boolean updateSoara(PostSoara postSoara) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Gem gem = gemRepository.findByEpisodeIdAndUserId(postSoara.episodeId(), user.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        gem.updateEach(postSoara.content1(), postSoara.content2(), postSoara.content3(), postSoara.content4(), postSoara.content5());
+
+        gemRepository.save(gem);
+
+        return true;
+
+    }
+
+    public GetGem getGem(Long episodeId) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Gem gem = gemRepository.findByEpisodeIdAndUserId(episodeId, user.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+
+        return new GetGem(gem.getId(), gem.getContent1(), gem.getContent2(), gem.getContent3(), gem.getContent4(), gem.getContent5());
     }
 }

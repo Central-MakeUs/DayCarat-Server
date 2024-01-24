@@ -54,8 +54,11 @@ public class Gem extends BaseEntity {
         this.isDeleted = true;
     }
 
-    public void update(String s3ObjectKey, String content1, String content2, String content3, String content4, String content5) {
+    public void updateS3ObjectKey(String s3ObjectKey) {
         this.s3ObjectKey = s3ObjectKey;
+    }
+
+    public void updateEach(String content1, String content2, String content3, String content4, String content5) {
         this.content1 = content1 == null ? this.content1 : content1;
         this.content2 = content2 == null ? this.content2 : content2;
         this.content3 = content3 == null ? this.content3 : content3;
