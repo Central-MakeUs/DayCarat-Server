@@ -249,4 +249,17 @@ public class GemService {
                 .toList();
 
     }
+
+    public GetMostGemKeyword getMostGemKeyword() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        EpisodeKeyword episodeKeyword = gemRepository.getMostGemKeyword(user.getId());
+
+        if (episodeKeyword == null) {
+            return new GetMostGemKeyword("보석 없음");
+        }
+
+        return new GetMostGemKeyword(episodeKeyword.getValue());
+    }
 }
