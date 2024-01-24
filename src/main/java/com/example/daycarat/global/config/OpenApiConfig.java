@@ -36,6 +36,18 @@ import org.springframework.context.annotation.Configuration;
         
         > 전체 에피소드 개수 조회
                         - 전체 에피소드 개수 조회 API 추가 : "/episode/count/all" 로 요청
+                        
+
+        - 01-25
+        
+        > 소아라 수정
+                        - 개별 등록 API 추가 : PATCH "/gem/soara" 로 요청
+                        
+        > 소아라 조회
+                        - 소아라 조회 API 추가 : GET "/gem/soara/{episodeId}" 로 요청
+
+        > 소아라 등록
+                        - 소아라 등록 API 요청값 변경 : POST "/gem/register" episodeId만 받음
 
         """),
         servers = {
