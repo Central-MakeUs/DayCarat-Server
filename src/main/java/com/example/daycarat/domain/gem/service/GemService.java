@@ -312,8 +312,13 @@ public class GemService {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+        Episode episode = episodeRepository.findById(postSoara.episodeId())
+                .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
+
         Gem gem = gemRepository.findByEpisodeIdAndUserId(postSoara.episodeId(), user.getId())
-                .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
+                        .orElse(Gem.builder()
+                                .episode(episode)
+                                .build());
 
         gem.updateEach(postSoara.content1(), postSoara.content2(), postSoara.content3(), postSoara.content4(), postSoara.content5());
 
