@@ -62,20 +62,50 @@ public class GemController {
         return SuccessResponse.success(gemService.updateSoara(postSoara));
     }
 
-    @Operation(summary = "보석 등록하기")
+    @Operation(summary = "보석 등록 완료하기",
+            description = """
+                    보석을 등록을 완료합니다.
+                    
+                    요청값:
+                    - episodeId : 에피소드 ID
+                    
+                    반환값:
+                    - true : 보석 등록 성공
+                    """)
     @PostMapping("/register")
     public SuccessResponse<Boolean> createGem(@RequestBody PostGem postGem) {
         return SuccessResponse.success(gemService.createGem(postGem));
     }
 
-    @Operation(summary = "보석 수정하기", description = "보내지 않은 데이터에 대해서는 기존 값을 유지합니다.")
+    @Operation(summary = "현재 사용하지 않는 API (보석 수정하기)",
+            description = """
+                    현재 사용하지 않는 API
+                    (사실 사용하려면 하셔도 됩니다.)
+                    
+                    SOARA 개별 등록하기로 수정한 후 해당 경로로 업데이트를 완료합니다.
+                    
+                    요청값:
+                    - gemId : 보석 ID
+                   
+                    반환값:
+                    - true : 보석 수정 성공
+                    """)
     @PatchMapping("/update")
     public SuccessResponse<Boolean> updateGem(@RequestBody PatchGem patchGem) {
         return SuccessResponse.success(gemService.updateGem(patchGem));
     }
 
 
-    @Operation(summary = "보석 삭제하기")
+    @Operation(summary = "보석 삭제하기",
+            description = """
+                    보석을 삭제합니다.
+                    
+                    요청값:
+                    - gemId : 보석 ID
+                    
+                    반환값:
+                    - true : 보석 삭제 성공
+                    """)
     @DeleteMapping("/delete/{gemId}")
     public SuccessResponse<Boolean> deleteGem(@PathVariable Long gemId) {
         return SuccessResponse.success(gemService.deleteGem(gemId));
