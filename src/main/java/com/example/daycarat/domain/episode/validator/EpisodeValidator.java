@@ -26,4 +26,10 @@ public class EpisodeValidator {
         }
     }
 
+    public static void checkIfFinalized(Episode episode) {
+        if (episode.getEpisodeState().equals(EpisodeState.UNFINALIZED)) {
+            throw new CustomException(ErrorCode.GEM_NOT_FOUND);
+        }
+    }
+
 }

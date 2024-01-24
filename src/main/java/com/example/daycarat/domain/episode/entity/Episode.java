@@ -49,22 +49,27 @@ public class Episode extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EpisodeKeyword episodeKeyword;
 
+    @Column(columnDefinition = "Boolean default false")
+    private Boolean isEpisodeKeywordUserSelected = false;
+
     @Builder
-    public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public Episode(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {
         this.user = user;
         this.activityTag = activityTag;
         this.title = title;
         this.selectedDate = selectedDate;
         this.episodeState = episodeState;
+        this.episodeKeyword = episodeKeyword;
     }
 
-    public static Episode of(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState) {
+    public static Episode of(User user, ActivityTag activityTag, String title, LocalDate selectedDate, EpisodeState episodeState, EpisodeKeyword episodeKeyword) {
         return Episode.builder()
                 .user(user)
                 .activityTag(activityTag)
                 .title(title)
                 .selectedDate(selectedDate)
                 .episodeState(episodeState)
+                .episodeKeyword(episodeKeyword)
                 .build();
     }
 
@@ -83,5 +88,14 @@ public class Episode extends BaseEntity {
     }
     public void updateKeyword(EpisodeKeyword episodeKeyword) {
         this.episodeKeyword = episodeKeyword;
+    }
+
+    public void updateIsEpisodeKeywordUserSelected(boolean isEpisodeKeywordUserSelected) {
+        this.isEpisodeKeywordUserSelected = isEpisodeKeywordUserSelected;
+    }
+
+    public void initEpisodeKeyword() {
+        this.episodeKeyword = EpisodeKeyword.UNSET;
+        this.isEpisodeKeywordUserSelected = false;
     }
 }

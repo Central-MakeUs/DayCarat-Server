@@ -39,9 +39,18 @@ public class GeneratedContentService {
         gemRepository.findByS3ObjectKeyAndIsDeleted(postGeneratedContent.s3ObjectKey(), false)
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
 
-        episode.updateKeyword(EpisodeKeyword.fromId(postGeneratedContent.keywordId()));
+        // 유저가 키워드를 직접 선택하지 않은 경우에만 키워드 등록
+        if (!episode.getIsEpisodeKeywordUserSelected())
+            episode.updateKeyword(EpisodeKeyword.fromId(postGeneratedContent.keywordId()));
 
         episodeRepository.save(episode);
+
+        // 중복 생성의 경우 이전 데이터 삭제 처리 후 새로 생성
+        generatedContentRepository.findByEpisodeIdAndIsDeleted(episode.getId(), false)
+                .ifPresent(generatedContent -> {
+                    generatedContent.delete();
+                    generatedContentRepository.save(generatedContent);
+                });
 
         GeneratedContent generatedContent = GeneratedContent.of(
                 episode,

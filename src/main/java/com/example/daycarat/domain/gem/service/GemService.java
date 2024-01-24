@@ -1,15 +1,17 @@
 package com.example.daycarat.domain.gem.service;
 
+import com.example.daycarat.domain.activity.entity.ActivityTag;
+import com.example.daycarat.domain.gem.dto.GetEpisodeClipboard;
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
-import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
-import com.example.daycarat.domain.gem.dto.PatchGem;
-import com.example.daycarat.domain.gem.dto.PostGem;
+import com.example.daycarat.domain.gem.dto.*;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.gem.validator.GemValidator;
+import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
@@ -18,6 +20,7 @@ import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
+import com.example.daycarat.global.util.StringParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service @RequiredArgsConstructor
@@ -110,8 +114,7 @@ public class GemService {
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
-        episode.updateState(EpisodeState.UNFINALIZED);
-
+        episode.initEpisodeKeyword();
         episodeRepository.save(episode);
 
         gem.delete();
@@ -137,6 +140,9 @@ public class GemService {
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
 
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
+
+        episode.initEpisodeKeyword();
+        episodeRepository.save(episode);
 
         String s3ObjectKey = LocalDateTime.now().toString();
 
@@ -194,6 +200,100 @@ public class GemService {
                 generatedContent.getGeneratedContent2(),
                 generatedContent.getGeneratedContent3()
         );
+
+    }
+
+    public GetGemCount getGemCount() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return gemRepository.getGemCount(user.getId());
+    }
+
+    public GetGemCount getGemCountByMonth() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return gemRepository.getGemCountByMonth(user.getId());
+    }
+
+    public List<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        List<GetGemSummaryByKeywordDto> getGemSummaryByKeywordDtoList = gemRepository.getGemSummaryByKeyword(user.getId());
+
+        // 0개인 키워드들을 반환하기 위해 리스트에 추가
+        for (EpisodeKeyword episodeKeyword : EpisodeKeyword.values()) {
+            boolean isExist = false;
+            for (GetGemSummaryByKeywordDto getGemSummaryByKeywordDto : getGemSummaryByKeywordDtoList) {
+                if (getGemSummaryByKeywordDto.episodeKeyword().equals(episodeKeyword)) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                getGemSummaryByKeywordDtoList.add(new GetGemSummaryByKeywordDto(episodeKeyword, 0L));
+            }
+        }
+
+        return getGemSummaryByKeywordDtoList
+                .stream()
+                .map(GetGemSummaryByKeywordDto::toGetGemSummaryByKeyword)
+                .toList();
+
+    }
+
+    public List<GetGemPageByKeyword> getGemPageByKeyword(String keyword, Long cursorId, Integer pageSize) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (pageSize == null) pageSize = 6;
+
+        return episodeRepository.getEpisodePageByKeyword(user, EpisodeKeyword.fromValue(keyword), cursorId, pageSize)
+                .stream()
+                .map(GetGemPageByKeywordDto::convert)
+                .toList();
+
+    }
+
+    public GetMostGemKeyword getMostGemKeyword() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        EpisodeKeyword episodeKeyword = gemRepository.getMostGemKeyword(user.getId());
+
+        if (episodeKeyword == null) {
+            return new GetMostGemKeyword("보석 없음");
+        }
+
+        return new GetMostGemKeyword(episodeKeyword.getValue());
+    }
+
+    public GetMostGemActivity getMostGemActivity() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        ActivityTag activityTag = gemRepository.getMostGemActivity(user.getId());
+
+        if (activityTag == null) {
+            return new GetMostGemActivity("보석 없음");
+        }
+
+        return new GetMostGemActivity(activityTag.getActivityTagName());
+    }
+
+
+    public GetEpisodeClipboard getEpisodeClipboard(Long episodeId) {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        GetEpisodeClipboardDto getEpisodeClipboardDto = gemRepository.getEpisodeClipboard(episodeId);
+
+        if (!getEpisodeClipboardDto.userId().equals(user.getId()))
+            throw new CustomException(ErrorCode.EPISODE_USER_NOT_MATCHED);
+
+        return new GetEpisodeClipboard(StringParser.getClipboard(getEpisodeClipboardDto));
 
     }
 }

@@ -5,6 +5,8 @@ import com.example.daycarat.domain.episode.dto.GetEpisodePageDto;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
+import com.example.daycarat.domain.gem.dto.GetGemPageByKeywordDto;
 import com.example.daycarat.domain.user.domain.User;
 
 import java.util.List;
@@ -23,4 +25,5 @@ public interface EpisodeRepositoryCustom {
     GetEpisodeCount getEpisodeCountOfTheMonth(User user, Integer year, Integer month);
     GetEpisodeCount getEpisodeCount(User user);
 
+    List<GetGemPageByKeywordDto> getEpisodePageByKeyword(User user, EpisodeKeyword episodeKeyword, Long cursorId, Integer pageSize);
 }

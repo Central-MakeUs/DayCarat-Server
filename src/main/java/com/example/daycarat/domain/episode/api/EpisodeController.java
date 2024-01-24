@@ -145,6 +145,8 @@ public class EpisodeController {
     @Operation(summary = "에피소드 조회: 날짜 최신순: 월별 조회",
             description = """
                     에피소드를 년도별, 월별로 조회합니다. 해당 월의 에피소드를 최신순으로 반환합니다.
+                    
+                    요청값:
                     - year: 조회할 년도입니다.
                     - month: 조회할 월입니다.
                     - cursorId: 1번째 페이지 조회시 null, 2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id을 입력합니다.
@@ -164,6 +166,8 @@ public class EpisodeController {
     @Operation(summary = "에피소드 조회: 활동 많은순: 활동별 조회",
             description = """
                     에피소드를 활동별로 조회합니다. 해당 활동 태그의 에피소드를 최신순으로 반환합니다.
+                    
+                    요청값:
                     - activityTagName: 활동 태그 이름입니다.
                     - cursorId: 1번째 페이지 조회시 null, 2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id을 입력합니다.
                     - pageSize: 한 페이지에 가져올 에피소드 개수, 기본값은 6입니다.

@@ -7,7 +7,6 @@ import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.episode.validator.EpisodeValidator;
-import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.domain.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -29,7 +28,6 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
-    private final GeneratedContentService generatedContentService;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
         ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
@@ -71,6 +69,7 @@ public class EpisodeService {
                 .title(postEpisode.title())
                 .selectedDate(LocalDateTimeParser.toLocalDate(postEpisode.date()))
                 .episodeState(EpisodeState.UNFINALIZED)
+                .episodeKeyword(EpisodeKeyword.UNSET)
                 .build();
 
         episodeRepository.save(episode);
@@ -206,7 +205,7 @@ public class EpisodeService {
 
         return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize)
                 .stream()
-                .map(GetEpisodePage::convert)
+                .map(GetEpisodePageDto::convert)
                 .collect(Collectors.toList());
     }
 
@@ -220,14 +219,12 @@ public class EpisodeService {
 
         return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize)
                 .stream()
-                .map(GetEpisodePage::convert)
+                .map(GetEpisodePageDto::convert)
                 .collect(Collectors.toList());
     }
 
     public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(episodeId)
@@ -256,9 +253,7 @@ public class EpisodeService {
     }
 
     public GetEpisodeCount getAllEpisodeCount() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return episodeRepository.getEpisodeCount(user);
@@ -266,9 +261,7 @@ public class EpisodeService {
     }
 
     public Boolean updateEpisodeKeyword(PatchEpisodeKeyword patchEpisodeKeyword) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(patchEpisodeKeyword.episodeId())
@@ -276,11 +269,13 @@ public class EpisodeService {
 
         EpisodeValidator.checkIfDeleted(episode);
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
-        EpisodeValidator.checkIfUnfinalized(episode);
+        EpisodeValidator.checkIfFinalized(episode);
 
-        generatedContentService.checkIfGeneratedContentExists(episode.getId());
+//        AI 추천 문장 생성에 실패한 경우에도 직접 키워드를 수정해야 하므로 주석처리
+//        generatedContentService.checkIfGeneratedContentExists(episode.getId());
 
         episode.updateKeyword(EpisodeKeyword.fromValue(patchEpisodeKeyword.keyword()));
+        episode.updateIsEpisodeKeywordUserSelected(true);
 
         episodeRepository.save(episode);
 

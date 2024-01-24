@@ -5,6 +5,9 @@ import com.example.daycarat.domain.episode.dto.GetEpisodePageDto;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByActivity;
 import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
+import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
+import com.example.daycarat.domain.episode.entity.EpisodeState;
+import com.example.daycarat.domain.gem.dto.GetGemPageByKeywordDto;
 import com.example.daycarat.domain.user.domain.User;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -73,6 +76,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
                         episode.episodeKeyword,
+                        episodeContent.episodeContentType,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -100,6 +104,7 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                         convertToMonthDayFormat(episode.selectedDate.stringValue()),
                         episode.episodeState,
                         episode.episodeKeyword,
+                        episodeContent.episodeContentType,
                         episodeContent.content))
                 .from(episode)
                 .leftJoin(episodeContent)
@@ -140,6 +145,32 @@ public class EpisodeRepositoryImpl implements EpisodeRepositoryCustom {
                 .where(episode.user.eq(user)
                         .and(episode.isDeleted.eq(false)))
                 .fetchOne();
+    }
+
+    @Override
+    public List<GetGemPageByKeywordDto> getEpisodePageByKeyword(User user, EpisodeKeyword episodeKeyword, Long cursorId, Integer pageSize) {
+        return jpaQueryFactory
+                .select(Projections.constructor(GetGemPageByKeywordDto.class,
+                        episode.id,
+                        episode.title,
+                        convertToMonthDayFormat(episode.selectedDate.stringValue()),
+                        episodeContent.episodeContentType,
+                        episodeContent.content))
+                .from(episode)
+                .leftJoin(episodeContent)
+                .on(episode.id.eq(episodeContent.episode.id))
+                .where(episode.user.eq(user)
+                        .and(episode.episodeKeyword.eq(episodeKeyword))
+                        .and(ltEpisodeId(cursorId))
+                        .and(episode.isDeleted.eq(false))
+                        .and(episodeContent.isDeleted.eq(false))
+                        .and(episodeContent.isMainContent.eq(true))
+                        .and(episode.episodeState.eq(EpisodeState.FINALIZED)))
+                .orderBy(episode.id.desc())
+                .limit(pageSize)
+                .fetch()
+                .stream().distinct()
+                .collect(Collectors.toList());
     }
 
     private StringExpression convertToMonthDayFormat(StringExpression dateExpression) {
