@@ -86,7 +86,7 @@ public class GemController {
                         - count : 개수
                     """)
     @GetMapping("/keyword")
-    public SuccessResponse<List<GetGemSummaryByKeyword>> getGemSummaryByKeyword() {
+    public SuccessResponse<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
         return SuccessResponse.success(gemService.getGemSummaryByKeyword());
     }
 

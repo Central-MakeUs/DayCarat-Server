@@ -6,10 +6,4 @@ public record GetGemSummaryByKeywordDto(
         EpisodeKeyword episodeKeyword,
         Long count
 ) {
-    public GetGemSummaryByKeyword toGetGemSummaryByKeyword() {
-        return new GetGemSummaryByKeyword(
-                episodeKeyword.getValue(),
-                count
-        );
-    }
 }

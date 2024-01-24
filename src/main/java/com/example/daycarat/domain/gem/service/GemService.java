@@ -216,30 +216,31 @@ public class GemService {
         return gemRepository.getGemCountByMonth(user.getId());
     }
 
-    public List<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
+    public GetGemSummaryByKeyword getGemSummaryByKeyword() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         List<GetGemSummaryByKeywordDto> getGemSummaryByKeywordDtoList = gemRepository.getGemSummaryByKeyword(user.getId());
 
-        // 0개인 키워드들을 반환하기 위해 리스트에 추가
-        for (EpisodeKeyword episodeKeyword : EpisodeKeyword.values()) {
-            boolean isExist = false;
-            for (GetGemSummaryByKeywordDto getGemSummaryByKeywordDto : getGemSummaryByKeywordDtoList) {
-                if (getGemSummaryByKeywordDto.episodeKeyword().equals(episodeKeyword)) {
-                    isExist = true;
-                    break;
-                }
+        GetGemSummaryByKeyword getGemSummaryByKeyword = new GetGemSummaryByKeyword();
+
+        for (GetGemSummaryByKeywordDto getGemSummaryByKeywordDto : getGemSummaryByKeywordDtoList) {
+
+            switch (getGemSummaryByKeywordDto.episodeKeyword()) {
+                case COMMUNICATION -> getGemSummaryByKeyword.setCommunication(getGemSummaryByKeywordDto.count());
+                case CONFLICT_RESOLUTION -> getGemSummaryByKeyword.setConflictResolution(getGemSummaryByKeywordDto.count());
+                case PASSION -> getGemSummaryByKeyword.setPassion(getGemSummaryByKeywordDto.count());
+                case DILIGENCE -> getGemSummaryByKeyword.setDiligence(getGemSummaryByKeywordDto.count());
+                case COLLABORATION -> getGemSummaryByKeyword.setCollaboration(getGemSummaryByKeywordDto.count());
+                case LEADERSHIP -> getGemSummaryByKeyword.setLeadership(getGemSummaryByKeywordDto.count());
+                case FEEDBACK -> getGemSummaryByKeyword.setFeedback(getGemSummaryByKeywordDto.count());
+                case UNSET -> getGemSummaryByKeyword.setUnset(getGemSummaryByKeywordDto.count());
             }
-            if (!isExist) {
-                getGemSummaryByKeywordDtoList.add(new GetGemSummaryByKeywordDto(episodeKeyword, 0L));
-            }
+
         }
 
-        return getGemSummaryByKeywordDtoList
-                .stream()
-                .map(GetGemSummaryByKeywordDto::toGetGemSummaryByKeyword)
-                .toList();
+        getGemSummaryByKeyword.handleNull();
+        return getGemSummaryByKeyword;
 
     }
 
