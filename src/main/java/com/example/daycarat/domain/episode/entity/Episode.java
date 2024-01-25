@@ -3,7 +3,7 @@ package com.example.daycarat.domain.episode.entity;
 import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.gem.entity.Gem;
 import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

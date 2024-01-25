@@ -1,7 +1,7 @@
 package com.example.daycarat.global.jwt;
 
-import com.example.daycarat.domain.user.domain.Role;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.Role;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;

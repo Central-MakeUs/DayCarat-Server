@@ -14,7 +14,7 @@ import com.example.daycarat.domain.gereratedcontent.dto.GetGeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
