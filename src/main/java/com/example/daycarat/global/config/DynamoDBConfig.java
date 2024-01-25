@@ -17,10 +17,10 @@ public class DynamoDBConfig {
     @Value("${cloud.aws.dynamodb.endpoint}")
     private String amazonDynamoDBEndpoint;
 
-    @Value("${cloud.aws.credentials.accessKey}")
+    @Value("${cloud.aws.dynamodb.accessKey}")
     private String amazonAWSAccessKey;
 
-    @Value("${cloud.aws.credentials.secretKey}")
+    @Value("${cloud.aws.dynamodb.secretKey}")
     private String amazonAWSSecretKey;
 
     @Bean
