@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
 @Configuration
-@EnableDynamoDBRepositories(basePackages = "com.example.daycarat.global.dynamodb")
+@EnableDynamoDBRepositories(basePackages = "com.example.daycarat.dynamodb")
 public class DynamoDBConfig {
 
     @Value("${cloud.aws.dynamodb.endpoint}")

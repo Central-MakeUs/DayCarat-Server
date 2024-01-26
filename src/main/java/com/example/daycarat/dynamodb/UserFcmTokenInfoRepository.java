@@ -1,4 +1,4 @@
-package com.example.daycarat.global.dynamodb;
+package com.example.daycarat.dynamodb;
 
 import com.example.daycarat.domain.fcmtoken.entity.UserFcmTokenInfo;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;

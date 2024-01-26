@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.fcmtoken.service;
 
 import com.example.daycarat.domain.fcmtoken.entity.UserFcmTokenInfo;
-import com.example.daycarat.global.dynamodb.UserFcmTokenInfoRepository;
+import com.example.daycarat.dynamodb.UserFcmTokenInfoRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
