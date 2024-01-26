@@ -1,7 +1,7 @@
 package com.example.daycarat.global.oauth;
 
-import com.example.daycarat.domain.user.domain.Role;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.Role;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.dto.UserDto;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.jwt.TokenResponse;

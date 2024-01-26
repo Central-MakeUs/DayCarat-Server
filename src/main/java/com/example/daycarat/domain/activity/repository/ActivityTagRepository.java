@@ -1,7 +1,7 @@
 package com.example.daycarat.domain.activity.repository;
 
 import com.example.daycarat.domain.activity.entity.ActivityTag;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

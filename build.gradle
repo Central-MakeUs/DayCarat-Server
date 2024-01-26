@@ -54,6 +54,9 @@ dependencies {
 	// spring cloud
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	// dynamodb
+	implementation 'com.github.derjust:spring-data-dynamodb:5.1.0'
+
 }
 
 tasks.named('test') {

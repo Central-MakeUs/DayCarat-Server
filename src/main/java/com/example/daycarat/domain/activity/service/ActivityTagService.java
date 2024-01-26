@@ -6,7 +6,7 @@ import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.activity.validator.ActivityTagValidator;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;

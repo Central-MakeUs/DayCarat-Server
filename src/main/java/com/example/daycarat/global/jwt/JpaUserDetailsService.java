@@ -1,6 +1,6 @@
 package com.example.daycarat.global.jwt;
 
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;

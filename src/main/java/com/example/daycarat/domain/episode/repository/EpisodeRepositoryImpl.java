@@ -8,7 +8,7 @@ import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.episode.entity.EpisodeState;
 import com.example.daycarat.domain.gem.dto.GetGemPageByKeywordDto;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;

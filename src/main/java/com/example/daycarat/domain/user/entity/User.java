@@ -1,4 +1,4 @@
-package com.example.daycarat.domain.user.domain;
+package com.example.daycarat.domain.user.entity;
 
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
 import com.example.daycarat.global.entity.BaseEntity;
@@ -27,12 +27,13 @@ public class User extends BaseEntity {
 
     // 푸시알림 허용 여부
     private Boolean pushAllow;
+    private String fcmToken;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public User(String email, String nickname, String profileImage, String password, Role role, String jobTitle, String strength, Boolean pushAllow) {
+    public User(String email, String nickname, String profileImage, String password, Role role, String jobTitle, String strength, Boolean pushAllow, String fcmToken) {
         this.email = email;
         this.nickname = nickname;
         this.profileImage = profileImage;
@@ -41,6 +42,7 @@ public class User extends BaseEntity {
         this.jobTitle = jobTitle;
         this.strength = strength;
         this.pushAllow = pushAllow;
+        this.fcmToken = fcmToken;
     }
 
 
@@ -49,6 +51,7 @@ public class User extends BaseEntity {
         this.jobTitle = patchUserInfo.jobTitle() != null ? patchUserInfo.jobTitle() : this.jobTitle;
         this.strength = patchUserInfo.strength() != null ? patchUserInfo.strength() : this.strength;
         this.pushAllow = patchUserInfo.pushAllow() != null ? patchUserInfo.pushAllow() : this.pushAllow;
+        this.fcmToken = patchUserInfo.fcmToken() != null ? patchUserInfo.fcmToken() : this.fcmToken;
     }
 
     public void updateProfile(String profile) {

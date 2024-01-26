@@ -2,10 +2,10 @@ package com.example.daycarat.domain.user.service;
 
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
-import com.example.daycarat.domain.gem.repository.GemRepository;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.fcmtoken.service.UserFcmTokenInfoService;
 import com.example.daycarat.domain.user.dto.GetUserInfo;
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserService {
     private final S3UploadService s3UploadService;
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
-    private final GemRepository gemRepository;
+    private final UserFcmTokenInfoService userFcmTokenInfoService;
 
     public GetUserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -49,6 +49,8 @@ public class UserService {
         user.update(patchUserInfo);
 
         userRepository.save(user);
+
+        userFcmTokenInfoService.saveOrUpdate(user.getId(), patchUserInfo.fcmToken());
 
         return true;
 

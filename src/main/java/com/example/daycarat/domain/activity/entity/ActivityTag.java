@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.activity.entity;
 
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

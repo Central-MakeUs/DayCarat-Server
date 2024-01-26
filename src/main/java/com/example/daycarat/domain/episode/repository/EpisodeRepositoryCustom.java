@@ -7,7 +7,7 @@ import com.example.daycarat.domain.episode.dto.GetEpisodeSummaryByDate;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeKeyword;
 import com.example.daycarat.domain.gem.dto.GetGemPageByKeywordDto;
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 
 import java.util.List;
 

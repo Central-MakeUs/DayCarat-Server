@@ -1,6 +1,6 @@
 package com.example.daycarat.domain.user.dto;
 
-import com.example.daycarat.domain.user.domain.User;
+import com.example.daycarat.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record GetUserInfo (

@@ -42,7 +42,10 @@ public enum ErrorCode {
     GEM_CONTENTS_NOT_FILLED(400, "C001", "보석의 내용이 모두 채워지지 않았습니다."),
 
     // GeneratedContent
-    GENERATED_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 AI 생성 컨텐츠입니다.");
+    GENERATED_CONTENT_NOT_FOUND(404, "C006", "존재하지 않는 AI 생성 컨텐츠입니다."),
+
+    //FCM
+    USER_FCM_TOKEN_NOT_FOUND(404, "C006", "존재하지 않는 FCM 토큰입니다.");
 
 
     private final int status;
