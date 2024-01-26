@@ -127,6 +127,7 @@ public class GemService {
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         episode.initEpisodeKeyword();
+        episode.updateState(EpisodeState.UNFINALIZED);
         episodeRepository.save(episode);
 
         gem.delete();
