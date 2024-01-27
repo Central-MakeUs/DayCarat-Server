@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.activity.api;
 
 import com.example.daycarat.domain.activity.dto.GetActivityTag;
+import com.example.daycarat.domain.activity.dto.GetActivityTagSearch;
 import com.example.daycarat.domain.activity.dto.PatchActivityTag;
 import com.example.daycarat.domain.activity.service.ActivityTagService;
 import com.example.daycarat.global.response.SuccessResponse;
@@ -57,5 +58,15 @@ public class ActivityController {
     @DeleteMapping("/{activityTagId}")
     public SuccessResponse<Boolean> deleteActivityTag(@PathVariable Long activityTagId) {
         return SuccessResponse.success(activityTagService.deleteActivityTag(activityTagId));
+    }
+
+    @Operation(summary = "활동 태그 검색하기",
+            description = """
+                    활동 태그를 검색합니다.
+                    - activityTagName: 검색할 활동 태그의 이름입니다.
+                    """)
+    @GetMapping("/search")
+    public SuccessResponse<List<GetActivityTagSearch>> searchActivityTag(@RequestParam String activityTagName) {
+        return SuccessResponse.success(activityTagService.searchActivityTag(activityTagName));
     }
 }
