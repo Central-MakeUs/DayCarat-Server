@@ -7,13 +7,12 @@ import static com.example.daycarat.global.error.exception.ErrorCode.INVALID_KEYW
 
 public enum EpisodeKeyword {
     COMMUNICATION(1, "커뮤니케이션"),
-    CONFLICT_RESOLUTION(2, "갈등 해결"),
-    PASSION(3, "열정"),
-    DILIGENCE(4, "성실"),
-    COLLABORATION(5, "협업 능력"),
-    LEADERSHIP(6, "리더십"),
-    FEEDBACK(7, "피드백"),
-    UNSET(8, "미선택");
+    PROBLEM_SOLVING(2, "문제 해결"),
+    CREATIVITY(3, "창의성"),
+    CHALLENGE_SPIRIT(4, "도전 정신"),
+    PROFICIENCY(5, "전문성"),
+    EXECUTION(6, "실행력"),
+    UNSET(7, "미선택");
 
     private final int id;
     private final String value;

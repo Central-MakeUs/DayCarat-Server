@@ -7,35 +7,31 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class GetGemSummaryByKeyword {
     private Long communication;
-    private Long conflictResolution;
-    private Long passion;
-    private Long diligence;
-    private Long collaboration;
-    private Long leadership;
-    private Long feedback;
+    private Long problemSolving;
+    private Long creativity;
+    private Long challengeSpirit;
+    private Long proficiency;
+    private Long execution;
     private Long unset;
 
     public void handleNull() {
         if (this.communication == null) {
             this.communication = 0L;
         }
-        if (this.conflictResolution == null) {
-            this.conflictResolution = 0L;
+        if (this.problemSolving == null) {
+            this.problemSolving = 0L;
         }
-        if (this.passion == null) {
-            this.passion = 0L;
+        if (this.creativity == null) {
+            this.creativity = 0L;
         }
-        if (this.diligence == null) {
-            this.diligence = 0L;
+        if (this.challengeSpirit == null) {
+            this.challengeSpirit = 0L;
         }
-        if (this.collaboration == null) {
-            this.collaboration = 0L;
+        if (this.proficiency == null) {
+            this.proficiency = 0L;
         }
-        if (this.leadership == null) {
-            this.leadership = 0L;
-        }
-        if (this.feedback == null) {
-            this.feedback = 0L;
+        if (this.execution == null) {
+            this.execution = 0L;
         }
         if (this.unset == null) {
             this.unset = 0L;
