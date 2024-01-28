@@ -2,6 +2,7 @@ package com.example.daycarat.domain.episode.service;
 
 import com.example.daycarat.domain.activity.entity.ActivityTag;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
+import com.example.daycarat.domain.activity.service.ActivityTagService;
 import com.example.daycarat.domain.episode.dto.*;
 import com.example.daycarat.domain.episode.entity.*;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
@@ -28,6 +29,7 @@ public class EpisodeService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final EpisodeContentRepository episodeContentRepository;
+    private final ActivityTagService activityTagService;
 
     private ActivityTag getActivityTag(User user, String activityTagName) {
         ActivityTag activityTag = activityTagRepository.findByUserIdAndActivityTagName(user.getId(), activityTagName)
@@ -62,6 +64,8 @@ public class EpisodeService {
         ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
         activityTagRepository.save(activityTag);
+
+        activityTagService.insertActivityTagSearch(user.getId(), postEpisode.activityTag());
 
         Episode episode = Episode.builder()
                 .user(user)
@@ -98,8 +102,8 @@ public class EpisodeService {
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         ActivityTag activityTag = getActivityTag(user, patchEpisode.activityTag());
-
         activityTagRepository.save(activityTag);
+        activityTagService.insertActivityTagSearch(user.getId(), patchEpisode.activityTag());
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 

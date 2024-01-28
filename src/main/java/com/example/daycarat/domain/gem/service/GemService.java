@@ -242,12 +242,11 @@ public class GemService {
 
             switch (getGemSummaryByKeywordDto.episodeKeyword()) {
                 case COMMUNICATION -> getGemSummaryByKeyword.setCommunication(getGemSummaryByKeywordDto.count());
-                case CONFLICT_RESOLUTION -> getGemSummaryByKeyword.setConflictResolution(getGemSummaryByKeywordDto.count());
-                case PASSION -> getGemSummaryByKeyword.setPassion(getGemSummaryByKeywordDto.count());
-                case DILIGENCE -> getGemSummaryByKeyword.setDiligence(getGemSummaryByKeywordDto.count());
-                case COLLABORATION -> getGemSummaryByKeyword.setCollaboration(getGemSummaryByKeywordDto.count());
-                case LEADERSHIP -> getGemSummaryByKeyword.setLeadership(getGemSummaryByKeywordDto.count());
-                case FEEDBACK -> getGemSummaryByKeyword.setFeedback(getGemSummaryByKeywordDto.count());
+                case PROBLEM_SOLVING -> getGemSummaryByKeyword.setProblemSolving(getGemSummaryByKeywordDto.count());
+                case CREATIVITY -> getGemSummaryByKeyword.setCreativity(getGemSummaryByKeywordDto.count());
+                case CHALLENGE_SPIRIT -> getGemSummaryByKeyword.setChallengeSpirit(getGemSummaryByKeywordDto.count());
+                case PROFICIENCY -> getGemSummaryByKeyword.setProficiency(getGemSummaryByKeywordDto.count());
+                case EXECUTION -> getGemSummaryByKeyword.setExecution(getGemSummaryByKeywordDto.count());
                 case UNSET -> getGemSummaryByKeyword.setUnset(getGemSummaryByKeywordDto.count());
             }
 
