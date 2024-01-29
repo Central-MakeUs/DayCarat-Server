@@ -131,10 +131,10 @@ public class GemController {
     @GetMapping("/recommend/{episodeId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "404", description = "AI 추천 키워드 생성중"
+            @ApiResponse(responseCode = "201", description = "AI 추천 키워드 생성중"
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE
                                         , schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 에러 (AI 추천 키워드 생성 실패)"
+            @ApiResponse(responseCode = "202", description = "서버 에러 (AI 추천 키워드 생성 실패)"
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE
                                         , schema = @Schema(implementation = ErrorResponse.class)))
     })
