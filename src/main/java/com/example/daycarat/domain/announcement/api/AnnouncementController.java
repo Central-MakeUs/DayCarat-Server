@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Announcement", description = "구현 안할듯 ..?")
+@Tag(name = "Announcement", description = "서버쪽 API입니다. 필요한 경우 푸시 알림 테스트 용도로 사용 가능합니다.")
 @RestController @RequestMapping("/announcement") @RequiredArgsConstructor
 public class AnnouncementController {
 
     private final AnnouncementService announcementService;
 
-    @Operation(summary = "공지사항 등록하기")
+    @Operation(summary = "공지사항 등록하기",
+            description = "공지사항을 등록합니다. 등록 시 모든 유저에게 푸시 알림이 전송됩니다.")
     @PostMapping
     public SuccessResponse<Boolean> saveAnnouncement(@RequestBody PostAnnouncement postAnnouncement) {
         return SuccessResponse.success(announcementService.createAnnouncement(postAnnouncement));
