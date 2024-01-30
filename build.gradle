@@ -57,6 +57,9 @@ dependencies {
 	// dynamodb
 	implementation 'com.github.derjust:spring-data-dynamodb:5.1.0'
 
+	// JsonObject
+	implementation 'com.google.code.gson:gson:2.8.9'
+
 }
 
 tasks.named('test') {
