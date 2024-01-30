@@ -1,6 +1,7 @@
 package com.example.daycarat.domain.admin.service;
 
 import com.example.daycarat.domain.admin.dto.PostFcmToken;
+import com.example.daycarat.domain.announcement.service.AnnouncementService;
 import com.example.daycarat.domain.episode.entity.Episode;
 import com.example.daycarat.domain.episode.entity.EpisodeContent;
 import com.example.daycarat.domain.episode.repository.EpisodeContentRepository;
@@ -19,6 +20,7 @@ public class AdminService {
     private final EpisodeRepository episodeRepository;
     private final EpisodeContentRepository episodeContentRepository;
     private final UserFcmTokenInfoService userFcmTokenInfoService;
+    private final AnnouncementService announcementService;
 
     @Transactional
     public Boolean setMainContentsOnEpisodeContents() {
