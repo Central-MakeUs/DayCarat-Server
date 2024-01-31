@@ -107,39 +107,16 @@ public class EpisodeService {
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 
-        // delete EpisodeContent
-        List<Long> episodeContentIds = patchEpisode.episodeContents().stream()
-                .map(PatchEpisodeContent::episodeContentId)
-                .toList();
+        // delete previous EpisodeContents
+        episode.getEpisodeContents().forEach(EpisodeContent::delete);
+        episodeRepository.save(episode);
 
-        deleteEpisodeContent(episode.getId(), episodeContentIds);
-
-        // update EpisodeContent
-        for (PatchEpisodeContent patchEpisodeContent : patchEpisode.episodeContents()) {
-            EpisodeContent episodeContent = episodeContentRepository.findById(patchEpisodeContent.episodeContentId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_CONTENT_NOT_FOUND));
-
-            episodeContent.update(EpisodeContentType.fromValue(patchEpisodeContent.episodeContentType()), patchEpisodeContent.content());
-        }
-
-        // create EpisodeContent
-        createEpisodeContent(episode, patchEpisode.newEpisodeContents());
+        // create new EpisodeContents
+        createEpisodeContent(episode, patchEpisode.episodeContent());
 
         selectMainContent(episode.getId());
 
         return true;
-
-    }
-
-    private void deleteEpisodeContent(Long episodeId, List<Long> episodeContentIds) {
-
-        List<EpisodeContent> byEpisodeId = episodeContentRepository.findByEpisodeId(episodeId);
-
-        for (EpisodeContent episodeContent : byEpisodeId) {
-            if (!episodeContentIds.contains(episodeContent.getId())) {
-                episodeContent.delete();
-            }
-        }
 
     }
 
