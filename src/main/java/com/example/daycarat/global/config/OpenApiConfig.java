@@ -48,6 +48,11 @@ import org.springframework.context.annotation.Configuration;
 
         > 소아라 등록
                         - 소아라 등록 API 요청값 변경 : POST "/gem/register" episodeId만 받음
+                        
+        - 01-31
+        
+        > 에피소드 수정
+                        - PATCH "/episode/update" 입력 양식 변경
 
         """),
         servers = {
