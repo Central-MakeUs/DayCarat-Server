@@ -30,7 +30,7 @@ public class GemController {
                     SOARA 작성 항목을 조회합니다.
                     
                     요청값:
-                    - episodeId : 에피소드 ID
+                    - (Path Variable) episodeId : 에피소드 ID
                     
                     반환값:
                     - gemId : 보석 ID
@@ -49,13 +49,25 @@ public class GemController {
             description = """
                     SOARA 작성 항목을 개별 등록합니다.
                     
-                    요청값 예시: 1번 에피소드의 content1을 개별 등록하기
-                    {
+                    요청값:
+                    - episodeId : 에피소드 ID
+                    - content1 : 내용1
+                    - content2 : 내용2
+                    - content3 : 내용3
+                    - content4 : 내용4
+                    - content5 : 내용5
+                    
+                    **content를 하나씩 등록하는 경우 나머지 content는 null로 보내주시면 됩니다.**
+                    
+                    요청값 예시: 1번 에피소드의 content1을 개별 등록하기:
+                    
+                    `{
                       "episodeId": 1,
                       "content1": "내용1"
-                    }
+                    }`
                     
-                    보내지 않은 부분들(null)은 기존 값이 유지됩니다.
+                    반환값:
+                    - true : SOARA 개별 등록 성공
                     """)
     @PatchMapping("/soara")
     public SuccessResponse<Boolean> createSoara(@RequestBody PostSoara postSoara) {
@@ -101,7 +113,7 @@ public class GemController {
                     보석을 삭제합니다.
                     
                     요청값:
-                    - gemId : 보석 ID
+                    - (Path Variable) gemId : 보석 ID
                     
                     반환값:
                     - true : 보석 삭제 성공
@@ -115,6 +127,9 @@ public class GemController {
     @Operation(summary = "AI 추천 키워드 및 문장 조회하기",
             description = """
                     에피소드 ID를 받아서 해당 보석에 대한 AI 추천 키워드 및 문장을 조회합니다.
+
+                    요청값:
+                    - (Path Variable) episodeId : 에피소드 ID
                     
                     상태 코드:
                     - 200 : 조회 성공
@@ -147,9 +162,13 @@ public class GemController {
                     보석 키워드별 개수를 조회합니다.
                     
                     반환값:
-                    배열로 반환됩니다.
-                        - episodeKeyword : 에피소드 키워드
-                        - count : 개수
+                    - communication: 커뮤니케이션 개수
+                    - problemSolving: 문제 해결 개수
+                    - creativity: 창의성 개수
+                    - challengeSpirit: 도전 정신 개수
+                    - proficiency: 전문성 개수
+                    - execution: 실행력 개수
+                    - unset: 미선택 개수
                     """)
     @GetMapping("/keyword")
     public SuccessResponse<GetGemSummaryByKeyword> getGemSummaryByKeyword() {
@@ -161,16 +180,15 @@ public class GemController {
                     보석 키워드별 보석 리스트를 조회합니다.
                     
                     요청값:
-                    - keyword: 에피소드 키워드입니다. (커뮤니케이션, 문제 해결, 창의성, 도전 정신, 전문성, 실행력, 미선택)
-                    - cursorId: 1번째 페이지 조회시 null, 2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id을 입력합니다.
-                    - pageSize: 한 페이지에 가져올 에피소드 개수, 기본값은 6입니다.
+                    - (Path Variable) keyword: 에피소드 키워드입니다. (커뮤니케이션, 문제 해결, 창의성, 도전 정신, 전문성, 실행력, 미선택)
+                    - (Query Parameter) cursorId: 1번째 페이지 조회시 null, 2번째 이상 페이지 조회시 직전 페이지의 마지막 episode id을 입력합니다.
+                    - (Query Parameter) pageSize: 한 페이지에 가져올 에피소드 개수, 기본값은 6입니다.
                     
-                    반환값:
-                    배열로 반환됩니다.
+                    반환값(배열):
                         - episodeId : 에피소드 ID
-                        - title : 보석 제목
-                        - date : 보석 생성 날짜
-                        - content : 보석 내용
+                        - title : 에피소드 제목
+                        - date : MM/dd 형식으로 에피소드 생성 날짜를 반환합니다.
+                        - content : 에피소드 대표 컨텐츠를 반환합니다. (50자로 자름)
                     """)
     @GetMapping("/keyword/{keyword}")
     public SuccessResponse<List<GetGemPageByKeyword>> getGemSummaryByKeyword(
@@ -232,6 +250,12 @@ public class GemController {
     @Operation(summary = "에피소드 클립보드 복사용 문자열 가져오기",
             description = """
                     에피소드 클립보드 복사용 문자열을 가져옵니다.
+                    
+                    요청값:
+                    - (Path Variable) episodeId: 에피소드 ID
+                    
+                    반환값:
+                    - content: 클립보드 내용
                     """)
     @GetMapping("/clipboard/{episodeId}")
     public SuccessResponse<GetEpisodeClipboard> getEpisodeClipboard(@PathVariable Long episodeId) {

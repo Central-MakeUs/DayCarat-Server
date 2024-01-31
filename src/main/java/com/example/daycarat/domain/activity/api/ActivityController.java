@@ -32,6 +32,10 @@ public class ActivityController {
     @Operation(summary = "활동 태그 조회하기",
             description = """
                         활동 태그를 조회합니다.
+                        
+                        반환값(배열):
+                        - id: 활동 태그의 ID입니다.
+                        - activityTagName: 활동 태그의 이름입니다.
                         """)
     @GetMapping
     public SuccessResponse<List<GetActivityTag>> getActivtyTag() {
@@ -41,8 +45,13 @@ public class ActivityController {
     @Operation(summary = "활동 태그 수정하기",
             description = """
                     활동 태그를 수정합니다.
+                    
+                    요청값:
                     - activityTagId: 수정할 활동 태그의 ID입니다.
                     - activityTagName: 수정할 활동 태그의 이름입니다.
+                    
+                    반환값:
+                    - true: 수정 성공
                     """)
     @PatchMapping
     public SuccessResponse<Boolean> updateActivityTag(@RequestBody PatchActivityTag patchActivityTag) {
@@ -53,7 +62,12 @@ public class ActivityController {
     @Operation(summary = "활동 태그 삭제하기",
             description = """
                     활동 태그를 삭제합니다.
-                    - activityTagId: 삭제할 활동 태그의 ID입니다.
+                    
+                    요청값:
+                    - (Path Variable) activityTagId: 삭제할 활동 태그의 ID입니다.
+                    
+                    반환값:
+                    - true: 삭제 성공
                     """)
     @DeleteMapping("/{activityTagId}")
     public SuccessResponse<Boolean> deleteActivityTag(@PathVariable Long activityTagId) {
@@ -63,7 +77,12 @@ public class ActivityController {
     @Operation(summary = "활동 태그 검색하기",
             description = """
                     활동 태그를 검색합니다.
-                    - activityTagName: 검색할 활동 태그의 이름입니다.
+                    
+                    요청값:
+                    - (Query Parameter) activityTagName: 검색할 활동 태그의 이름입니다.
+                    
+                    반환값(배열):
+                    - activityTagName: 활동 태그의 이름입니다.
                     """)
     @GetMapping("/search")
     public SuccessResponse<List<GetActivityTagSearch>> searchActivityTag(@RequestParam String activityTagName) {
