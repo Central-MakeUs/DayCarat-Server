@@ -12,7 +12,7 @@ public enum ErrorCode {
     AUTHENTICATION_REQUIRED(401, "C001", "인증이 필요합니다."),
     ACCESS_DENIED(403, "C002", "권한이 없는 사용자입니다."),
     INTERNAL_SERVER_ERROR(500, "C004", "서버 에러입니다."),
-    MEMBER_NOT_FOUND(404, "C005", "존재하지 않는 사용자입니다."),
+    USER_NOT_FOUND(404, "C005", "존재하지 않는 사용자입니다."),
     INVALID_REQUEST_ERROR(400, "C001", "잘못된 요청입니다."),
 
     // Apple OAuth

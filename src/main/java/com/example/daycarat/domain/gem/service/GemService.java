@@ -15,6 +15,7 @@ import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.entity.User;
+import com.example.daycarat.domain.user.entity.UserClass;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -74,7 +75,7 @@ public class GemService {
     @Transactional
     public Boolean createGem(PostGem postGem) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(postGem.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -106,15 +107,20 @@ public class GemService {
 
         uploadJsonFile(user, episode, postSoara, s3ObjectKey);
 
+        // 유저 등급 설정
+        Long gemCount = gemRepository.getGemCount(user.getId()).gemCount();
+        updateUserClass(user, gemCount);
+
         return true;
 
     }
 
+    @Transactional
     public Boolean deleteGem(Long gemId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Gem gem = gemRepository.findById(gemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
@@ -136,7 +142,36 @@ public class GemService {
 
         generatedContentService.deleteGeneratedContent(episode.getId());
 
+        // 유저 등급 설정
+        Long gemCount = gemRepository.getGemCount(user.getId()).gemCount();
+        updateUserClass(user, gemCount);
+
         return true;
+    }
+
+    private void updateUserClass(User user, Long gemCount) {
+        System.out.println("gemCount = " + gemCount);
+        UserClass userClass = user.getUserClass();
+
+        if (gemCount < 11) {
+            if (userClass != UserClass.ROOKIE_COLLECTOR) {
+                user.updateClass(UserClass.ROOKIE_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+        else if (gemCount < 21) {
+            if (userClass != UserClass.BEGINNER_COLLECTOR) {
+                user.updateClass(UserClass.BEGINNER_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+        else {
+            if (userClass != UserClass.PRO_COLLECTOR) {
+                user.updateClass(UserClass.PRO_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+
     }
 
     @Transactional
@@ -144,7 +179,7 @@ public class GemService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Gem gem = gemRepository.findById(patchGem.gemId())
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));
@@ -184,7 +219,7 @@ public class GemService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -218,21 +253,21 @@ public class GemService {
 
     public GetGemCount getGemCount() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return gemRepository.getGemCount(user.getId());
     }
 
     public GetGemCount getGemCountByMonth() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return gemRepository.getGemCountByMonth(user.getId());
     }
 
     public GetGemSummaryByKeyword getGemSummaryByKeyword() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<GetGemSummaryByKeywordDto> getGemSummaryByKeywordDtoList = gemRepository.getGemSummaryByKeyword(user.getId());
 
@@ -259,7 +294,7 @@ public class GemService {
 
     public List<GetGemPageByKeyword> getGemPageByKeyword(String keyword, Long cursorId, Integer pageSize) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (pageSize == null) pageSize = 6;
 
@@ -272,7 +307,7 @@ public class GemService {
 
     public GetMostGemKeyword getMostGemKeyword() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         EpisodeKeyword episodeKeyword = gemRepository.getMostGemKeyword(user.getId());
 
@@ -285,7 +320,7 @@ public class GemService {
 
     public GetMostGemActivity getMostGemActivity() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ActivityTag activityTag = gemRepository.getMostGemActivity(user.getId());
 
@@ -299,7 +334,7 @@ public class GemService {
 
     public GetEpisodeClipboard getEpisodeClipboard(Long episodeId) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         GetEpisodeClipboardDto getEpisodeClipboardDto = gemRepository.getEpisodeClipboard(user.getId(), episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -310,7 +345,7 @@ public class GemService {
 
     public Boolean updateSoara(PostSoara postSoara) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(postSoara.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -330,7 +365,7 @@ public class GemService {
 
     public GetGem getGem(Long episodeId) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Gem gem = gemRepository.findByEpisodeIdAndUserId(episodeId, user.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.GEM_NOT_FOUND));

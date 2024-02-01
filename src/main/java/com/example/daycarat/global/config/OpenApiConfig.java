@@ -53,6 +53,11 @@ import org.springframework.context.annotation.Configuration;
         
         > 에피소드 수정
                         - PATCH "/episode/update" 입력 양식 변경
+                        
+        - 02-01
+        
+        > 유저 정보 조회
+                        - GET "/user/info" 유저 정보 조회 API 에 새 데이터 userClass 추가: 보석 개수에 따라 정해짐 (루키콜렉터 | 초보콜렉터 | 프로콜렉터)
 
         """),
         servers = {

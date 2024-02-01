@@ -59,7 +59,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
@@ -91,7 +91,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // update Episode
 
@@ -124,7 +124,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -146,7 +146,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return episodeRepository.findTop3ByUserOrderBySelectedDateDesc(user)
                 .stream()
@@ -159,7 +159,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (year == null) year = 2024;
 
@@ -170,7 +170,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return episodeRepository.getEpisodeSummaryByActivity(user);
 
@@ -182,7 +182,7 @@ public class EpisodeService {
         if (pageSize == null) pageSize = 6;
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return episodeRepository.getEpisodePageByDate(user, year, month, cursorId, pageSize)
                 .stream()
@@ -196,7 +196,7 @@ public class EpisodeService {
         if (pageSize == null) pageSize = 6;
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return episodeRepository.getEpisodePageByActivity(user, activityTagName, cursorId, pageSize)
                 .stream()
@@ -206,7 +206,7 @@ public class EpisodeService {
 
     public GetEpisodeDetail getEpisodeDetail(Long episodeId) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
@@ -225,7 +225,7 @@ public class EpisodeService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -235,7 +235,7 @@ public class EpisodeService {
 
     public GetEpisodeCount getAllEpisodeCount() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return episodeRepository.getEpisodeCount(user);
 
@@ -243,7 +243,7 @@ public class EpisodeService {
 
     public Boolean updateEpisodeKeyword(PatchEpisodeKeyword patchEpisodeKeyword) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Episode episode = episodeRepository.findById(patchEpisodeKeyword.episodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.EPISODE_NOT_FOUND));
