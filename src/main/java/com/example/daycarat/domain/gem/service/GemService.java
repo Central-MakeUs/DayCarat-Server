@@ -15,6 +15,7 @@ import com.example.daycarat.domain.gereratedcontent.entity.GeneratedContent;
 import com.example.daycarat.domain.gereratedcontent.repository.GeneratedContentRepository;
 import com.example.daycarat.domain.gereratedcontent.service.GeneratedContentService;
 import com.example.daycarat.domain.user.entity.User;
+import com.example.daycarat.domain.user.entity.UserClass;
 import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
@@ -106,10 +107,15 @@ public class GemService {
 
         uploadJsonFile(user, episode, postSoara, s3ObjectKey);
 
+        // 유저 등급 설정
+        Long gemCount = gemRepository.getGemCount(user.getId()).gemCount();
+        updateUserClass(user, gemCount);
+
         return true;
 
     }
 
+    @Transactional
     public Boolean deleteGem(Long gemId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -136,7 +142,36 @@ public class GemService {
 
         generatedContentService.deleteGeneratedContent(episode.getId());
 
+        // 유저 등급 설정
+        Long gemCount = gemRepository.getGemCount(user.getId()).gemCount();
+        updateUserClass(user, gemCount);
+
         return true;
+    }
+
+    private void updateUserClass(User user, Long gemCount) {
+        System.out.println("gemCount = " + gemCount);
+        UserClass userClass = user.getUserClass();
+
+        if (gemCount < 11) {
+            if (userClass != UserClass.ROOKIE_COLLECTOR) {
+                user.updateClass(UserClass.ROOKIE_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+        else if (gemCount < 21) {
+            if (userClass != UserClass.BEGINNER_COLLECTOR) {
+                user.updateClass(UserClass.BEGINNER_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+        else {
+            if (userClass != UserClass.PRO_COLLECTOR) {
+                user.updateClass(UserClass.PRO_COLLECTOR);
+                userRepository.save(user);
+            }
+        }
+
     }
 
     @Transactional

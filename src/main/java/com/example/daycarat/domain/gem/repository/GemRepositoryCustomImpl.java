@@ -28,11 +28,12 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
     public GetGemCount getGemCount(Long userId) {
         return jpaQueryFactory
                 .select(Projections.constructor(GetGemCount.class,
-                        gem.count()
+                        episode.count()
                 ))
-                .from(gem)
-                .where(gem.episode.user.id.eq(userId)
-                        .and(gem.isDeleted.eq(false)))
+                .from(episode)
+                .where(episode.user.id.eq(userId)
+                        .and(episode.episodeState.eq(EpisodeState.FINALIZED))
+                        .and(episode.isDeleted.eq(false)))
                 .fetchOne();
     }
 
@@ -46,7 +47,8 @@ public class GemRepositoryCustomImpl implements GemRepositoryCustom {
                 .where(gem.episode.user.id.eq(userId)
                         .and(gem.isDeleted.eq(false))
                         .and(gem.lastModifiedDate.year().eq(LocalDateTime.now().getYear()))
-                        .and(gem.lastModifiedDate.month().eq(LocalDateTime.now().getMonthValue())))
+                        .and(gem.lastModifiedDate.month().eq(LocalDateTime.now().getMonthValue()))
+                        .and(gem.episode.episodeState.eq(EpisodeState.FINALIZED)))
                 .fetchOne();
     }
 
