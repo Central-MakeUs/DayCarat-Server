@@ -1,12 +1,11 @@
 package com.example.daycarat.global.oauth;
 
+import com.example.daycarat.domain.user.dto.KakaoUserDto;
 import com.example.daycarat.domain.user.entity.Role;
 import com.example.daycarat.domain.user.entity.User;
-import com.example.daycarat.domain.user.dto.UserDto;
 import com.example.daycarat.domain.user.repository.UserRepository;
+import com.example.daycarat.global.jwt.SecurityService;
 import com.example.daycarat.global.jwt.TokenResponse;
-import com.example.daycarat.global.jwt.TokenService;
-import com.example.daycarat.global.jwt.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -31,7 +27,7 @@ import java.util.UUID;
 public class KakaoUserService {
 
     private final UserRepository userRepository;
-    private final TokenService tokenService;
+    private final SecurityService securityService;
 
     @Value("${oauth.kakao.client-id}")
     private String clientId;
@@ -40,17 +36,17 @@ public class KakaoUserService {
 
     public Pair<TokenResponse, Boolean> kakaoLogin(String accessToken) throws JsonProcessingException {
 
-        UserDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoUserDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
         Pair<User, Boolean> kakaoUser = registerKakaoUserIfNeed(kakaoUserInfo);
 
-        Authentication authentication = forceLogin(kakaoUser.getLeft());
+        Authentication authentication = securityService.forceLogin(kakaoUser.getLeft());
 
-        return Pair.of(kakaoUsersAuthorizationInput(authentication), kakaoUser.getRight());
+        return Pair.of(securityService.usersAuthorizationInput(authentication), kakaoUser.getRight());
 
     }
 
-    private UserDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private KakaoUserDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -58,8 +54,8 @@ public class KakaoUserService {
 
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
-        RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST,
                 kakaoUserInfoRequest,
@@ -69,7 +65,7 @@ public class KakaoUserService {
         return handleKakaoResponse(response.getBody());
     }
 
-    private UserDto handleKakaoResponse(String responseBody) throws JsonProcessingException {
+    private KakaoUserDto handleKakaoResponse(String responseBody) throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
@@ -81,10 +77,10 @@ public class KakaoUserService {
 
         String thumbnailImage = jsonNode.get("kakao_account").get("profile").get("thumbnail_image_url").asText();
 
-        return UserDto.of(email, nickname, thumbnailImage);
+        return KakaoUserDto.of(email, nickname, thumbnailImage);
     }
 
-    private Pair<User, Boolean> registerKakaoUserIfNeed (UserDto kakaoUserInfo) {
+    private Pair<User, Boolean> registerKakaoUserIfNeed (KakaoUserDto kakaoUserInfo) {
 
         String kakaoEmail = kakaoUserInfo.getEmail();
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
@@ -109,20 +105,5 @@ public class KakaoUserService {
 
         }
         return Pair.of(kakaoUser, false);
-    }
-
-    private Authentication forceLogin(User kakaoUser) {
-        UserDetails userDetails = new UserDetailsImpl(kakaoUser);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
-    }
-
-    private TokenResponse kakaoUsersAuthorizationInput(Authentication authentication) {
-        UserDetailsImpl userDetailsImpl = ((UserDetailsImpl) authentication.getPrincipal());
-        String accessToken = tokenService.createAccessToken(userDetailsImpl);
-        String refreshToken = tokenService.createRefreshToken(userDetailsImpl);
-
-        return new TokenResponse(accessToken, refreshToken);
     }
 }
