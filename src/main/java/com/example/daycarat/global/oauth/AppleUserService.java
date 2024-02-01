@@ -4,6 +4,7 @@ import com.example.daycarat.domain.user.dto.AppleUserDto;
 import com.example.daycarat.domain.user.entity.Role;
 import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
+import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.jwt.SecurityService;
 import com.example.daycarat.global.jwt.TokenResponse;
 import com.google.gson.JsonObject;
@@ -15,6 +16,7 @@ import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -35,7 +37,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
 
-@Service @RequiredArgsConstructor
+import static com.example.daycarat.global.error.exception.ErrorCode.APPLE_LOGIN_FAILED;
+
+@Service @RequiredArgsConstructor @Slf4j
 public class AppleUserService {
 
     private final UserRepository userRepository;
@@ -79,9 +83,9 @@ public class AppleUserService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<String> response = restTemplate.postForEntity("https://appleid.apple.com/auth/token", request, String.class);
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity("https://appleid.apple.com/auth/token", request, String.class);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
             JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();
             String idToken = json.get("id_token").getAsString();
 
@@ -99,8 +103,10 @@ public class AppleUserService {
             user.setId(claimsSet.getSubject());  // 'sub' claim은 사용자의 고유 ID
             user.setEmail((String) claimsSet.getClaim("email"));  // 이메일
             return user;
-        } else {
-            throw new RuntimeException("Failed to get user info from Apple");
+        }
+        catch (Exception e) {
+            log.error(String.valueOf(e));
+            throw new CustomException(APPLE_LOGIN_FAILED);
         }
     }
 
@@ -158,47 +164,59 @@ public class AppleUserService {
     }
 
     private byte[] getPrivateKey() throws Exception {
-        byte[] content = null;
-        File file = null;
+        byte[] content;
+        File file;
 
         URL res = getClass().getResource(keyPath);
-
+        if (res == null) {
+            throw new Exception("Resource " + keyPath + " not found");
+        }
         if ("jar".equals(res.getProtocol())) {
-            try {
-                InputStream input = getClass().getResourceAsStream(keyPath);
-                file = File.createTempFile("tempfile", ".tmp");
-                OutputStream out = new FileOutputStream(file);
-
-                int read;
-                byte[] bytes = new byte[1024];
-
-                while ((read = input.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-
-                out.close();
-                file.deleteOnExit();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            file = createTempFileFromInputStream();
         } else {
             file = new File(res.getFile());
         }
 
-        if (file.exists()) {
-            try (FileReader keyReader = new FileReader(file);
-                 PemReader pemReader = new PemReader(keyReader))
-            {
-                PemObject pemObject = pemReader.readPemObject();
-                content = pemObject.getContent();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (file != null && file.exists()) {
+            content = readContentFromFile(file);
         } else {
             throw new Exception("File " + file + " not found");
         }
 
         return content;
     }
+
+    private File createTempFileFromInputStream() throws Exception {
+        File tempFile;
+        try {
+            InputStream input = getClass().getResourceAsStream(keyPath);
+            tempFile = File.createTempFile("tempfile", ".tmp");
+            try (OutputStream out = new FileOutputStream(tempFile)) {
+                byte[] bytes = new byte[1024];
+                int read;
+                while ((read = input.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+            }
+            tempFile.deleteOnExit();
+        } catch (IOException ex) {
+            throw new Exception("Failed to create temp file", ex);
+        }
+        return tempFile;
+    }
+
+    private byte[] readContentFromFile(File file) throws Exception {
+        byte[] content;
+        try (FileReader keyReader = new FileReader(file);
+             PemReader pemReader = new PemReader(keyReader))
+        {
+            PemObject pemObject = pemReader.readPemObject();
+            content = pemObject.getContent();
+        } catch (IOException e) {
+            throw new Exception("Failed to read private key", e);
+        }
+        return content;
+    }
+
 
 }

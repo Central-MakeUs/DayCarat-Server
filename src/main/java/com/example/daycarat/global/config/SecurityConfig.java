@@ -30,7 +30,7 @@ public class SecurityConfig {
     };
 
     private final String[] securityPatterns = {
-            "/user/oauth/kakao"
+            "/user/oauth/kakao", "/user/oauth/apple"
     };
 
     private final String[] UserPatterns = {

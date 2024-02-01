@@ -15,6 +15,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "C005", "존재하지 않는 사용자입니다."),
     INVALID_REQUEST_ERROR(400, "C001", "잘못된 요청입니다."),
 
+    // Apple OAuth
+    APPLE_LOGIN_FAILED(400, "C001", "인증 코드가 올바르지 않거나 만료되었습니다."),
+
     // Episode
     EPISODE_NOT_FOUND(404, "C006", "존재하지 않는 에피소드입니다."),
     EPISODE_USER_NOT_MATCHED(403, "C007", "에피소드의 소유자가 아닙니다."),
