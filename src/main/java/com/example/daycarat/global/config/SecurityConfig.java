@@ -30,7 +30,7 @@ public class SecurityConfig {
     };
 
     private final String[] securityPatterns = {
-            "/user/oauth/kakao"
+            "/user/oauth/kakao", "/user/oauth/apple"
     };
 
     private final String[] UserPatterns = {
@@ -53,6 +53,14 @@ public class SecurityConfig {
             "/generated-content/**"
     };
 
+    private final String[] AnnouncementPatterns = {
+            "/announcement/**"
+    };
+
+    private final String[] SlackPatterns = {
+            "/slack/**"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -65,6 +73,8 @@ public class SecurityConfig {
                         .requestMatchers(UserPatterns).authenticated()
                         .requestMatchers(EpisodePatterns).authenticated()
                         .requestMatchers(GemPatterns).authenticated()
+                        .requestMatchers(AnnouncementPatterns).authenticated()
+                        .requestMatchers(SlackPatterns).permitAll()
                         .requestMatchers(AdminPatterns).hasAuthority("ADMIN")
                         .requestMatchers(GeneratedContentPatterns).hasAuthority("ADMIN")
                         .anyRequest().permitAll()
