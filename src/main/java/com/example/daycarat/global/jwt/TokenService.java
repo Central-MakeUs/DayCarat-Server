@@ -77,7 +77,7 @@ public class TokenService {
         token = token.split(" ")[1].trim();
         String email = getEmail(token);
         // 이메일로 멤버 인스턴스를 얻음
-        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     // Authorization Header를 통해 인증을 한다.

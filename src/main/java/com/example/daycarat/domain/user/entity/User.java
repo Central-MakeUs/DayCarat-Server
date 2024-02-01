@@ -29,6 +29,10 @@ public class User extends BaseEntity {
     private Boolean pushAllow;
     private String fcmToken;
 
+    // 유저 등급
+    @Enumerated(EnumType.STRING)
+    private UserClass userClass;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -43,6 +47,7 @@ public class User extends BaseEntity {
         this.strength = strength;
         this.pushAllow = pushAllow;
         this.fcmToken = fcmToken;
+        this.userClass = UserClass.ROOKIE_COLLECTOR;
     }
 
 
@@ -56,5 +61,9 @@ public class User extends BaseEntity {
 
     public void updateProfile(String profile) {
         this.profileImage = profile;
+    }
+
+    public void updateClass(UserClass userClass) {
+        this.userClass = userClass;
     }
 }

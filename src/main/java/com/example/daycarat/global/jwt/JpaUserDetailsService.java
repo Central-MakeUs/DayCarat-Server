@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import static com.example.daycarat.global.error.exception.ErrorCode.MEMBER_NOT_FOUND;
+import static com.example.daycarat.global.error.exception.ErrorCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new CustomException(MEMBER_NOT_FOUND)
+                () -> new CustomException(USER_NOT_FOUND)
         );
 
         return new UserDetailsImpl(user);

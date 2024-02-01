@@ -60,7 +60,7 @@ public class ActivityTagService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<ActivityTag> allByUserId = activityTagRepository.findAllByUserId(user.getId());
 
@@ -75,7 +75,7 @@ public class ActivityTagService {
     @Transactional
     public Boolean updateActivityTag(PatchActivityTag patchActivityTag) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ActivityTag activityTag = activityTagRepository.findById(patchActivityTag.activityTagId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
@@ -105,7 +105,7 @@ public class ActivityTagService {
     @Transactional
     public Boolean deleteActivityTag(Long activityTagId) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ActivityTag activityTag = activityTagRepository.findById(activityTagId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_TAG_NOT_FOUND));
@@ -137,7 +137,7 @@ public class ActivityTagService {
 
     public List<GetActivityTagSearch> searchActivityTag(String activityTagName) {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<ActivityTagSearch> activityTagSearches = activityTagSearchRepository
                 .findAllByActivityTagSearchContainingAndUserId(StringParser.decompose(activityTagName), user.getId());
