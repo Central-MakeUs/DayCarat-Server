@@ -31,6 +31,7 @@ jobs:
           fi
           touch ./src/main/resources/application.yml
           touch ./src/main/resources/AuthKey_X4AZ7SJP35.p8
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./src/main/resources/application.yml
           echo "${{ secrets.APPLE_AUTH_KEY }}" > ./src/main/resources/AuthKey_X4AZ7SJP35.p8
 
       - name: Set up JDK 17
