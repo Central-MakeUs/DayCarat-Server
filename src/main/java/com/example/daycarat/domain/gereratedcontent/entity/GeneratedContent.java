@@ -19,8 +19,11 @@ public class GeneratedContent extends BaseEntity {
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
 
+    @Column(length = 5000)
     private String generatedContent1;
+    @Column(length = 5000)
     private String generatedContent2;
+    @Column(length = 5000)
     private String generatedContent3;
 
     @Builder

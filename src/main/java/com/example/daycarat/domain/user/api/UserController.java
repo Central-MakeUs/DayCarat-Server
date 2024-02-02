@@ -76,9 +76,11 @@ public class UserController {
                     - accessToken: 서버 내부에서 발급한 토큰입니다.
                     - refreshToken: 서버 내부에서 발급한 토큰입니다.
                     """)
-    @GetMapping("/oauth/apple")
+    @PostMapping("/oauth/apple")
     public SuccessResponse<TokenResponse> callback(@Parameter(name = "code", description = "애플 인증서버에서 받은 인증 코드", required = true)
                                                  @RequestParam String code) {
+        System.out.println("code = " + code);
+
         Pair<TokenResponse, Boolean> pair = appleUserService.appleLogin(code);
 
         if (pair.getRight()) {
