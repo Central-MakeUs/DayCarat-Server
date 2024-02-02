@@ -10,6 +10,7 @@ src/main/resources/AuthKey_X4AZ7SJP35.p8
 application.yml
 application-prod.yml
 deploy.sh
+schema.json
 
 local.env
 
