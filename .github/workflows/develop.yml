@@ -26,13 +26,14 @@ jobs:
       - name: Make application-secret.yml and set secrets
         run: |
           mkdir -p ./src/main/resources
+          mkdir -p ./src/main/resources/key
           if [ -f ./src/main/resources/application.yml ]; then
             rm ./src/main/resources/application.yml
           fi
           touch ./src/main/resources/application.yml
           touch ./src/main/resources/AuthKey_X4AZ7SJP35.p8
           echo "${{ secrets.APPLICATION_SECRET }}" > ./src/main/resources/application.yml
-          echo "${{ secrets.APPLE_AUTH_KEY }}" > ./src/main/resources/AuthKey_X4AZ7SJP35.p8
+          echo "${{ secrets.APPLE_AUTH_KEY }}" > ./src/main/resources/key/${{ secrets.APPLE_AUTH_KEY_ID }}.p8
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
