@@ -7,8 +7,6 @@ import com.example.daycarat.domain.user.repository.UserRepository;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.jwt.SecurityService;
 import com.example.daycarat.global.jwt.TokenResponse;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.jsonwebtoken.Jwts;
@@ -21,15 +19,8 @@ import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -59,8 +50,8 @@ public class AppleUserService {
 
 
 
-    public Pair<TokenResponse, Boolean> appleLogin(String code) {
-        AppleUserDto appleUserInfo = getUserInfo(code);
+    public Pair<TokenResponse, Boolean> appleLogin(String id_token) {
+        AppleUserDto appleUserInfo = getUserInfo(id_token);
 
         Pair<User, Boolean> appleUser = registerAppleUserIfNeed(appleUserInfo);
 
@@ -69,28 +60,8 @@ public class AppleUserService {
         return Pair.of(securityService.usersAuthorizationInput(authentication), appleUser.getRight());
     }
 
-    public AppleUserDto getUserInfo(String code) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "authorization_code");
-        body.add("client_id", clientId);
-        body.add("client_secret", createClientSecret());
-        body.add("code", code);
-        body.add("redirect_uri", redirectUri);
-
-        System.out.println("createClientSecret() = " + createClientSecret());
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
+    public AppleUserDto getUserInfo(String idToken) {
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity("https://appleid.apple.com/auth/token", request, String.class);
-
-            JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();
-            String idToken = json.get("id_token").getAsString();
-
             // id_token 디코딩
             JWTClaimsSet claimsSet;
             try {
