@@ -58,6 +58,11 @@ import org.springframework.context.annotation.Configuration;
         
         > 유저 정보 조회
                         - GET "/user/info" 유저 정보 조회 API 에 새 데이터 userClass 추가: 보석 개수에 따라 정해짐 (루키콜렉터 | 초보콜렉터 | 프로콜렉터)
+        
+        - 02-06
+        
+        > 에피소드 등록
+                        - POST "/episode/register" 시 episodeContentType 에 '보완할 점' 추가 (에피소드 수정 시에도 적용)
 
         """),
         servers = {
