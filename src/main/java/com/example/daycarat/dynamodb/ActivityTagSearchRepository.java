@@ -11,5 +11,7 @@ public interface ActivityTagSearchRepository extends CrudRepository<ActivityTagS
     List<ActivityTagSearch> findAllByActivityTagSearchContainingAndUserId(String activityTagName, Long userId);
     List<ActivityTagSearch> findAllByActivityTagSearchAndUserId(String activityTagName, Long userId);
     List<ActivityTagSearch> findAllByActivityTagAndUserId(String activityTagName, Long userId);
+
+    void deleteAllByUserId(Long userId);
 }
 

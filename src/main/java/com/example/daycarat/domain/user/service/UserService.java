@@ -3,11 +3,12 @@ package com.example.daycarat.domain.user.service;
 import com.example.daycarat.domain.activity.repository.ActivityTagRepository;
 import com.example.daycarat.domain.episode.repository.EpisodeRepository;
 import com.example.daycarat.domain.fcmtoken.service.UserFcmTokenInfoService;
-import com.example.daycarat.domain.gem.repository.GemRepository;
 import com.example.daycarat.domain.user.dto.GetUserInfo;
 import com.example.daycarat.domain.user.dto.PatchUserInfo;
 import com.example.daycarat.domain.user.entity.User;
 import com.example.daycarat.domain.user.repository.UserRepository;
+import com.example.daycarat.dynamodb.ActivityTagSearchRepository;
+import com.example.daycarat.dynamodb.UserFcmTokenInfoRepository;
 import com.example.daycarat.global.aws.S3UploadService;
 import com.example.daycarat.global.error.exception.CustomException;
 import com.example.daycarat.global.error.exception.ErrorCode;
@@ -29,7 +30,8 @@ public class UserService {
     private final EpisodeRepository episodeRepository;
     private final ActivityTagRepository activityTagRepository;
     private final UserFcmTokenInfoService userFcmTokenInfoService;
-    private final GemRepository gemRepository;
+    private final ActivityTagSearchRepository activityTagSearchRepository;
+    private final UserFcmTokenInfoRepository userFcmTokenInfoRepository;
 
     public GetUserInfo getUserInfo() {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
@@ -79,6 +81,12 @@ public class UserService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        // delete fcm token from ddb
+        userFcmTokenInfoRepository.deleteById(user.getId());
+
+        // delete activityTags from ddb
+        activityTagSearchRepository.deleteAllByUserId(user.getId());
 
         episodeRepository.deleteAllByUser(user);
         activityTagRepository.deleteAllByUser(user);
