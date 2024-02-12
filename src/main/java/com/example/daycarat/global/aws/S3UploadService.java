@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import static com.example.daycarat.global.error.exception.ErrorCode.AI_RECOMMENDATION_NOT_FOUND;
 
@@ -29,8 +30,10 @@ public class S3UploadService {
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        amazonS3.putObject(bucket + "/" + path, originalFilename, multipartFile.getInputStream(), metadata);
-        return amazonS3.getUrl(bucket + "/" + path, originalFilename).toString();
+        String filename = LocalDateTime.now() + "_" + originalFilename;
+
+        amazonS3.putObject(bucket + "/" + path, filename, multipartFile.getInputStream(), metadata);
+        return amazonS3.getUrl(bucket + "/" + path, filename).toString();
     }
 
     public void saveJsonFileContent(String path, String fileName, String jsonContent) {
