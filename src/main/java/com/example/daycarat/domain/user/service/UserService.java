@@ -83,7 +83,9 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // delete fcm token from ddb
-        userFcmTokenInfoRepository.deleteById(user.getId());
+        if (userFcmTokenInfoRepository.existsById(user.getId())) {
+            userFcmTokenInfoRepository.deleteById(user.getId());
+        }
 
         // delete activityTags from ddb
         activityTagSearchRepository.deleteAllByUserId(user.getId());
