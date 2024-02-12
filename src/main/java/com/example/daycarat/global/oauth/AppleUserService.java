@@ -53,10 +53,8 @@ public class AppleUserService {
 
 
 
-    public Pair<TokenResponse, Boolean> appleLogin(String id_token) {
-        validate(id_token);
-
-        AppleUserDto appleUserInfo = getUserInfo(id_token);
+    public Pair<TokenResponse, Boolean> appleLogin(String email) {
+        AppleUserDto appleUserInfo = new AppleUserDto(null, email);
 
         Pair<User, Boolean> appleUser = registerAppleUserIfNeed(appleUserInfo);
 

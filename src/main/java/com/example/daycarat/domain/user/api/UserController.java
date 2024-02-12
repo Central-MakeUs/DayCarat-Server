@@ -70,18 +70,18 @@ public class UserController {
                     개발용 유저 삭제 API를 통해 최초 회원가입이 정상적으로 처리되는지 확인할 수 있습니다.
                   
                     요청값:
-                    - (Query Parameter) code: 애플 인증서버에서 받은 인증 코드
+                    - (Query Parameter) email: 애플 인증서버에서 받은 이메일
                     
                     반환값:
                     - accessToken: 서버 내부에서 발급한 토큰입니다.
                     - refreshToken: 서버 내부에서 발급한 토큰입니다.
                     """)
     @PostMapping("/oauth/apple")
-    public SuccessResponse<TokenResponse> callback(@Parameter(name = "id_token", description = "애플 인증서버에서 받은 id_token", required = true)
-                                                   @RequestParam String id_token) {
-        System.out.println("id_token = " + id_token);
+    public SuccessResponse<TokenResponse> callback(@Parameter(name = "email", description = "애플 인증서버에서 받은 email", required = true)
+                                                   @RequestParam String email) {
+        System.out.println("email = " + email);
 
-        Pair<TokenResponse, Boolean> pair = appleUserService.appleLogin(id_token);
+        Pair<TokenResponse, Boolean> pair = appleUserService.appleLogin(email);
 
         if (pair.getRight()) {
             return SuccessResponse.createSuccess(pair.getLeft());
