@@ -59,6 +59,19 @@ public class UserController {
 
     }
 
+    @PostMapping("/oauth/kakao")
+    public SuccessResponse<TokenResponse> kakaoLoginDev(@Parameter(name = "accessToken", description = "카카오 인증서버에서 받은 토큰", required = true)
+                                                     @RequestParam String accessToken) throws JsonProcessingException {
+        Pair<TokenResponse, Boolean> pair = kakaoUserService.kakaoLogin(accessToken);
+
+        if (pair.getRight()) {
+            return SuccessResponse.createSuccess(pair.getLeft());
+        } else {
+            return SuccessResponse.success(pair.getLeft());
+        }
+
+    }
+
     @Operation(summary = "애플 인증 코드로 내부 토큰 발급하기",
             description = """
                     애플 인증 코드로 내부 토큰을 발급합니다.
