@@ -8,7 +8,7 @@ import java.util.List;
 
 @EnableScan
 public interface ActivityTagSearchRepository extends CrudRepository<ActivityTagSearch, Long> {
-    List<ActivityTagSearch> findAllByActivityTagSearchContainingAndUserId(String activityTagName, Long userId);
+    List<ActivityTagSearch> findDistinctByActivityTagSearchContainingAndUserId(String activityTagName, Long userId);
     List<ActivityTagSearch> findAllByActivityTagSearchAndUserId(String activityTagName, Long userId);
     List<ActivityTagSearch> findAllByActivityTagAndUserId(String activityTagName, Long userId);
 

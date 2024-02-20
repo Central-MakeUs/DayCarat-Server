@@ -63,9 +63,11 @@ public class EpisodeService {
 
         ActivityTag activityTag = getActivityTag(user, postEpisode.activityTag());
 
-        activityTagRepository.save(activityTag);
+        if (!activityTagRepository.existsByActivityTagNameAndUserIdAndIsDeleted(postEpisode.activityTag(), user.getId(), false)) {
+            activityTagService.insertActivityTagSearch(user.getId(), postEpisode.activityTag());
+        }
 
-        activityTagService.insertActivityTagSearch(user.getId(), postEpisode.activityTag());
+        activityTagRepository.save(activityTag);
 
         Episode episode = Episode.builder()
                 .user(user)
@@ -102,8 +104,12 @@ public class EpisodeService {
         EpisodeValidator.checkIfUserEpisodeMatches(user, episode);
 
         ActivityTag activityTag = getActivityTag(user, patchEpisode.activityTag());
+
+        if (!activityTagRepository.existsByActivityTagNameAndUserIdAndIsDeleted(patchEpisode.activityTag(), user.getId(), false)) {
+            activityTagService.insertActivityTagSearch(user.getId(), patchEpisode.activityTag());
+        }
+
         activityTagRepository.save(activityTag);
-        activityTagService.insertActivityTagSearch(user.getId(), patchEpisode.activityTag());
 
         episode.update(activityTag, patchEpisode.title(), LocalDateTimeParser.toLocalDate(patchEpisode.selectedDate()));
 

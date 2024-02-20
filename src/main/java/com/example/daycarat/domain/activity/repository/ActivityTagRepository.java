@@ -12,4 +12,6 @@ public interface ActivityTagRepository extends JpaRepository<ActivityTag, Long> 
     Optional<ActivityTag> findByUserIdAndActivityTagName(Long userId, String activityTagName);
 
     void deleteAllByUser(User user);
+
+    boolean existsByActivityTagNameAndUserIdAndIsDeleted(String activityTagName, Long userId, boolean isDeleted);
 }

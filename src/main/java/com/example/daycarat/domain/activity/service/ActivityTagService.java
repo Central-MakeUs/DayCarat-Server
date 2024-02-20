@@ -140,7 +140,7 @@ public class ActivityTagService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<ActivityTagSearch> activityTagSearches = activityTagSearchRepository
-                .findAllByActivityTagSearchContainingAndUserId(StringParser.decompose(activityTagName), user.getId());
+                .findDistinctByActivityTagSearchContainingAndUserId(StringParser.decompose(activityTagName), user.getId());
 
         return activityTagSearches.stream()
                 .filter(activityTagSearch -> !activityTagSearch.getIsDeleted())
