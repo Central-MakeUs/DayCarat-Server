@@ -145,6 +145,7 @@ public class ActivityTagService {
         return activityTagSearches.stream()
                 .filter(activityTagSearch -> !activityTagSearch.getIsDeleted())
                 .map(GetActivityTagSearch::of)
+                .distinct()
                 .collect(Collectors.toList());
     }
 }
