@@ -1,0 +1,31 @@
+name: Push to ECR
+
+on:
+  push:
+    branches: [ "deploy/ipv6" ]
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REGISTRY: 690207726876.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REPOSITORY: daycarat
+  IMAGE_TAG: ${{ github.sha }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Connection Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ec2-user
+          key: ${{ secrets.KEY }}
+          script: |
+            ls
+
+
