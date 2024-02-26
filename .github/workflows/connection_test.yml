@@ -20,12 +20,7 @@ jobs:
 
     steps:
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ec2-user
-          key: ${{ secrets.KEY }}
-          script: |
-            ls
-
-
+        run: |
+          echo "${{ secrets.KEY }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+          ssh -i /tmp/ssh_key -6 ec2-user@${{ secrets.HOST }} "ls"
