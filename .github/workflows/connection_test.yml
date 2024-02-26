@@ -23,4 +23,4 @@ jobs:
         run: |
           echo "${{ secrets.KEY }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -i /tmp/ssh_key -6 ec2-user@${{ secrets.HOST }} "ls"
+          ssh -i /tmp/ssh_key ec2-user@${{ secrets.HOST }} "ls"
